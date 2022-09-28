@@ -4,4 +4,4 @@ This repository works on transcribing hqr.f and hqr2.f from eispack into C to co
 
 
 # License
-This repository is to be released under GPLv3 (or later) once made public. More information can be found in the LICENSE file and at https://www.gnu.org/licenses/gpl.txt
+This repository is to be released under GPLv3 (or later). More information can be found in the LICENSE file and at https://www.gnu.org/licenses/gpl.txt
