@@ -5,8 +5,8 @@
 #define _PB_N n
 #define SCALAR_VAL(x) x
 #define b0(i,j) B[i + j * n]
-#define b1(i,j) B[(i - 1) + (j - 1) * n]
 #define a0(i,j) A[i + j * n]
+#define b1(i,j) B[(i - 1) + (j - 1) * n]
 #define a1(i,j) A[(i - 1) + (j - 1) * n]
 
 
@@ -184,7 +184,6 @@ int main(int argc, char ** argv) {
             //en and na are indices to add the current eigenValue to it's list
             int na = en -1;
             int enm2 = na -1;
-
             // Another index counter
             int l = 1;
             // Look for single small sub-diagonal element 
