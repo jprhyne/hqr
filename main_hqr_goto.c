@@ -66,7 +66,7 @@ int main(int argc, char ** argv) {
         int printFlag = 0;
 
 	// Seeds the random number generator for repeatability
-	srand(0);
+	srand(734);
 	// Default size of the matrix A
     	n = 20;
 	
@@ -91,23 +91,24 @@ int main(int argc, char ** argv) {
 
 	// Allocate the memory for A to be generated. It will contain n^2 
 	// elements where each element is a double precision floating point number
-	A = (double *) malloc( n * n *  sizeof(double));
-	B = (double *) malloc( n * n *  sizeof(double));
+	A = (double *) malloc( n * n *  sizeof(double) + sizeof(double));
+	B = (double *) malloc( n * n *  sizeof(double) + sizeof(double));
 	// Create a vector to store the real parts of the eigenvalues
 	wr = (double *) malloc( n *  sizeof(double));
 	// Create a vector to store the real parts of the eigenvalues
 	wi = (double *) malloc( n *  sizeof(double));
 
 	// Generate A as a random matrix.
- 	for(i = 0; i < n; i++)
- 		for(j = 0; j < n; j++)
-			a0(i,j) = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
-	
-	// since hqr needs A to be upper hessenberg, we will set all other values 
-	// to 0	in order find the eigenvalues using other sources
-	for ( int i = 0; i < n-2; i++ ) {
-                    a0(i+2,i) = 0;
-	}
+ 	for(i = 0; i < n; i++) {
+            int start = 0;
+            if (i - 1 > 0)
+                start = i - 1;
+ 	    for(j = start; j < n; j++) {
+                double val = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
+	        a0(i,j) = val; 
+            }
+        }
+
         // Store a copy of A into B so that we can run our own
         // version of hqr written in C 
         for ( int i = 0; i < n; i++ )
@@ -120,10 +121,10 @@ int main(int argc, char ** argv) {
         if (printFlag) {
             printf("A = [\n");
             for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n - 1; j++) {
-                    printf("%f,", a0(i,j));
+                for (int j = 0; j < n; j++) {
+                    printf("%3.8f,", a0(i,j));
                 }
-                printf("%f\n", a0(i,n-1));
+                printf("\n");
             }
             printf("]\n");
         }
@@ -169,7 +170,7 @@ int main(int argc, char ** argv) {
             eigenValsImag[i-1] = 0;
         } 
         en = igh;
-        t = 0;
+        t = 0.0;
         itn = 30 * n;
 beginEigSearch:
         if (en < low)
@@ -237,82 +238,82 @@ postExceptionalShift:
 afterSubDiagSearch:
         mp2 = m + 2;
         for (i = mp2; i <= en; i++){
-            b1(i,i-2) = 0;
+            b1(i,i-2) = 0.0;
             if (i == mp2)
                 continue;
-            b1(i,i - 3) = 0;
+            b1(i,i - 3) = 0.0;
         }
         // double qr step
         for (k = m; k <= na; k++){
-           notLast = k != na;
-          if (k == m)
-             goto skipOnFirstLoop;
-          p = b1(k,k - 1);
-          q = b1(k + 1, k - 1);
-          r = 0;
-          if (notLast)
-              r = b1(k + 2, k - 1);
-          x = fabs(p) + fabs(q) + fabs(r);
-          if (x == 0) 
-              continue;
-          p = p / x;
-          q = q / x;
-          r = r / x;
+            notLast = k != na;
+            if (k == m)
+                goto skipOnFirstLoop;
+            p = b1(k,k - 1);
+            q = b1(k + 1, k - 1);
+            r = 0.0;
+            if (notLast)
+                r = b1(k + 2, k - 1);
+            x = fabs(p) + fabs(q) + fabs(r);
+            if (x == 0) 
+                continue;
+            p = p / x;
+            q = q / x;
+            r = r / x;
 skipOnFirstLoop: 
-          if (p >= 0)
-              s = sqrt(p * p + q * q + r * r);
-          else
-              s = -sqrt(p * p + q * q + r * r);
-          if (k == m)
-              goto skipOnFirstAgain;
-          b1(k, k - 1) = -s * x;
-          goto afterSkipOnFirstAgain;
+            if (p >= 0)
+                s = sqrt(p * p + q * q + r * r);
+            else
+                s = -sqrt(p * p + q * q + r * r);
+            if (k == m)
+                goto skipOnFirstAgain;
+            b1(k, k - 1) = -s * x;
+            goto afterSkipOnFirstAgain;
 skipOnFirstAgain:
-          if (l != m)
-              b1(k, k - 1) = - b1(k, k - 1);
+            if (l != m)
+                b1(k, k - 1) = - b1(k, k - 1);
 afterSkipOnFirstAgain:
-          p = p + s;
-          x = p / s;
-          y = q / s;
-          zz = r / s;
-          q = q / p;
-          r = r / p;
-          if(notLast)
-              goto moreTermsMod;
-          // row modification
-          for ( j = k; j <= en; j++){
-              p = b1(k, j) + q * b1(k + 1, j);
-              b1(k,j) = b1(k, j) - p * x;
-              b1(k + 1, j) = b1(k + 1, j) - p * y;
-          }
-          if (en <= k + 3)
-              j = en;
-          else 
-              j = k + 3;
-          for (i = l; i <= j; i++) {
-              p = x * b1(i, k) + y * b1(i, k + 1);
-              b1(i,k) = b1(i,k) - p;
-              b1(i,k + 1) = b1(i, k + 1) - p * q;
-          } 
-          continue;
+            p = p + s;
+            x = p / s;
+            y = q / s;
+            zz = r / s;
+            q = q / p;
+            r = r / p;
+            if(notLast)
+                goto moreTermsMod;
+            // row modification
+            for ( j = k; j <= en; j++){
+                p = b1(k, j) + q * b1(k + 1, j);
+                b1(k,j) = b1(k, j) - p * x;
+                b1(k + 1, j) = b1(k + 1, j) - p * y;
+            }
+            if (en <= k + 3)
+                j = en;
+            else 
+                j = k + 3;
+            for (i = l; i <= j; i++) {
+                p = x * b1(i, k) + y * b1(i, k + 1);
+                b1(i,k) = b1(i,k) - p;
+                b1(i,k + 1) = b1(i, k + 1) - p * q;
+            } 
+            continue;
 moreTermsMod:
-          // row modification
-          for ( j = k; j <= en; j++){
-              p = b1(k, j) + q * b1(k + 2, j) + r * b1(k + 2, j);
-              b1(k,j) = b1(k, j) - p * x;
-              b1(k + 1, j) = b1(k + 1, j) - p * y;
-              b1(k + 2, j) = b1(k + 1, j) - p * zz;
-          }
-          if (en <= k + 3)
-              j = en;
-          else 
-              j = k + 3;
-          for (i = l; i <= j; i++) {
-              p = x * b1(i, k) + y * b1(i, k + 1) + zz * b1(i, k + 2);
-              b1(i,k) = b1(i,k) - p;
-              b1(i,k + 1) = b1(i, k + 1) - p * q;
-              b1(i, k + 2) = b1(i, k + 2) - p * r;
-          } 
+            // row modification
+            for ( j = k; j <= en; j++){
+                p = b1(k, j) + q * b1(k + 1, j) + r * b1(k + 2, j);
+                b1(k,j) = b1(k, j) - p * x;
+                b1(k + 1, j) = b1(k + 1, j) - p * y;
+                b1(k + 2, j) = b1(k + 1, j) - p * zz;
+            }
+            if (en <= k + 3)
+                j = en;
+            else 
+                j = k + 3;
+            for (i = l; i <= j; i++) {
+                p = x * b1(i, k) + y * b1(i, k + 1) + zz * b1(i, k + 2);
+                b1(i,k) = b1(i,k) - p;
+                b1(i,k + 1) = b1(i, k + 1) - p * q;
+                b1(i, k + 2) = b1(i, k + 2) - p * r;
+            } 
         }
         goto subDiagonalSearch;
 
@@ -322,7 +323,7 @@ singleRoot:
         en = na;
         goto beginEigSearch;
 doubleRoot:
-        p = (y - x) / 2;
+        p = (y - x) / 2.0;
         q = p * p + w;
         zz = sqrt(fabs(q));
         x = x + t;
