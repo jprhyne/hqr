@@ -9,6 +9,10 @@
 #define b1(i,j) B[(i - 1) + (j - 1) * n]
 #define a1(i,j) A[(i - 1) + (j - 1) * n]
 
+// TODO: Issue in non-converging eigenvalues likely lies 
+// inside the modification steps. Ensure that we are accessing them
+// correctly.
+
 
 // This may be bad practice, but we put all malloc'd entities
 // as global variables in order to make freeing the
@@ -186,9 +190,7 @@ subDiagonalSearch:
             s = fabs(b1(l - 1, l - 1)) + fabs(b1(l,l));
             if ( s == 0 )
                 s = norm;
-            tst1 = s;
-            tst2 = tst1 + fabs(b1(l,l - 1));
-            if (tst2 == tst1)
+            if (fabs(b1(l,l - 1)) < pow(10,-6))
                 goto formShift;
         }
 formShift:
@@ -208,6 +210,7 @@ formShift:
         t = t + x;
         for (i = low; i <= en; i++)
             b1(i,i) = b1(i,i) - x;
+        i--;
         s = fabs(b1(en,na)) + fabs(b1(na, enm2));
         x = s * 0.75;
         y = x;
@@ -230,9 +233,7 @@ postExceptionalShift:
             r = r / s;
             if (m == l)
                 goto afterSubDiagSearch;
-            tst1 = fabs(p)*(fabs(b1(m - 1, m - 1)) + fabs(zz) + fabs(b1(m + 1, m + 1)));
-            tst2 = tst1 + fabs(b1(m, m - 1)) * (fabs(q) + fabs(r));
-            if (tst2 == tst1)
+            if ((fabs(b1(m,m - 1)) * (fabs(q) + fabs(r))) < pow(10,-6))
                 goto afterSubDiagSearch;
         }
 afterSubDiagSearch:
@@ -243,6 +244,7 @@ afterSubDiagSearch:
                 continue;
             b1(i,i - 3) = 0.0;
         }
+        i--;
         // double qr step
         for (k = m; k <= na; k++){
             notLast = k != na;
@@ -286,6 +288,7 @@ afterSkipOnFirstAgain:
                 b1(k,j) = b1(k, j) - p * x;
                 b1(k + 1, j) = b1(k + 1, j) - p * y;
             }
+            j--;
             if (en <= k + 3)
                 j = en;
             else 
@@ -295,6 +298,7 @@ afterSkipOnFirstAgain:
                 b1(i,k) = b1(i,k) - p;
                 b1(i,k + 1) = b1(i, k + 1) - p * q;
             } 
+            i--;
             continue;
 moreTermsMod:
             // row modification
@@ -304,6 +308,7 @@ moreTermsMod:
                 b1(k + 1, j) = b1(k + 1, j) - p * y;
                 b1(k + 2, j) = b1(k + 1, j) - p * zz;
             }
+            j--;
             if (en <= k + 3)
                 j = en;
             else 
@@ -314,7 +319,9 @@ moreTermsMod:
                 b1(i,k + 1) = b1(i, k + 1) - p * q;
                 b1(i, k + 2) = b1(i, k + 2) - p * r;
             } 
+            i--;
         }
+        k--;
         goto subDiagonalSearch;
 
 singleRoot:
@@ -361,6 +368,24 @@ endOfProgram:
             for ( int i = 0; i < n; i++)
                 printf("    %5.8f,\n", eigenValsImag[i]);
             printf("]\n");
+            printf("A = [\n");
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    printf("%3.8f,", a0(i,j));
+                }
+                printf("\n");
+            }
+            printf("]\n");
+            printf("B = [\n");
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    printf("%3.8f,", b0(i,j));
+                }
+                printf("\n");
+            }
+            printf("]\n");
+
+
         }
         freeMemory();
         return 0;
