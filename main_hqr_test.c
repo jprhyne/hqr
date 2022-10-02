@@ -40,7 +40,8 @@ void usage()
     printf("\t-h: Print this help dialogue\n");
 }
 
-void freeMemory(){
+void freeMemory()
+{
     free(A);
     free(B);
     free(wr);
@@ -104,10 +105,9 @@ int main(int argc, char ** argv) {
 	
 	// since hqr needs A to be upper hessenberg, we will set all other values 
 	// to 0	in order find the eigenvalues using other sources
-	for ( int i = 2; i < n; i++ ) {
-		for (int j = 0; j < i - 1; j++) {
-                    a0(i,j) = 0;
-		}
+	for ( int i = 0; i < n-2; i++ ) {
+                printf("A(%d,%d) = %3.8f\n",i+2,i,a0(i+2,i));
+                    a0(i+2,i) = 1;
 	}
         // Store a copy of A into B so that we can run our own
         // version of hqr written in C 
@@ -151,7 +151,7 @@ int main(int argc, char ** argv) {
         eigenValsReal = (double *) malloc(n * sizeof(double));
         eigenValsImag = (double *) malloc(n * sizeof(double));
 
-        int indexOfError = 1;
+        int indexOfError = 0;
         double norm = 0;
         int k = 1;
 
@@ -160,15 +160,16 @@ int main(int argc, char ** argv) {
         int igh = n;
 
         for (int i = 1; i <= n; i++ ){
-            for (int j = k; j <= n; j++) 
-                norm += abs(b1(i,j)); // 1 norm of the matrix A
+            for (int j = k; j <= n; j++) {
+                norm += fabs(b1(i,j)); // 1 norm of the matrix A
+            }
             k = i;
             // This never executes, however it is functionality in the 
             // original hqr subroutine, so I am repeating it here
             // in case there is a chance of balanc being reimplemented as well.
-            if ( i <= low || i >= igh) {
-                eigenValsReal[i] = b1(i,i);
-                eigenValsImag[i] = 0;
+            if ( i < low || i > igh) {
+                eigenValsReal[i - 1] = b1(i,i);
+                eigenValsImag[i - 1] = 0;
             }
         }
         int en = igh;
@@ -179,33 +180,32 @@ int main(int argc, char ** argv) {
          * This loop searches for the remaining (all in our case)
          * eigenvalues
          */
+        // Currently, we do not converge when n > 2
         while (en >= low) {
             int its = 0;
             //en and na are indices to add the current eigenValue to it's list
-            int na = en -1;
-            int enm2 = na -1;
+            int na = en - 1;
+            int enm2 = en - 2;
             // Another index counter
-            int l = 1;
+            int l;
             // Look for single small sub-diagonal element 
-            for (int ll = low; ll <= en; ll++) {
-                l = en + low - ll;
-                if (l != low) {
-                    double s = abs(b1(l-1,l-1)) + abs(b1(l,l));
-                    if (s == 0) //consider using another method of checking if s is 0 
-                        s = norm;
-                    double tst1 = s;
-                    double tst2 = tst1 + abs(abs(b1(l,l-1)));
-                    // Found it?
-                    if (tst1 == tst2)
-                        break;
-                }
+            for (l = en; l > low; l--) {
+                double s = fabs(b1(l-1,l-1)) + fabs(b1(l,l));
+                if (s == 0) //consider using another method of checking if s is 0 
+                    s = norm;
+                tst1 = s;
+                tst2 = tst1 + fabs(b1(l,l-1));
+                // Found it?
+                if (tst1 == tst2)
+                    break;
             }
+            
             // Form shift
             x = b1(en,en);
             // Single root found. Why?
             if (l == en) {
-                eigenValsReal[en] = x + t;
-                eigenValsImag[en] = 0;
+                eigenValsReal[en - 1] = x + t;
+                eigenValsImag[en - 1] = 0;
                 en = na;
                 continue;
             }
@@ -216,26 +216,29 @@ int main(int argc, char ** argv) {
             if (l == na) {
                 p = (y-x) / 2;
                 q = p*p+w;
-                zz = sqrt(abs(q));
+                zz = sqrt(fabs(q));
                 x += t;
                 if (q >= 0) {
                     // Real pair
                     zz = (p >= 0)?(p + zz):(p - zz);
-                    eigenValsReal[na] = x + zz;
-                    eigenValsReal[en] = (zz == 0)?(eigenValsReal[na]):(x - w / zz);
-                    eigenValsImag[na] = 0;
-                    eigenValsImag[en] = 0;
+                    eigenValsReal[na - 1] = x + zz;
+                    eigenValsReal[en - 1] = (zz == 0)?(eigenValsReal[na]):(x - w / zz);
+                    eigenValsImag[na - 1] = 0;
+                    eigenValsImag[en - 1] = 0;
                 } else {
                     // Complex pair
-                    eigenValsReal[na] = x + p;
-                    eigenValsReal[en] = x + p;
-                    eigenValsImag[na] = zz;
-                    eigenValsImag[en] = -zz;
+                    eigenValsReal[na - 1] = x + p;
+                    eigenValsReal[en - 1] = x + p;
+                    eigenValsImag[na - 1] = zz;
+                    eigenValsImag[en - 1] = -zz;
                 }
+                en = enm2;
+                continue;
             } else if (itn == 0){
                 // We have not converged to all eigenvalues after 30*n iterations.
                 ierr = en;
                 // To prevent memory leaks
+                printf("There was an error\n");
                 freeMemory();
                 return 1;
             } else if (its == 10 || its == 20) {
@@ -243,7 +246,8 @@ int main(int argc, char ** argv) {
                 t += x;
                 for (int j = low; j <= en; j++) 
                     b1(i,i) -= x;
-                s = abs(b1(en,na)) + abs(b1(na,enm2));
+                //j--;
+                s = fabs(b1(en,na)) + fabs(b1(na,enm2));
                 x = s * 0.75;
                 y = x;
                 w = -.4375 * s * s;
@@ -253,32 +257,34 @@ int main(int argc, char ** argv) {
             // Look for two consecutive small sub-diagonal elements.
             // for m=en-2 to l in step of -1
             int m;
-            for (m = enm2; i >= l; i--) {
+            for (m = enm2; m >= l; m--) {
                 zz = b1(m,m);
                 r = x - zz;
                 s = y - zz;
                 p = (r * s - w) / b1(m + 1, m) + b1(m, m + 1);
                 q = b1(m + 1, m + 1) - zz - r - s;
                 r = b1(m + 2, m + 1);
-                s = abs(p) + abs(q) + abs(r);
+                s = fabs(p) + fabs(q) + fabs(r);
                 p /= s;
                 q /= s;
                 r /= s;
                 // We only do the following checks if we are not on the 
                 // last iteration of this loop
                 if (m != l) { 
-                    tst1 = abs(p)*(abs(b1(m - 1, m - 1)) + abs(zz) + abs(b1(m + 1, m + 1)));
-                    tst2 = tst1 + abs(b1(m, m - 1))*(abs(q) + abs(r));
+                    tst1 = fabs(p)*(fabs(b1(m - 1, m - 1)) + fabs(zz) + fabs(b1(m + 1, m + 1)));
+                    tst2 = tst1 + fabs(b1(m, m - 1))*(fabs(q) + fabs(r));
                     // Why not just test if right part of tst2 is 0?
                     if (tst1 == tst2)
                         break;
                 } 
             }
+            m++;
             for (int i = m-2;i <= en;i++) {
                 b1(i, i - 2) = 0;
                 if (i != m - 2)
                     b1(i, i - 3) = 0;
             }
+            i--;
             // double qr step involving rows l to en and columns m to en
             for (int k = m; k <= na; k++) {
                 // If na == k, then we are on our
@@ -290,7 +296,7 @@ int main(int argc, char ** argv) {
                     p = b1(k, k - 1);
                     q = b1(k + 1, k - 1);
                     r = (!lastIter) ? (b1( k + 2, k - 1)):(0);
-                    x = abs(p) + abs(q) + abs(r);
+                    x = fabs(p) + fabs(q) + fabs(r);
                     if ( x == 0 )
                         continue;
                     p /= x;

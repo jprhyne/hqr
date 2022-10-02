@@ -74,6 +74,7 @@ c        computations.
          wr(i) = h(i,i)
          wi(i) = 0.0d0
    50 continue
+         write(*,*) norm
 c
       en = igh
       t = 0.0d0
