@@ -4,8 +4,8 @@
 #include <math.h>
 #define _PB_N n
 #define SCALAR_VAL(x) x
-#define b0(i,j) B[i + j * n]
-#define a0(i,j) A[i + j * n]
+#define b0(i,j) B[(i) + (j) * n]
+#define a0(i,j) A[(i) + (j) * n]
 #define b1(i,j) B[(i - 1) + (j - 1) * n]
 #define a1(i,j) A[(i - 1) + (j - 1) * n]
 
@@ -190,7 +190,7 @@ subDiagonalSearch:
             s = fabs(b1(l - 1, l - 1)) + fabs(b1(l,l));
             if ( s == 0 )
                 s = norm;
-            if (fabs(b1(l,l - 1)) < pow(10,-6))
+            if (fabs(b1(l,l - 1))  == 0)
                 goto formShift;
         }
 formShift:
@@ -233,7 +233,7 @@ postExceptionalShift:
             r = r / s;
             if (m == l)
                 goto afterSubDiagSearch;
-            if ((fabs(b1(m,m - 1)) * (fabs(q) + fabs(r))) < pow(10,-6))
+            if ((fabs(b1(m,m - 1)) * (fabs(q) + fabs(r))) == 0)
                 goto afterSubDiagSearch;
         }
 afterSubDiagSearch:
