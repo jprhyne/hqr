@@ -176,35 +176,35 @@ int main(int argc, char ** argv) {
         en = igh;
         t = 0.0;
         itn = 30 * n;
-beginEigSearch:
+beginEigSearch_60:
         if (en < low)
-            goto endOfProgram;
+            goto endOfProgram_1001;
         its = 0;
         na = en - 1;
         enm2 = na -1;
-subDiagonalSearch:
+subDiagonalSearch_70:
         for (int ll = low; ll <= en; ll++) {
             l = en + low - ll;
             if (l == low)
-                goto formShift;
+                goto formShift_100;
             s = fabs(b1(l - 1, l - 1)) + fabs(b1(l,l));
             if ( s == 0 )
                 s = norm;
             if (fabs(b1(l,l - 1))  == 0)
-                goto formShift;
+                goto formShift_100;
         }
-formShift:
+formShift_100:
         x = b1(en,en);
         if (l == en)
-            goto singleRoot;
+            goto singleRoot_270;
         y = b1(na,na);
         w = b1(en,na) * b1(na,en);
         if (l == na)
-            goto doubleRoot;
+            goto doubleRoot_280;
         if (itn == 0)
-            goto errorThenEnd;
+            goto errorThenEnd_1000;
         if (its != 10 && its != 20)
-            goto postExceptionalShift;
+            goto postExceptionalShift_130;
         
         // form exceptional shift
         t = t + x;
@@ -215,7 +215,7 @@ formShift:
         x = s * 0.75;
         y = x;
         w = -0.4375 * s * s;
-postExceptionalShift:
+postExceptionalShift_130:
         its = its + 1;
         itn = itn - 1;
 // look for two consecutive small sub-diagonal elements.
@@ -232,11 +232,11 @@ postExceptionalShift:
             q = q / s;
             r = r / s;
             if (m == l)
-                goto afterSubDiagSearch;
+                goto afterSubDiagSearch_150;
             if ((fabs(b1(m,m - 1)) * (fabs(q) + fabs(r))) == 0)
-                goto afterSubDiagSearch;
+                goto afterSubDiagSearch_150;
         }
-afterSubDiagSearch:
+afterSubDiagSearch_150:
         mp2 = m + 2;
         for (i = mp2; i <= en; i++){
             b1(i,i-2) = 0.0;
@@ -249,7 +249,7 @@ afterSubDiagSearch:
         for (k = m; k <= na; k++){
             notLast = k != na;
             if (k == m)
-                goto skipOnFirstLoop;
+                goto skipOnFirstLoop_170;
             p = b1(k,k - 1);
             q = b1(k + 1, k - 1);
             r = 0.0;
@@ -261,19 +261,19 @@ afterSubDiagSearch:
             p = p / x;
             q = q / x;
             r = r / x;
-skipOnFirstLoop: 
+skipOnFirstLoop_170: 
             if (p >= 0)
                 s = sqrt(p * p + q * q + r * r);
             else
                 s = -sqrt(p * p + q * q + r * r);
             if (k == m)
-                goto skipOnFirstAgain;
+                goto skipOnFirstAgain_180;
             b1(k, k - 1) = -s * x;
-            goto afterSkipOnFirstAgain;
-skipOnFirstAgain:
+            goto afterSkipOnFirstAgain_190;
+skipOnFirstAgain_180:
             if (l != m)
                 b1(k, k - 1) = - b1(k, k - 1);
-afterSkipOnFirstAgain:
+afterSkipOnFirstAgain_190:
             p = p + s;
             x = p / s;
             y = q / s;
@@ -281,7 +281,7 @@ afterSkipOnFirstAgain:
             q = q / p;
             r = r / p;
             if(notLast)
-                goto moreTermsMod;
+                goto moreTermsMod_225;
             // row modification
             for ( j = k; j <= en; j++){
                 p = b1(k, j) + q * b1(k + 1, j);
@@ -300,7 +300,7 @@ afterSkipOnFirstAgain:
             } 
             i--;
             continue;
-moreTermsMod:
+moreTermsMod_225:
             // row modification
             for ( j = k; j <= en; j++){
                 p = b1(k, j) + q * b1(k + 1, j) + r * b1(k + 2, j);
@@ -322,20 +322,20 @@ moreTermsMod:
             i--;
         }
         k--;
-        goto subDiagonalSearch;
+        goto subDiagonalSearch_70;
 
-singleRoot:
+singleRoot_270:
         eigenValsReal[en - 1] = x + t;
         eigenValsImag[en - 1] = 0;
         en = na;
-        goto beginEigSearch;
-doubleRoot:
+        goto beginEigSearch_60;
+doubleRoot_280:
         p = (y - x) / 2.0;
         q = p * p + w;
         zz = sqrt(fabs(q));
         x = x + t;
         if (q < 0)
-            goto complexPair;
+            goto complexPair_320;
         // real pair
         if (p >= 0)
             zz = p + zz;
@@ -347,18 +347,18 @@ doubleRoot:
             eigenValsReal[en - 1] = x - w / zz;
         eigenValsImag[na - 1] = 0;
         eigenValsImag[en - 1] = 0;
-        goto postDoubleRoot;
-complexPair:
+        goto postDoubleRoot_330;
+complexPair_320:
         eigenValsReal[na - 1] = x + p;
         eigenValsReal[en - 1] = x + p;
         eigenValsImag[na - 1] = zz;
         eigenValsImag[en - 1] = -zz;
-postDoubleRoot:
+postDoubleRoot_330:
         en = enm2;
-        goto beginEigSearch;
-errorThenEnd:
+        goto beginEigSearch_60;
+errorThenEnd_1000:
         indexOfError = en; 
-endOfProgram:
+endOfProgram_1001:
         if (printFlag){
             printf("eigValReal = [\n");
             for ( int i = 0; i < n; i++)
