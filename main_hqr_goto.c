@@ -9,11 +9,6 @@
 #define b1(i,j) B[(i - 1) + (j - 1) * n]
 #define a1(i,j) A[(i - 1) + (j - 1) * n]
 
-// TODO: Issue in non-converging eigenvalues likely lies 
-// inside the modification steps. Ensure that we are accessing them
-// correctly.
-
-
 // This may be bad practice, but we put all malloc'd entities
 // as global variables in order to make freeing the
 // memory easier
@@ -95,8 +90,8 @@ int main(int argc, char ** argv) {
 
 	// Allocate the memory for A to be generated. It will contain n^2 
 	// elements where each element is a double precision floating point number
-	A = (double *) malloc( n * n *  sizeof(double) + sizeof(double));
-	B = (double *) malloc( n * n *  sizeof(double) + sizeof(double));
+	A = (double *) malloc( n * n *  sizeof(double));
+	B = (double *) malloc( n * n *  sizeof(double));
 	// Create a vector to store the real parts of the eigenvalues
 	wr = (double *) malloc( n *  sizeof(double));
 	// Create a vector to store the real parts of the eigenvalues
