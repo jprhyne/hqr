@@ -1,5 +1,5 @@
       subroutine qrstp2(nm,n,low,igh,h,wr,wi,ierr,norm,k,its,en,na,enm2,
-     2 l,s,t,retVal,x,y,w,p,q,r,zz,mp2,itn) 
+     2 l,s,t,retVal,x,y,w,p,q,r,zz,mp2,itn,m) 
       integer i,j,k,l,m,n,en,ll,mm,na,nm,igh,itn,its,low,mp2,enm2,ierr
       integer retVal
       double precision h(nm,n),wr(n),wi(n)

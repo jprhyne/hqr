@@ -37,25 +37,25 @@ extern void frmsft_( int* nm, int* n, int* low, int* igh,
 	double* h, double* wr, double* wi, int* ierr, double* norm,
         int* k, int* its, int* en, int* na, int* enm2,
         int* l, double* s, double* t, int* retVal, double* x, double* y,
-        double* w, int* itn);
+        double* w, int* itn, int* m);
 
 extern void subdag_( int* nm, int* n, int* low, int* igh,
 	double* h, double* wr, double* wi, int* ierr, double* norm,
         int* k, int* its, int* en, int* na, int* enm2,
         int* l, double* s, double* t, int* retVal, double* x, double* y,
-        double* w,int* itn);
+        double* w,int* itn, int* m);
 
 extern void sbdag2_( int* nm, int* n, int* low, int* igh,
 	double* h, double* wr, double* wi, int* ierr, double* norm,
         int* k, int* its, int* en, int* na, int* enm2,
         int* l, double* s, double* t, int* retVal, double* x, double* y,
-        double* w,double* p, double* q, double* r, double* zz, int* mp2,int* itn);
+        double* w,double* p, double* q, double* r, double* zz, int* mp2,int* itn, int* m);
 
 extern void qrstp2_( int* nm, int* n, int* low, int* igh,
 	double* h, double* wr, double* wi, int* ierr, double* norm,
         int* k, int* its, int* en, int* na, int* enm2,
         int* l, double* s, double* t, int* retVal, double* x, double* y,
-        double* w,double* p, double* q, double* r, double* zz, int* mp2,int* itn);
+        double* w,double* p, double* q, double* r, double* zz, int* mp2,int* itn, int* m);
 
 void usage()
 {
@@ -211,11 +211,11 @@ beginEigSearch_60:
         enm2 = na -1;
 subDiagonalSearch_70:
         subdag_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
-                &l,&s,&t,&retVal,&x,&y,&w,&itn);
+                &l,&s,&t,&retVal,&x,&y,&w,&itn,&m);
 formShift_100:
         retVal = 0;
         frmsft_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
-                &l,&s,&t,&retVal,&x,&y,&w,&itn);
+                &l,&s,&t,&retVal,&x,&y,&w,&itn,&m);
         // In order to emulate the behavior of the fortran code, instead 
         // of jumping to the right code inside there, we instead set a
         // return value and check what it is on exit
@@ -248,10 +248,10 @@ postExceptionalShift_130:
         its = its + 1;
         itn = itn - 1;
         sbdag2_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
-                &l,&s,&t,&retVal,&x,&y,&w,&p,&q,&r,&zz,&mp2,&itn);
+                &l,&s,&t,&retVal,&x,&y,&w,&p,&q,&r,&zz,&mp2,&itn,&m);
         // double qr step
         qrstp2_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
-                &l,&s,&t,&retVal,&x,&y,&w,&p,&q,&r,&zz,&mp2,&itn);
+                &l,&s,&t,&retVal,&x,&y,&w,&p,&q,&r,&zz,&mp2,&itn,&m);
         goto subDiagonalSearch_70;
 
 singleRoot_270:
