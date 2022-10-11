@@ -39,7 +39,7 @@ extern void frmsft_( int* nm, int* n, int* low, int* igh,
         int* l, double* s, double* t, int* retVal, double* x, double* y,
         double* w, int* itn, int* m);
 
-extern void subdag_( int* nm, int* n, int* low, int* igh,
+extern void hqr_subdiagsearch_( int* nm, int* n, int* low, int* igh,
 	double* h, double* wr, double* wi, int* ierr, double* norm,
         int* k, int* its, int* en, int* na, int* enm2,
         int* l, double* s, double* t, int* retVal, double* x, double* y,
@@ -210,7 +210,7 @@ beginEigSearch_60:
         na = en - 1;
         enm2 = na -1;
 subDiagonalSearch_70:
-        subdag_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
+        hqr_subdiagsearch_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
                 &l,&s,&t,&retVal,&x,&y,&w,&itn,&m);
 formShift_100:
         retVal = 0;

@@ -1,10 +1,15 @@
-      subroutine subdag(nm,n,low,igh,h,wr,wi,ierr,norm,k,its,en,na,enm2,
+      subroutine hqr_subdiagsearch(
+     1 nm,n,low,igh,h,wr,wi,ierr,norm,k,its,en,na,enm2,
      2 l,s,t,retVal,x,y,w,itn,m) 
+      implicit none
       integer i,j,k,l,m,n,en,ll,mm,na,nm,igh,itn,its,low,mp2,enm2,ierr
       integer retVal
       double precision h(nm,n),wr(n),wi(n)
-      double precision p,q,r,s,t,w,x,y,zz,norm,tst1,tst2
+      double precision p,q,r,s,t,w,x,y,zz,norm
       logical notlas
+
+c     local variables
+      double precision tst1,tst2
 
 c     .......... look for single small sub-diagonal element
 c                for l=en step -1 until low do -- ..........
