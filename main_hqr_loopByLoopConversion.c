@@ -33,10 +33,11 @@ extern void hqr_( int* nm, int* n, int* low, int* igh,
  * This function is going to be similar to the one above, however
  * we are instead copying one loop at a time
  */
-extern void myhqr_( int* nm, int* n, int* low, int* igh,
+extern void frmsft_( int* nm, int* n, int* low, int* igh,
 	double* h, double* wr, double* wi, int* ierr, double* norm,
         int* k, int* its, int* en, int* na, int* enm2, int* ll,
-        int*l, double* s);
+        int*l, double* s, double* t, int* retVal, double* x, double* y,
+        double* w);
 
 void usage()
 {
@@ -165,9 +166,11 @@ int main(int argc, char ** argv) {
         // These deal with our boundary conditions
         int low = 1;
         int igh = n;
-        int en,m,mm,notLast,itn,its,na,enm2,l,ll;
+        int en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal;
         double x,y,z,t,w,mp2,s,r,q,p,zz,tst1,tst2;
         // Converting one section at a time
+        // This section is not being used in our case until a version of
+        // balance is ported
         for (i = 1; i <= n; i++) {
             for (j = k; j <= n; j++) {
                 norm += fabs(b1(i,j));
@@ -178,33 +181,203 @@ int main(int argc, char ** argv) {
             eigenValsReal[i-1] = b1(i,i);
             eigenValsImag[i-1] = 0.0;
         }
+        //initializing some variables
         en = igh;
         t = 0.0;
         itn = 30 * n;
-eigValSearch_60: 
-        if ( en < low ) {
-            // This means we are done
-            goto end_1001;
-        }
+beginEigSearch_60:
+        if (en < low)
+            goto endOfProgram_1001;
         its = 0;
         na = en - 1;
-        enm2 = na - 1;
-subDiagSearch_70:
-        for (ll = low; ll <= en; ll++) {
+        enm2 = na -1;
+subDiagonalSearch_70:
+        for (int ll = low; ll <= en; ll++) {
             l = en + low - ll;
-            if ( l == low ) 
-                break;
-            s = fabs(b1(l-1,l-1)) + fabs(b1(l,l));
-            if (s == 0.0) 
+            if (l == low)
+                goto formShift_100;
+            s = fabs(b1(l - 1, l - 1)) + fabs(b1(l,l));
+            if ( s == 0 )
                 s = norm;
-            tst1 = s;
-            tst2 = tst1 + fabs(b1(l,l-1));
-            if (tst1 == tst2)
-                break;
+            if (fabs(b1(l,l - 1))  == 0)
+                goto formShift_100;
         }
-        ll--;
-	myhqr_( &n, &n, &ione, &n, B, eigenValsReal, eigenValsImag, &ierr, &norm, &k, &its, &en, &na, &enm2, &ll, &l, &s);
-end_1001:
+formShift_100:
+        retVal = 0;
+        frmsft_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
+                &ll,&l,&s,&t,&retVal,&x,&y,&w);
+        // In order to emulate the behavior of the fortran code, instead 
+        // of jumping to the right code inside there, we instead set a
+        // return value and check what it is on exit
+        // if retVal did not change from 0, we went through the entire
+        // form shift section
+        // if retVal is 1, then we found a single root
+        // if retVal is 2, then we found a double root
+        // if retVal is 3, then we did not converge and terminate with error
+        switch (retVal) {
+            case 0: 
+                // full termination
+                break;
+            case 1: 
+                // single root
+                goto singleRoot_270;
+            case 2:
+                // double root
+                goto doubleRoot_280;
+            case 3:
+                // Error termination
+                goto errorThenEnd_1000;
+            default:
+                // This should never happen, so if it does we free memory
+                // print an error message, then terminate.
+                freeMemory();
+                printf("Error in fortran subroutine. Check if assignment of retVal is correct\n");
+                return 2;
+        }
+postExceptionalShift_130:
+        its = its + 1;
+        itn = itn - 1;
+// look for two consecutive small sub-diagonal elements.
+        for (mm = l; mm <= enm2; mm++){
+            m = enm2 + l - mm;
+            zz = b1(m,m);
+            r = x - zz;
+            s = y - zz;
+            p = (r * s - w) / b1(m + 1, m) + b1(m, m + 1);
+            q = b1(m + 1, m + 1) - zz - r - s;
+            r = b1(m + 2, m + 1);
+            s = fabs(p) + fabs(q) + fabs(r);
+            p = p / s;
+            q = q / s;
+            r = r / s;
+            if (m == l)
+                goto afterSubDiagSearch_150;
+            if ((fabs(b1(m,m - 1)) * (fabs(q) + fabs(r))) == 0)
+                goto afterSubDiagSearch_150;
+        }
+afterSubDiagSearch_150:
+        mp2 = m + 2;
+        for (i = mp2; i <= en; i++){
+            b1(i,i-2) = 0.0;
+            if (i == mp2)
+                continue;
+            b1(i,i - 3) = 0.0;
+        }
+        i--;
+        // double qr step
+        for (k = m; k <= na; k++){
+            notLast = k != na;
+            if (k == m)
+                goto skipOnFirstLoop_170;
+            p = b1(k,k - 1);
+            q = b1(k + 1, k - 1);
+            r = 0.0;
+            if (notLast)
+                r = b1(k + 2, k - 1);
+            x = fabs(p) + fabs(q) + fabs(r);
+            if (x == 0) 
+                continue;
+            p = p / x;
+            q = q / x;
+            r = r / x;
+skipOnFirstLoop_170: 
+            if (p >= 0)
+                s = sqrt(p * p + q * q + r * r);
+            else
+                s = -sqrt(p * p + q * q + r * r);
+            if (k == m)
+                goto skipOnFirstAgain_180;
+            b1(k, k - 1) = -s * x;
+            goto afterSkipOnFirstAgain_190;
+skipOnFirstAgain_180:
+            if (l != m)
+                b1(k, k - 1) = - b1(k, k - 1);
+afterSkipOnFirstAgain_190:
+            p = p + s;
+            x = p / s;
+            y = q / s;
+            zz = r / s;
+            q = q / p;
+            r = r / p;
+            if(notLast)
+                goto moreTermsMod_225;
+            // row modification
+            for ( j = k; j <= en; j++){
+                p = b1(k, j) + q * b1(k + 1, j);
+                b1(k,j) = b1(k, j) - p * x;
+                b1(k + 1, j) = b1(k + 1, j) - p * y;
+            }
+            j--;
+            if (en <= k + 3)
+                j = en;
+            else 
+                j = k + 3;
+            for (i = l; i <= j; i++) {
+                p = x * b1(i, k) + y * b1(i, k + 1);
+                b1(i,k) = b1(i,k) - p;
+                b1(i,k + 1) = b1(i, k + 1) - p * q;
+            } 
+            i--;
+            continue;
+moreTermsMod_225:
+            // row modification
+            for ( j = k; j <= en; j++){
+                p = b1(k, j) + q * b1(k + 1, j) + r * b1(k + 2, j);
+                b1(k,j) = b1(k, j) - p * x;
+                b1(k + 1, j) = b1(k + 1, j) - p * y;
+                b1(k + 2, j) = b1(k + 1, j) - p * zz;
+            }
+            j--;
+            if (en <= k + 3)
+                j = en;
+            else 
+                j = k + 3;
+            for (i = l; i <= j; i++) {
+                p = x * b1(i, k) + y * b1(i, k + 1) + zz * b1(i, k + 2);
+                b1(i,k) = b1(i,k) - p;
+                b1(i,k + 1) = b1(i, k + 1) - p * q;
+                b1(i, k + 2) = b1(i, k + 2) - p * r;
+            } 
+            i--;
+        }
+        k--;
+        goto subDiagonalSearch_70;
+
+singleRoot_270:
+        eigenValsReal[en - 1] = x + t;
+        eigenValsImag[en - 1] = 0;
+        en = na;
+        goto beginEigSearch_60;
+doubleRoot_280:
+        p = (y - x) / 2.0;
+        q = p * p + w;
+        zz = sqrt(fabs(q));
+        x = x + t;
+        if (q < 0)
+            goto complexPair_320;
+        // real pair
+        if (p >= 0)
+            zz = p + zz;
+        else 
+            zz = p - zz;
+        eigenValsReal[na - 1] = x + zz;
+        eigenValsReal[en - 1] = eigenValsReal[na - 1];
+        if (zz != 0)
+            eigenValsReal[en - 1] = x - w / zz;
+        eigenValsImag[na - 1] = 0;
+        eigenValsImag[en - 1] = 0;
+        goto postDoubleRoot_330;
+complexPair_320:
+        eigenValsReal[na - 1] = x + p;
+        eigenValsReal[en - 1] = x + p;
+        eigenValsImag[na - 1] = zz;
+        eigenValsImag[en - 1] = -zz;
+postDoubleRoot_330:
+        en = enm2;
+        goto beginEigSearch_60;
+errorThenEnd_1000:
+        indexOfError = en; 
+endOfProgram_1001:
         if (printFlag){
             printf("eigValReal = [\n");
             for ( int i = 0; i < n; i++)
@@ -222,8 +395,6 @@ end_1001:
                 printf("\n");
             }
             printf("]\n");
-
-
         }
         freeMemory();
         return 0;

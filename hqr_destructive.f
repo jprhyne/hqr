@@ -1,5 +1,4 @@
-      subroutine myhqr(nm,n,low,igh,h,wr,wi,ierr,norm,k,its,en,na,enm2,
-     2 ll,l,s)
+      subroutine hqr(nm,n,low,igh,h,wr,wi,ierr)
 C  RESTORED CORRECT INDICES OF LOOPS (200,210,230,240). (9/29/89 BSG)
 c
       integer i,j,k,l,m,n,en,ll,mm,na,nm,igh,itn,its,low,mp2,enm2,ierr
@@ -57,10 +56,44 @@ c     this version dated september 1989.
 c
 c     ------------------------------------------------------------------
 c
+      ierr = 0
+      norm = 0.0d0
+      k = 1
 c     .......... store roots isolated by balanc
 c                and compute matrix norm ..........
+      do 50 i = 1, n
 c
-
+         do 40 j = k, n
+   40    norm = norm + dabs(h(i,j))
+c
+         k = i
+c        Since we are operating under the assumption that
+c        we are not calling balanc, we always skip over the wr
+c        computations.
+         if (i .ge. low .and. i .le. igh) go to 50
+         wr(i) = h(i,i)
+         wi(i) = 0.0d0
+   50 continue
+c
+      en = igh
+      t = 0.0d0
+      itn = 30*n
+c     .......... search for next eigenvalues ..........
+   60 if (en .lt. low) go to 1001
+      its = 0
+      na = en - 1
+      enm2 = na - 1
+c     .......... look for single small sub-diagonal element
+c                for l=en step -1 until low do -- ..........
+   70 do 80 ll = low, en
+         l = en + low - ll
+         if (l .eq. low) go to 100
+         s = dabs(h(l-1,l-1)) + dabs(h(l,l))
+         if (s .eq. 0.0d0) s = norm
+         tst1 = s
+         tst2 = tst1 + dabs(h(l,l-1))
+         if (tst2 .eq. tst1) go to 100
+   80 continue
 c     .......... form shift ..........
   100 x = h(en,en)
       if (l .eq. en) go to 270
