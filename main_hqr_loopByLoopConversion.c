@@ -35,9 +35,27 @@ extern void hqr_( int* nm, int* n, int* low, int* igh,
  */
 extern void frmsft_( int* nm, int* n, int* low, int* igh,
 	double* h, double* wr, double* wi, int* ierr, double* norm,
-        int* k, int* its, int* en, int* na, int* enm2, int* ll,
-        int*l, double* s, double* t, int* retVal, double* x, double* y,
-        double* w);
+        int* k, int* its, int* en, int* na, int* enm2,
+        int* l, double* s, double* t, int* retVal, double* x, double* y,
+        double* w, int* itn);
+
+extern void subdag_( int* nm, int* n, int* low, int* igh,
+	double* h, double* wr, double* wi, int* ierr, double* norm,
+        int* k, int* its, int* en, int* na, int* enm2,
+        int* l, double* s, double* t, int* retVal, double* x, double* y,
+        double* w,int* itn);
+
+extern void sbdag2_( int* nm, int* n, int* low, int* igh,
+	double* h, double* wr, double* wi, int* ierr, double* norm,
+        int* k, int* its, int* en, int* na, int* enm2,
+        int* l, double* s, double* t, int* retVal, double* x, double* y,
+        double* w,double* p, double* q, double* r, double* zz, int* mp2,int* itn);
+
+extern void qrstp2_( int* nm, int* n, int* low, int* igh,
+	double* h, double* wr, double* wi, int* ierr, double* norm,
+        int* k, int* its, int* en, int* na, int* enm2,
+        int* l, double* s, double* t, int* retVal, double* x, double* y,
+        double* w,double* p, double* q, double* r, double* zz, int* mp2,int* itn);
 
 void usage()
 {
@@ -166,8 +184,8 @@ int main(int argc, char ** argv) {
         // These deal with our boundary conditions
         int low = 1;
         int igh = n;
-        int en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal;
-        double x,y,z,t,w,mp2,s,r,q,p,zz,tst1,tst2;
+        int en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal,mp2;
+        double x,y,z,t,w,s,r,q,p,zz,tst1,tst2;
         // Converting one section at a time
         // This section is not being used in our case until a version of
         // balance is ported
@@ -192,20 +210,12 @@ beginEigSearch_60:
         na = en - 1;
         enm2 = na -1;
 subDiagonalSearch_70:
-        for (int ll = low; ll <= en; ll++) {
-            l = en + low - ll;
-            if (l == low)
-                goto formShift_100;
-            s = fabs(b1(l - 1, l - 1)) + fabs(b1(l,l));
-            if ( s == 0 )
-                s = norm;
-            if (fabs(b1(l,l - 1))  == 0)
-                goto formShift_100;
-        }
+        subdag_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
+                &l,&s,&t,&retVal,&x,&y,&w,&itn);
 formShift_100:
         retVal = 0;
         frmsft_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
-                &ll,&l,&s,&t,&retVal,&x,&y,&w);
+                &l,&s,&t,&retVal,&x,&y,&w,&itn);
         // In order to emulate the behavior of the fortran code, instead 
         // of jumping to the right code inside there, we instead set a
         // return value and check what it is on exit
@@ -237,110 +247,11 @@ formShift_100:
 postExceptionalShift_130:
         its = its + 1;
         itn = itn - 1;
-// look for two consecutive small sub-diagonal elements.
-        for (mm = l; mm <= enm2; mm++){
-            m = enm2 + l - mm;
-            zz = b1(m,m);
-            r = x - zz;
-            s = y - zz;
-            p = (r * s - w) / b1(m + 1, m) + b1(m, m + 1);
-            q = b1(m + 1, m + 1) - zz - r - s;
-            r = b1(m + 2, m + 1);
-            s = fabs(p) + fabs(q) + fabs(r);
-            p = p / s;
-            q = q / s;
-            r = r / s;
-            if (m == l)
-                goto afterSubDiagSearch_150;
-            if ((fabs(b1(m,m - 1)) * (fabs(q) + fabs(r))) == 0)
-                goto afterSubDiagSearch_150;
-        }
-afterSubDiagSearch_150:
-        mp2 = m + 2;
-        for (i = mp2; i <= en; i++){
-            b1(i,i-2) = 0.0;
-            if (i == mp2)
-                continue;
-            b1(i,i - 3) = 0.0;
-        }
-        i--;
+        sbdag2_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
+                &l,&s,&t,&retVal,&x,&y,&w,&p,&q,&r,&zz,&mp2,&itn);
         // double qr step
-        for (k = m; k <= na; k++){
-            notLast = k != na;
-            if (k == m)
-                goto skipOnFirstLoop_170;
-            p = b1(k,k - 1);
-            q = b1(k + 1, k - 1);
-            r = 0.0;
-            if (notLast)
-                r = b1(k + 2, k - 1);
-            x = fabs(p) + fabs(q) + fabs(r);
-            if (x == 0) 
-                continue;
-            p = p / x;
-            q = q / x;
-            r = r / x;
-skipOnFirstLoop_170: 
-            if (p >= 0)
-                s = sqrt(p * p + q * q + r * r);
-            else
-                s = -sqrt(p * p + q * q + r * r);
-            if (k == m)
-                goto skipOnFirstAgain_180;
-            b1(k, k - 1) = -s * x;
-            goto afterSkipOnFirstAgain_190;
-skipOnFirstAgain_180:
-            if (l != m)
-                b1(k, k - 1) = - b1(k, k - 1);
-afterSkipOnFirstAgain_190:
-            p = p + s;
-            x = p / s;
-            y = q / s;
-            zz = r / s;
-            q = q / p;
-            r = r / p;
-            if(notLast)
-                goto moreTermsMod_225;
-            // row modification
-            for ( j = k; j <= en; j++){
-                p = b1(k, j) + q * b1(k + 1, j);
-                b1(k,j) = b1(k, j) - p * x;
-                b1(k + 1, j) = b1(k + 1, j) - p * y;
-            }
-            j--;
-            if (en <= k + 3)
-                j = en;
-            else 
-                j = k + 3;
-            for (i = l; i <= j; i++) {
-                p = x * b1(i, k) + y * b1(i, k + 1);
-                b1(i,k) = b1(i,k) - p;
-                b1(i,k + 1) = b1(i, k + 1) - p * q;
-            } 
-            i--;
-            continue;
-moreTermsMod_225:
-            // row modification
-            for ( j = k; j <= en; j++){
-                p = b1(k, j) + q * b1(k + 1, j) + r * b1(k + 2, j);
-                b1(k,j) = b1(k, j) - p * x;
-                b1(k + 1, j) = b1(k + 1, j) - p * y;
-                b1(k + 2, j) = b1(k + 1, j) - p * zz;
-            }
-            j--;
-            if (en <= k + 3)
-                j = en;
-            else 
-                j = k + 3;
-            for (i = l; i <= j; i++) {
-                p = x * b1(i, k) + y * b1(i, k + 1) + zz * b1(i, k + 2);
-                b1(i,k) = b1(i,k) - p;
-                b1(i,k + 1) = b1(i, k + 1) - p * q;
-                b1(i, k + 2) = b1(i, k + 2) - p * r;
-            } 
-            i--;
-        }
-        k--;
+        qrstp2_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
+                &l,&s,&t,&retVal,&x,&y,&w,&p,&q,&r,&zz,&mp2,&itn);
         goto subDiagonalSearch_70;
 
 singleRoot_270:
