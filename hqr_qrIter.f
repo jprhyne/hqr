@@ -7,6 +7,7 @@
       logical notlas
 c     .......... double qr step involving rows l to en and
 c                columns m to en ..........
+      write(*,*) "in qr step", m, na
       do 260 k = m, na
          notlas = k .ne. na
          if (k .eq. m) go to 170
