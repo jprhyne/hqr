@@ -1,10 +1,15 @@
-      subroutine frmsft(nm,n,low,igh,h,wr,wi,ierr,norm,k,its,en,na,enm2,
-     2 l,s,t,retVal,x,y,w,itn,m) 
-      integer i,j,k,l,m,n,en,ll,mm,na,nm,igh,itn,its,low,mp2,enm2,ierr
+      subroutine hqr_formshift(nm,n,low,h,ierr,its,itn,en,na,enm2,
+     2 l,s,t,retVal,x,y,w) 
+      integer ierr,en,na,enm2,l,its,itn,low 
       integer retVal
-      double precision h(nm,n),wr(n),wi(n)
-      double precision p,q,r,s,t,w,x,y,zz,norm,tst1,tst2
-      logical notlas
+      double precision h(nm,n)
+      double precision s,t,w,x,y
+c---------------------------------------------------------------
+c      Variables modified: s,t,x,y,w,retVal,h,ierr
+c      Variables only read: en,na,enm2,l,its,itn,low
+c      Variables created locally i
+c      Variables needed for other variable's declaration: nm,n
+c---------------------------------------------------------------
 
       x = h(en,en)
       if (l .eq. en) go to 270

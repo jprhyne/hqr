@@ -9,14 +9,14 @@ hqr.o: hqr.f
 hqr_destructive.o: hqr_destructive.f
 	$(FC) -c hqr_destructive.f -g
 
-hqr_formshift.o: hqr_formshift.f
-	$(FC) -c hqr_formshift.f -g
+formShift.o: formShift.c
+	$(CC) -c $^ -g
 
-hqr_subdiagsearch.o: hqr_subdiagsearch.f
-	$(FC) -c hqr_subdiagsearch.f -g
+subDiagonalSearch.o: subDiagonalSearch.c
+	$(CC) -c $^ -g
 
-hqr_dblSubDiag.o: hqr_dblSubDiag.f
-	$(FC) -c $^ -g
+doubleSubDiagonalSearch.o: doubleSubDiagonalSearch.c 
+	$(CC) -c $^ -g
 
 hqr_qrIter.o: hqr_qrIter.f
 	$(FC) -c $^ -g
@@ -33,7 +33,7 @@ main_hqr_goto.exe: main_hqr_goto.o hqr.o
 main_hqr_loopByLoopConversion.o: main_hqr_loopByLoopConversion.c
 	$(CC) -c main_hqr_loopByLoopConversion.c -lm -g
 
-main_hqr_loopByLoopConversion.exe: main_hqr_loopByLoopConversion.o hqr_formshift.o hqr.o hqr_subdiagsearch.o hqr_dblSubDiag.o hqr_qrIter.o
+main_hqr_loopByLoopConversion.exe: main_hqr_loopByLoopConversion.o formShift.o hqr.o subDiagonalSearch.o doubleSubDiagonalSearch.o hqr_qrIter.o
 	$(FC) -o $@ $^
 
 main_hqr_test.exe: main_hqr_test.o hqr.o

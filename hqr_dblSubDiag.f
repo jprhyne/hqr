@@ -1,10 +1,14 @@
-      subroutine sbdag2(nm,n,low,igh,h,wr,wi,ierr,norm,k,its,en,na,enm2,
-     2 l,s,t,retVal,x,y,w,p,q,r,zz,mp2,itn,m) 
-      integer i,j,k,l,m,n,en,ll,mm,na,nm,igh,itn,its,low,mp2,enm2,ierr
-      integer retVal
+      subroutine hqr_dblSubDiag(h,enm2,
+     2 l,s,x,y,w,p,q,r,zz) 
+      implicit none
+      integer i,l,m,mm,mp2,enm2
       double precision h(nm,n),wr(n),wi(n)
-      double precision p,q,r,s,t,w,x,y,zz,norm,tst1,tst2
-      logical notlas
+      double precision p,q,r,s,w,x,y,zz,tst1,tst2
+c-------------------------------------------------------------------
+c       Variables modified: m,mm,zz,r,s,p,q
+c       Variables only read: l,enm2,x,y,w,h
+c       Variables only locally used: tst1,tst2,mp2,i
+c-------------------------------------------------------------------
       do 140 mm = l, enm2
          m = enm2 + l - mm
          zz = h(m,m)

@@ -1,12 +1,13 @@
-      subroutine hqr_subdiagsearch(
-     1 nm,n,low,igh,h,wr,wi,ierr,norm,k,its,en,na,enm2,
-     2 l,s,t,retVal,x,y,w,itn,m) 
+      subroutine hqr_subdiagsearch(nm,n,low,h,norm,l,s) 
       implicit none
-      integer i,j,k,l,m,n,en,ll,mm,na,nm,igh,itn,its,low,mp2,enm2,ierr
-      integer retVal
-      double precision h(nm,n),wr(n),wi(n)
-      double precision p,q,r,s,t,w,x,y,zz,norm
-      logical notlas
+      integer ll,low,en,l
+      double precision h(nm,n)
+      double precision s,norm
+c---------------------------------------------------------------
+c       Variables Modified: ll,l,s
+c       Variables only read: low,en,h,norm
+c       Variables used locally only: tst1,tst2
+c---------------------------------------------------------------
 
 c     local variables
       double precision tst1,tst2

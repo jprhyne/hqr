@@ -1,4 +1,5 @@
-      subroutine qrstp2(nm,n,low,igh,h,wr,wi,ierr,norm,k,its,en,na,enm2,
+      subroutine hqr_qrIter(nm,n,low,igh,h,wr,wi,ierr,norm,k,its,en,na,
+     1 enm2,
      2 l,s,t,retVal,x,y,w,p,q,r,zz,mp2,itn,m) 
       integer i,j,k,l,m,n,en,ll,mm,na,nm,igh,itn,its,low,mp2,enm2,ierr
       integer retVal
@@ -7,7 +8,6 @@
       logical notlas
 c     .......... double qr step involving rows l to en and
 c                columns m to en ..........
-      write(*,*) "in qr step", m, na
       do 260 k = m, na
          notlas = k .ne. na
          if (k .eq. m) go to 170

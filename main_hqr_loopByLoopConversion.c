@@ -33,29 +33,20 @@ extern void hqr_( int* nm, int* n, int* low, int* igh,
  * This function is going to be similar to the one above, however
  * we are instead copying one loop at a time
  */
-extern void frmsft_( int* nm, int* n, int* low, int* igh,
-	double* h, double* wr, double* wi, int* ierr, double* norm,
-        int* k, int* its, int* en, int* na, int* enm2,
-        int* l, double* s, double* t, int* retVal, double* x, double* y,
-        double* w, int* itn, int* m);
 
-extern void hqr_subdiagsearch_( int* nm, int* n, int* low, int* igh,
-	double* h, double* wr, double* wi, int* ierr, double* norm,
-        int* k, int* its, int* en, int* na, int* enm2,
-        int* l, double* s, double* t, int* retVal, double* x, double* y,
-        double* w,int* itn, int* m);
-
-extern void sbdag2_( int* nm, int* n, int* low, int* igh,
+extern void hqr_qriter_( int* nm, int* n, int* low, int* igh,
 	double* h, double* wr, double* wi, int* ierr, double* norm,
         int* k, int* its, int* en, int* na, int* enm2,
         int* l, double* s, double* t, int* retVal, double* x, double* y,
         double* w,double* p, double* q, double* r, double* zz, int* mp2,int* itn, int* m);
 
-extern void qrstp2_( int* nm, int* n, int* low, int* igh,
-	double* h, double* wr, double* wi, int* ierr, double* norm,
-        int* k, int* its, int* en, int* na, int* enm2,
-        int* l, double* s, double* t, int* retVal, double* x, double* y,
-        double* w,double* p, double* q, double* r, double* zz, int* mp2,int* itn, int* m);
+extern int formShift(int n, int low, double* B, int* ierr, int its, int itn,
+        int en, int l, double* s, double* t, double* x, double* y, double* w);
+
+extern int subDiagonalSearch(int n, int low, double* B, int en, double norm, double* s);
+
+extern int doubleSubDiagonalSearch(int n, double* B, int en, int enm2, int l, double* s, double x,
+        double y, double w, double* p, double* q, double* r, double* zz);
 
 void usage()
 {
@@ -210,12 +201,9 @@ beginEigSearch_60:
         na = en - 1;
         enm2 = na -1;
 subDiagonalSearch_70:
-        hqr_subdiagsearch_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
-                &l,&s,&t,&retVal,&x,&y,&w,&itn,&m);
+        l = subDiagonalSearch(n,low,B,en,norm,&s);
 formShift_100:
-        retVal = 0;
-        frmsft_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
-                &l,&s,&t,&retVal,&x,&y,&w,&itn,&m);
+        retVal = formShift(n,low, B, &ierr, its, itn, en, l, &s, &t, &x, &y, &w);
         // In order to emulate the behavior of the fortran code, instead 
         // of jumping to the right code inside there, we instead set a
         // return value and check what it is on exit
@@ -247,10 +235,9 @@ formShift_100:
 postExceptionalShift_130:
         its = its + 1;
         itn = itn - 1;
-        sbdag2_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
-                &l,&s,&t,&retVal,&x,&y,&w,&p,&q,&r,&zz,&mp2,&itn,&m);
+        m = doubleSubDiagonalSearch(n, B, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
         // double qr step
-        qrstp2_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
+        hqr_qriter_(&n, &n, &ione, &n, B, wr, wi, &ierr,&norm,&k,&its,&en,&na,&enm2,
                 &l,&s,&t,&retVal,&x,&y,&w,&p,&q,&r,&zz,&mp2,&itn,&m);
         goto subDiagonalSearch_70;
 
