@@ -28,7 +28,6 @@ c                columns m to en ..........
          h(k,k-1) = -s * x
          go to 190
   180    if (l .ne. m) h(k,k-1) = -h(k,k-1)
-c Below here
   190    p = p + s
          x = p / s
          y = q / s

@@ -18,6 +18,9 @@ subDiagonalSearch.o: subDiagonalSearch.c
 doubleSubDiagonalSearch.o: doubleSubDiagonalSearch.c 
 	$(CC) -c $^ -g
 
+qrIteration.o: qrIteration.c
+	$(CC) -c $^ -g -lm
+
 hqr_qrIter.o: hqr_qrIter.f
 	$(FC) -c $^ -g
 
@@ -33,12 +36,12 @@ main_hqr_goto.exe: main_hqr_goto.o hqr.o
 main_hqr_loopByLoopConversion.o: main_hqr_loopByLoopConversion.c
 	$(CC) -c main_hqr_loopByLoopConversion.c -lm -g
 
-main_hqr_loopByLoopConversion.exe: main_hqr_loopByLoopConversion.o formShift.o hqr.o subDiagonalSearch.o doubleSubDiagonalSearch.o hqr_qrIter.o
+main_hqr_loopByLoopConversion.exe: main_hqr_loopByLoopConversion.o formShift.o hqr.o subDiagonalSearch.o doubleSubDiagonalSearch.o hqr_qrIter.o qrIteration.o
 	$(FC) -o $@ $^
 
 main_hqr_test.exe: main_hqr_test.o hqr.o
 	$(FC) hqr.o main_hqr_test.o -o $@
 
 clean:
-	rm -f *.exe *.o *.out
+	rm -f *.exe *.o *.out .*swp
 

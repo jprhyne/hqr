@@ -9,6 +9,10 @@
 /**
  *  Inputs that are passed as a pointer are modified after calling
  *  this function. 
+ *  Inputs:
+ *      n - Size of the matrix B
+ *      low - The lower bound of 
+ *  Outputs:
  */
 int formShift(int n, int low, double* B, int* ierr, int its, int itn,
         int en, int l, double* s, double* t, double* x, double* y, double* w)
