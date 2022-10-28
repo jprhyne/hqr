@@ -52,6 +52,8 @@ void usage()
     printf("\t\tThe default value is 20\n");
     printf("\t-v: verbose flag that prints out the results of eispack hqr\n");
     printf("\t\tBy default, nothing is printed to the console\n");
+	printf("\t-t: testing flag that only prints the expected vs the");
+	printf("\t\tactual computed eigenvalues.");
     printf("\t-h: Print this help dialogue\n");
 }
 
@@ -79,6 +81,7 @@ int main(int argc, char ** argv) {
          * By default, we do not do this
          */
         int printFlag = 0;
+		int testFlag = 0;
 
 	// Seeds the random number generator for repeatability
 	srand(734);
@@ -101,7 +104,10 @@ int main(int argc, char ** argv) {
                 i++;
             } else if ( strcmp ( *(argv + i), "-v") == 0) {
                 printFlag=1;
-            }
+            } else if ( strcmp ( *(argv + i), "-t") == 0) {
+				testFlag=1;
+			}
+
 	}
 
 	// Allocate the memory for A to be generated. It will contain n^2 
@@ -133,7 +139,7 @@ int main(int argc, char ** argv) {
 	 * Here, we print out A for finding the eigenvalues via MATLAB
 	 * This must be done before calling hqr_ because it destroys A
 	 */
-        if (printFlag) {
+        if (printFlag && !testFlag) {
             printf("A = [\n");
             for (int i = 0; i < n; i++) {
                 for (int j = 0; j < n; j++) {
@@ -148,7 +154,7 @@ int main(int argc, char ** argv) {
 	 * Below prints out wr and wi for inspection via 
 	 * MATLAB/visual inspection
 	 */
-        if (printFlag) {
+        if (printFlag && !testFlag) {
             printf("wr = [\n");
             for ( int i = 0; i < n; i++)
                 printf("    %5.8f,\n", wr[i]);
@@ -272,7 +278,13 @@ postDoubleRoot_330:
 errorThenEnd_1000:
         indexOfError = en; 
 endOfProgram_1001:
-        if (printFlag){
+		double eigRealDiff[n];
+		double eigImagDiff[n];
+		for (int i = 0; i < n; i++) {
+			eigRealDiff[i] = eigenValsReal[i] - wr[i];
+			eigImagDiff[i] = eigenValsImag[i] - wi[i];
+		}
+        if (printFlag && !testFlag){
             printf("eigValReal = [\n");
             for ( int i = 0; i < n; i++)
                 printf("    %5.8f,\n", eigenValsReal[i]);
@@ -280,6 +292,14 @@ endOfProgram_1001:
             printf("eigValImag = [\n");
             for ( int i = 0; i < n; i++)
                 printf("    %5.8f,\n", eigenValsImag[i]);
+            printf("]\n");
+            printf("eigRealDiff = [\n");
+            for ( int i = 0; i < n; i++)
+                printf("    %1.20f,\n", eigRealDiff[i]);
+            printf("]\n");
+            printf("eigImagDiff = [\n");
+            for ( int i = 0; i < n; i++)
+                printf("    %1.20f,\n", eigImagDiff[i]);
             printf("]\n");
             printf("B = [\n");
             for (int i = 0; i < n; i++) {
@@ -290,7 +310,16 @@ endOfProgram_1001:
             }
             printf("]\n");
 			// TODO: Add 2 arrays wr-eigreal and wi-eigimag
-        }
+        } else if (testFlag) {
+            printf("eigRealDiff = [\n");
+            for ( int i = 0; i < n; i++)
+                printf("    %1.20f,\n", eigRealDiff[i]);
+            printf("]\n");
+            printf("eigImagDiff = [\n");
+            for ( int i = 0; i < n; i++)
+                printf("    %1.20f,\n", eigImagDiff[i]);
+            printf("]\n");
+		}
         freeMemory();
         return 0;
 }
