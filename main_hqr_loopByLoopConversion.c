@@ -109,6 +109,10 @@ int main(int argc, char ** argv) {
 			}
 
 	}
+        // arrays that will hold the differences in the eigenvalues of hqr
+        // and this implementation
+	double eigRealDiff[n];
+	double eigImagDiff[n];
 
 	// Allocate the memory for A to be generated. It will contain n^2 
 	// elements where each element is a double precision floating point number
@@ -278,12 +282,19 @@ postDoubleRoot_330:
 errorThenEnd_1000:
         indexOfError = en; 
 endOfProgram_1001:
-		double eigRealDiff[n];
-		double eigImagDiff[n];
-		for (int i = 0; i < n; i++) {
-			eigRealDiff[i] = eigenValsReal[i] - wr[i];
-			eigImagDiff[i] = eigenValsImag[i] - wi[i];
-		}
+	for (int i = 0; i < n; i++) {
+            eigRealDiff[i] = eigenValsReal[i] - wr[i];
+            eigImagDiff[i] = eigenValsImag[i] - wi[i];
+	}
+        // Compute the 1-norms of eigRealDiff and eigImagDiff
+        double normReal = 0.;
+        double normImag = 0.;
+        for (int i = 0; i < n; i ++) {
+            if (eigRealDiff[i] != 0.)
+                normReal += fabs(eigRealDiff[i]);
+            if (eigImagDiff[i] != 0.)
+                normImag += fabs(eigImagDiff[i]);
+        }
         if (printFlag && !testFlag){
             printf("eigValReal = [\n");
             for ( int i = 0; i < n; i++)
@@ -309,16 +320,9 @@ endOfProgram_1001:
                 printf("\n");
             }
             printf("]\n");
-			// TODO: Add 2 arrays wr-eigreal and wi-eigimag
         } else if (testFlag) {
-            printf("eigRealDiff = [\n");
-            for ( int i = 0; i < n; i++)
-                printf("    %1.20f,\n", eigRealDiff[i]);
-            printf("]\n");
-            printf("eigImagDiff = [\n");
-            for ( int i = 0; i < n; i++)
-                printf("    %1.20f,\n", eigImagDiff[i]);
-            printf("]\n");
+            printf("The 1 norm of eigRealDiff = %1.20f\n",normReal);
+            printf("The 1 norm of eigImagDiff = %1.20f\n",normImag);
 		}
         freeMemory();
         return 0;
