@@ -30,7 +30,7 @@ void qrIteration(int n, double* B, int en, int na, int l, double* s, double* x,
             *r = *r / *x;
         }
             double insideSqrt = *p * *p + *q * *q + *r * *r;
-            if (*p > 0.0) {
+            if (*p >= 0.0) {
                 *s = sqrt(insideSqrt);
             } else {
                 *s = -sqrt(insideSqrt);
