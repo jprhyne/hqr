@@ -1,0 +1,93 @@
+========
+cons & pros of real QR algorithm versus complex QR
+========
+
+cons of real
+- more complicated, 2x2 blocks, 1x1 block, tedious
+- you cannot shift with one complex eigenvalue (A-sigma I), (A-sigma1 I)(A-sigma2 I)= A^2-2Re(sigma)A + |sigma|I
+implicit Q theorem
+pros of real
+- complex conjugate pair (as theory), clear real 1x1 eigenvalues, more stable . . .
+- a*b in complex is 4 times a*b in real
+
+========
+What is a Schur form
+========
+(1)
+(2)
+(3) 
+
+========
+basic QR algorithm
+========
+QR => RQ => QR => RQ => 
+Linear convergence 
+2x2 blocks appear magically. 
+
+=====
+higher precision 
+====
+high precision for fun to study rate of convergence
+can get 1-256 in 9 iterations or so.
+
+
+===
+symmetric case
+===
+
+
+========
+2x2 blocks
+========
+
+[ 9 18
+[ -3 7 ]
+
+
+
+[ 8    7.28
+ -7.28 8 ]
+
+ 8+7.28 i 0 
+ 0         8-7.28i  ]
+
+
+
+a + bi 
+
+
+[ a  b
+  -d a ]
+
+We have
+   A =[a b; d a]; with b * d < 0.
+And 
+   B = [a sqrt(-b*d); -sqrt(-b*d) a];
+ 
+We know that A and B are similar because they have the same eigenvalues. 
+ 
+And so to go from A to B, 
+W = [ sqrt(-d/b) 0; 0 1 ]
+And then 
+B = W * A * inv(W)
+ 
+Here you go. Easy peasy. This is done in two_x_two_v0.m
+ 
+So why don’t LAPACK returns 2-by-2 blocks of the form:
+   B = [a sqrt(-b*d); -sqrt(-b*d) a];
+And returns 2-by-2 blocks of the form:
+   A =[a b; d a]; with b * d < 0.
+
+Because for any real matrix 2-by-2 X with complex conjugate pairs has eigenvalues, you can find a real orthogonal similarity transformation V such that 
+X = V * A * V^T
+ 
+And then to go from A to B you are non-orthogonal. 
+ 
+LAPACK only wants orthogonal similarity transformation, so LAPACK refuses to do the step A to B. LAPACK goes from X to A. LAPACK does not go from A to B.
+ 
+The routines that goes from X to A in LAPACK is LANV2. I will need to have another look at it. 
+ 
+I was not familiar with all this. 
+ 
+
+
