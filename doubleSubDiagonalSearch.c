@@ -13,7 +13,8 @@
  *  the index m is returned after this 
  */
 int doubleSubDiagonalSearch(int n, double* B, int en, int enm2, int l, double* s, 
-        double x, double y, double w, double* p, double* q, double* r, double* zz)
+        double x, double y, double w, double* p, double* q, double* r, double* zz,
+        int eigenVectorFlag)
 {
     int m;
     for (int mm = l; mm <= enm2; mm++) {

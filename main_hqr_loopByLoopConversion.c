@@ -16,6 +16,7 @@ double* A;
 double* B;
 double* wr;
 double* wi;
+double* z;
 double* eigenValsReal;
 double* eigenValsImag;
 
@@ -29,21 +30,24 @@ double* eigenValsImag;
 extern void hqr_( int* nm, int* n, int* low, int* igh,
 	double* h, double* wr, double* wi, int* ierr);
 
+extern void hqr2_(int* nm, int* n, int* low, int* igh,
+	double* h, double* wr, double* wi, double* z, int* ierr);
+
 /*
  * This function is going to be similar to the one above, however
  * we are instead copying one loop at a time
  */
 extern void qrIteration(int n, double* h, int en, int na, int l, double* s,
         double* x, double* y, double* p, double* q, double* r, double* zz,
-        int m);
+        int m, int eigenVectorFlag);
 
 extern int formShift(int n, int low, double* B, int* ierr, int its, int itn,
-        int en, int l, double* s, double* t, double* x, double* y, double* w);
+        int en, int l, double* s, double* t, double* x, double* y, double* w, int eigenVectorFlag);
 
-extern int subDiagonalSearch(int n, int low, double* B, int en, double norm, double* s);
+extern int subDiagonalSearch(int n, int low, double* B, int en, double norm, double* s, int eigenVectorFlag);
 
 extern int doubleSubDiagonalSearch(int n, double* B, int en, int enm2, int l, double* s, double x,
-        double y, double w, double* p, double* q, double* r, double* zz);
+        double y, double w, double* p, double* q, double* r, double* zz, int eigenVectorFlag);
 
 void usage()
 {
@@ -52,9 +56,10 @@ void usage()
     printf("\t\tThe default value is 20\n");
     printf("\t-v: verbose flag that prints out the results of eispack hqr\n");
     printf("\t\tBy default, nothing is printed to the console\n");
-	printf("\t-t: testing flag that only prints the expected vs the");
-	printf("\t\tactual computed eigenvalues.");
+    printf("\t-t: testing flag that only prints the expected vs the");
+    printf("\t\tactual computed eigenvalues.");
     printf("\t-h: Print this help dialogue\n");
+    printf("\t--jobv: Flag that tells us to compute the Schur vectors");
 }
 
 void freeMemory()
@@ -63,6 +68,7 @@ void freeMemory()
     free(B);
     free(wr);
     free(wi);
+    free(z);
     free(eigenValsReal);
     free(eigenValsImag);
 }
@@ -81,7 +87,8 @@ int main(int argc, char ** argv) {
          * By default, we do not do this
          */
         int printFlag = 0;
-		int testFlag = 0;
+	int testFlag = 0;
+        int eigenVectorFlag = 0;
 
 	// Seeds the random number generator for repeatability
 	srand(734);
@@ -105,9 +112,10 @@ int main(int argc, char ** argv) {
             } else if ( strcmp ( *(argv + i), "-v") == 0) {
                 printFlag=1;
             } else if ( strcmp ( *(argv + i), "-t") == 0) {
-				testFlag=1;
-			}
-
+		testFlag=1;
+	    } else if ( strcmp ( *(argv + i), "--jobv") == 0) {
+                eigenVectorFlag=1;
+            }
 	}
         // arrays that will hold the differences in the eigenvalues of hqr
         // and this implementation
@@ -208,9 +216,9 @@ beginEigSearch_60:
         na = en - 1;
         enm2 = na -1;
 subDiagonalSearch_70:
-        l = subDiagonalSearch(n,low,B,en,norm,&s);
+        l = subDiagonalSearch(n,low,B,en,norm,&s,eigenVectorFlag);
 formShift_100:
-        retVal = formShift(n,low, B, &ierr, its, itn, en, l, &s, &t, &x, &y, &w);
+        retVal = formShift(n,low, B, &ierr, its, itn, en, l, &s, &t, &x, &y, &w,eigenVectorFlag);
         // In order to emulate the behavior of the fortran code, instead 
         // of jumping to the right code inside there, we instead set a
         // return value and check what it is on exit
@@ -242,9 +250,9 @@ formShift_100:
 postExceptionalShift_130:
         its = its + 1;
         itn = itn - 1;
-        m = doubleSubDiagonalSearch(n, B, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
+        m = doubleSubDiagonalSearch(n, B, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz, eigenVectorFlag);
         // double qr step
-        qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
+        qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m, eigenVectorFlag);
         goto subDiagonalSearch_70;
 
 singleRoot_270:

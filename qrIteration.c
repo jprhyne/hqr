@@ -8,7 +8,8 @@ extern void hqr_qriter_(int* nm, int* n, double* h, int* en, int* na,
  * n: One dimension 
  */
 void qrIteration(int n, double* B, int en, int na, int l, double* s, double* x, 
-        double * y, double* p, double* q, double* r, double* zz, int m)
+        double * y, double* p, double* q, double* r, double* zz, int m, 
+        int eigenVectorFlag)
 {
     int i,j,k;
     bool notLast;
