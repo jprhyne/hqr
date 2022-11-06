@@ -19,6 +19,7 @@ double* wi;
 double* z;
 double* eigenValsReal;
 double* eigenValsImag;
+FILE* testingFile;
 
 /*
  * This is header is for the subroutine inside hqr.f
@@ -71,6 +72,7 @@ void freeMemory()
     free(z);
     free(eigenValsReal);
     free(eigenValsImag);
+    fclose(testingFile);
 }
 
 int main(int argc, char ** argv) {
@@ -91,7 +93,8 @@ int main(int argc, char ** argv) {
         int eigenVectorFlag = 0;
 
 	// Seeds the random number generator for repeatability
-	srand(734);
+        // Old seed was 734
+        int seed = 28;// Seed of 28 gives an error for k=6
 	// Default size of the matrix A
     	n = 20;
 	
@@ -115,8 +118,15 @@ int main(int argc, char ** argv) {
 		testFlag=1;
 	    } else if ( strcmp ( *(argv + i), "--jobv") == 0) {
                 eigenVectorFlag=1;
+            } else if ( strcmp ( *(argv + i), "-s") == 0) {
+                seed = atoi( *(argv + i + 1) ); 
+                if (seed <= 0)
+                    usage();
+                i++;
             }
 	}
+        testingFile = fopen("outputFileC.txt","w");
+        srand(seed);
         // arrays that will hold the differences in the eigenvalues of hqr
         // and this implementation
 	double eigRealDiff[n];
@@ -253,6 +263,15 @@ postExceptionalShift_130:
         m = doubleSubDiagonalSearch(n, B, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz, eigenVectorFlag);
         // double qr step
         qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m, eigenVectorFlag);
+        // For debugging purposes, we print out the contents of b1 to a file
+        for (int i = 1; i <= n; i++){
+            for (int j = 1; j < n; j++) {
+                fprintf(testingFile, "%1.20f,", b1(i,j));
+            }
+            fprintf(testingFile, "%1.20f\n", b1(i,j));
+        }
+        fprintf(testingFile, "\n");
+
         goto subDiagonalSearch_70;
 
 singleRoot_270:

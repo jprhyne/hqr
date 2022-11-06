@@ -88,5 +88,5 @@ void qrIteration(int n, double* B, int en, int na, int l, double* s, double* x,
                 }
             }
         }
+
 }
-    //hqr_qriter_(&n,&n,h,&en,&na,&l,s,x,y,p,q,r,zz,&m);
