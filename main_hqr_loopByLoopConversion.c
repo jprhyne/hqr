@@ -264,6 +264,7 @@ postExceptionalShift_130:
         // double qr step
         qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m, eigenVectorFlag);
         // For debugging purposes, we print out the contents of b1 to a file
+		/*
         for (int i = 1; i <= n; i++){
             for (int j = 1; j < n; j++) {
                 fprintf(testingFile, "%1.20f,", b1(i,j));
@@ -271,7 +272,7 @@ postExceptionalShift_130:
             fprintf(testingFile, "%1.20f\n", b1(i,j));
         }
         fprintf(testingFile, "\n");
-
+		*/
         goto subDiagonalSearch_70;
 
 singleRoot_270:
@@ -348,8 +349,7 @@ endOfProgram_1001:
             }
             printf("]\n");
         } else if (testFlag) {
-            printf("The 1 norm of eigRealDiff = %1.20f\n",normReal);
-            printf("The 1 norm of eigImagDiff = %1.20f\n",normImag);
+            printf("Seed=%d, diff=%1.20f\n",seed,normReal + normImag);
 		}
         freeMemory();
         return 0;

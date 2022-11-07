@@ -61,6 +61,6 @@ if [ -f "results.txt" ]; then
 fi
 echo "" > results.txt
 for k in $(seq 1 "$numStep" "$numIter"); do
-	echo "For dimension k=$k" >> results.txt
+	echo -n "k=$k, " >> results.txt
 	./main_hqr_loopByLoopConversion.exe -t -n $k >> results.txt
 done

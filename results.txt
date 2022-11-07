@@ -1,25 +1,11 @@
 
-For dimension k=1
-The 1 norm of eigRealDiff = 0.00000000000000000000
-The 1 norm of eigImagDiff = 0.00000000000000000000
-For dimension k=2
-The 1 norm of eigRealDiff = 0.00000000000000000000
-The 1 norm of eigImagDiff = 0.00000000000000000000
-For dimension k=3
-The 1 norm of eigRealDiff = 0.00000000000000000000
-The 1 norm of eigImagDiff = 0.00000000000000000000
-For dimension k=4
-The 1 norm of eigRealDiff = 0.00000000000000000000
-The 1 norm of eigImagDiff = 0.00000000000000000000
-For dimension k=5
-The 1 norm of eigRealDiff = 0.00000000000000000000
-The 1 norm of eigImagDiff = 0.00000000000000000000
-For dimension k=6
-The 1 norm of eigRealDiff = 0.00000000000000000000
-The 1 norm of eigImagDiff = 0.00000000000000000000
-For dimension k=7
-The 1 norm of eigRealDiff = 0.00000000000000000000
-The 1 norm of eigImagDiff = 0.00000000000000000000
-For dimension k=8
-The 1 norm of eigRealDiff = 0.00000000000000000000
-The 1 norm of eigImagDiff = 0.00000000000000000000
+k=1, Seed=28, diff=0.00000000000000000000
+k=2, Seed=28, diff=0.00000000000000000000
+k=3, Seed=28, diff=0.00000000000000000000
+k=4, Seed=28, diff=0.00000000000000000000
+k=5, Seed=28, diff=0.00000000000000000000
+k=6, Seed=28, diff=0.00000000000000000000
+k=7, Seed=28, diff=0.00000000000000000000
+k=8, Seed=28, diff=0.00000000000000000000
+k=9, Seed=28, diff=0.00000000000000000000
+k=10, Seed=28, diff=0.00000000000000000000
