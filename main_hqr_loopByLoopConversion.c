@@ -134,12 +134,12 @@ int main(int argc, char ** argv) {
 
 	// Allocate the memory for A to be generated. It will contain n^2 
 	// elements where each element is a double precision floating point number
-	A = (double *) malloc( n * n *  sizeof(double));
-	B = (double *) malloc( n * n *  sizeof(double));
+	A = (double *) calloc( n * n,  sizeof(double));
+	B = (double *) calloc( n * n,  sizeof(double));
 	// Create a vector to store the real parts of the eigenvalues
-	wr = (double *) malloc( n *  sizeof(double));
+	wr = (double *) calloc( n,  sizeof(double));
 	// Create a vector to store the real parts of the eigenvalues
-	wi = (double *) malloc( n *  sizeof(double));
+	wi = (double *) calloc( n,  sizeof(double));
 
 	// Generate A as a random matrix.
  	for(i = 0; i < n; i++) {
@@ -191,8 +191,8 @@ int main(int argc, char ** argv) {
         // a C implementation of EISPACK's HQR.f where we move from an upper
         // Hessenberg matrix to the Schur form.
         
-        eigenValsReal = (double *) malloc(n * sizeof(double));
-        eigenValsImag = (double *) malloc(n * sizeof(double));
+        eigenValsReal = (double *) calloc(n, sizeof(double));
+        eigenValsImag = (double *) calloc(n, sizeof(double));
 
         int indexOfError = 0;
         double norm = 0;
@@ -268,7 +268,7 @@ postExceptionalShift_130:
             for (int j = 1; j < n; j++) {
                 fprintf(testingFile, "%1.20f,", b1(i,j));
             }
-            fprintf(testingFile, "%1.20f\n", b1(i,j));
+            fprintf(testingFile, "%1.20f\n", b1(i,n));
         }
         fprintf(testingFile, "\n");
 
