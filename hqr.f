@@ -208,6 +208,7 @@ c Here, we are adding a write command to help with debugging purposes
 c This writes out the entire matrix on a single line in memory order
 c so this will be column major (first n elements is the first column
 c not the first row
+c      write(*,*) h
       go to 70
 c     .......... one root found ..........
   270 wr(en) = x + t
