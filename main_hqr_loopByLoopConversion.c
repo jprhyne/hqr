@@ -72,7 +72,8 @@ void freeMemory()
     free(z);
     free(eigenValsReal);
     free(eigenValsImag);
-    fclose(testingFile);
+	if (testingFile)
+	    fclose(testingFile);
 }
 
 int main(int argc, char ** argv) {
@@ -89,7 +90,7 @@ int main(int argc, char ** argv) {
          * By default, we do not do this
          */
         int printFlag = 0;
-	int testFlag = 0;
+		int testFlag = 0;
         int eigenVectorFlag = 0;
 
 	// Seeds the random number generator for repeatability
@@ -125,7 +126,8 @@ int main(int argc, char ** argv) {
                 i++;
             }
 	}
-        testingFile = fopen("outputFileC.txt","w");
+		//Uncomment if we want to test the output of qrIteration.c
+		//testingFile = fopen("outputFileC.txt","w");
         srand(seed);
         // arrays that will hold the differences in the eigenvalues of hqr
         // and this implementation
@@ -349,7 +351,7 @@ endOfProgram_1001:
             }
             printf("]\n");
         } else if (testFlag) {
-            printf("Seed=%d, diff=%1.20f\n",seed,normReal + normImag);
+            printf("Seed=%d, diff=%1.20f, diff is 0: %d\n",seed,normReal + normImag,normReal + normImag == 0.0);
 		}
         freeMemory();
         return 0;
