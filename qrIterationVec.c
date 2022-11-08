@@ -1,4 +1,5 @@
 #define b1(i,j) B[(i - 1) + (j - 1) * n]
+#define z1(i,j) Z[(i - 1) + (j - 1) * n]
 #include<stdbool.h>
 #include<math.h>
 extern void hqr_qriter_(int* nm, int* n, double* h, int* en, int* na,
@@ -7,8 +8,9 @@ extern void hqr_qriter_(int* nm, int* n, double* h, int* en, int* na,
 /**
  * n: One dimension 
  */
-void qrIteration(int n, double* B, int en, int na, int l, double* s, double* x, 
-        double * y, double* p, double* q, double* r, double* zz, int m)
+void qrIterationVec(int n, double* B, int en, int na, int l, double* s, double* x, 
+        double * y, double* p, double* q, double* r, double* zz, int m, int low,
+        int igh, double *Z)
 {
     int i,j,k;
     bool notLast;
@@ -47,7 +49,6 @@ void qrIteration(int n, double* B, int en, int na, int l, double* s, double* x,
             *q = *q / *p;
             *r = *r / *p;
             if (notLast) {
-                // Try doing nothing depending on behavior
 //c     .......... row modification ..........
                 for (j = k; j <= en; j++) {
                     *p = b1(k,j) + *q * b1(k+1,j) + *r * b1(k+2,j);
@@ -60,13 +61,19 @@ void qrIteration(int n, double* B, int en, int na, int l, double* s, double* x,
                 } else {
                     j = k+3;
                 }
+//c     .......... column modification ..........
                 for (i = l; i <= j; i++) {
                     *p = *x * b1(i,k) + *y * b1(i,k+1) + *zz * b1(i,k+2);
                     b1(i,k) = b1(i,k) - *p;
                     b1(i,k+1) = b1(i,k+1) - *p * *q;
                     b1(i,k+2) = b1(i,k+2) - *p * *r;
                 }
-//c     .......... column modification ..........
+//c     .......... accumulate transformations  ..........
+                for (i = low; i <= igh; i++) {
+                    *p = *x * z1(i,k) + *y * z1(i,k+1);
+                    z1(i,k) = z1(i,k) - *p;
+                    z1(i, k + 1) = z1(1,k+1) - *p * *q;
+                }
             } else {
 //c     .......... row modification ..........
                 for (j = k; j <= en; j++) {
@@ -84,6 +91,13 @@ void qrIteration(int n, double* B, int en, int na, int l, double* s, double* x,
                     *p = *x * b1(i,k) + *y * b1(i,k+1);
                     b1(i,k) = b1(i,k) - *p;
                     b1(i,k+1) = b1(i,k+1) - *p * *q;
+                }
+//c     .......... accumulate transformations  ..........
+                for (i = low; i <= igh; i++) {
+                    *p = *x * z1(i,k) + *y * z1(i,k+1) + *zz * z1(i,k+2);
+                    z1(i,k) = z1(i,k) - *p;
+                    z1(i, k + 1) = z1(1,k+1) - *p * *q;
+                    z1(i, k + 1) = z1(1,k+1) - *p * *r;
                 }
             }
         }

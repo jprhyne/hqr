@@ -11,12 +11,5 @@ This repository works on transcribing hqr.f and hqr2.f from eispack into C to co
 * Clean up existing Code
 * Make sure comments on all of my stuff is clear
 
-# Analysis of testing results 
-After running the testing cases for n=1,...,500 there are meaningful differences between the real parts of the eigenvalues.
-This is likely due to an ordering issue, maybe look into this if worthwhile? The differences in the imaginary part are always
-less than 10^{-16}
-
-Fixed issue that was causing errors in the k=5 case. This was an edge case of dsign not being properly handled. Still looking into other issues
-
 # License
 This repository is to be released under GPLv3 (or later). More information can be found in the LICENSE file and at https://www.gnu.org/licenses/gpl.txt

@@ -15,8 +15,7 @@
  *  Outputs:
  */
 int formShift(int n, int low, double* B, int* ierr, int its, int itn,
-        int en, int l, double* s, double* t, double* x, double* y, double* w,
-        int eigenVectorFlag)
+        int en, int l, double* s, double* t, double* x, double* y, double* w)
 {
     int retVal = 0;
     int ione = 1;

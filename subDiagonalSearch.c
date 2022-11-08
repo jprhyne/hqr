@@ -13,8 +13,7 @@
  * have c being small enough such that a*d + c = a*d
  * in machine arithmetic
  */
-int subDiagonalSearch(int n, int low, double* B, int en, double norm, double* s,
-        int eigenVectorFlag)
+int subDiagonalSearch(int n, int low, double* B, int en, double norm, double* s)
 {
     int l;
     for (int ll = low; ll <= en; ll++) {
