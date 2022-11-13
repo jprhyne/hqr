@@ -1,15 +1,10 @@
 #include <stdlib.h>
-qrIteration(int n, double* h, int en, int na, int l, double* s,
-        double* x, double* y, double* p, double* q, double* r, double* zz,
-        int m);
 
-extern int formShift(int n, int low, double* B, int* ierr, int its, int itn,
-        int en, int l, double* s, double* t, double* x, double* y, double* w);
+#define a0(i,j) A[(i) + (j) * n]
+#define z0(i,j) z[(i) + (j) * n]
 
-extern int subDiagonalSearch(int n, int low, double* B, int en, double norm, double* s);
-
-extern int doubleSubDiagonalSearch(int n, double* B, int en, int enm2, int l, double* s, double x,
-        double y, double w, double* p, double* q, double* r, double* zz);
+extern void hqr2_(int *nm,int *n,int *low,int *igh, double *h, double *wr,
+        double *wi, double *z, int *ierr)
 
 void usage()
 {
@@ -137,7 +132,7 @@ int main(int argc, char ** argv) {
             }
             printf("]\n");
         }
-	hqr_( &n, &n, &ione, &n, A, wr, wi, &ierr);
+	hqr2_( &n, &n, &ione, &n, A, wr, wi, z, &ierr);
 	/*
 	 * Below prints out wr and wi for inspection via 
 	 * MATLAB/visual inspection
@@ -151,173 +146,14 @@ int main(int argc, char ** argv) {
             for ( int i = 0; i < n; i++)
                 printf("    %5.8f,\n", wi[i]);
             printf("]\n");
-        }
-
-        // Now, we write our version. This next section is just
-        // a C implementation of EISPACK's HQR.f where we move from an upper
-        // Hessenberg matrix to the Schur form.
-        
-        eigenValsReal = (double *) malloc(n * sizeof(double));
-        eigenValsImag = (double *) malloc(n * sizeof(double));
-
-        int indexOfError = 0;
-        double norm = 0;
-        int k = 1;
-        // These deal with our boundary conditions
-        int low = 1;
-        int igh = n;
-        int en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal,mp2;
-        double x,y,z,t,w,s,r,q,p,zz,tst1,tst2;
-        // Converting one section at a time
-        // This section is not being used in our case until a version of
-        // balance is ported
-        for (i = 1; i <= n; i++) {
-            for (j = k; j <= n; j++) {
-                norm += fabs(b1(i,j));
-            }
-            k = i;
-            if (i >= low && i <= igh)
-                continue;
-            eigenValsReal[i-1] = b1(i,i);
-            eigenValsImag[i-1] = 0.0;
-        }
-        //initializing some variables
-        en = igh;
-        t = 0.0;
-        itn = 30 * n;
-beginEigSearch_60:
-        if (en < low)
-            goto endOfProgram_1001;
-        its = 0;
-        na = en - 1;
-        enm2 = na -1;
-subDiagonalSearch_70:
-        l = subDiagonalSearch(n,low,B,en,norm,&s);
-formShift_100:
-        retVal = formShift(n,low, B, &ierr, its, itn, en, l, &s, &t, &x, &y, &w);
-        // In order to emulate the behavior of the fortran code, instead 
-        // of jumping to the right code inside there, we instead set a
-        // return value and check what it is on exit
-        // if retVal did not change from 0, we went through the entire
-        // form shift section
-        // if retVal is 1, then we found a single root
-        // if retVal is 2, then we found a double root
-        // if retVal is 3, then we did not converge and terminate with error
-        switch (retVal) {
-            case 0: 
-                // full termination
-                break;
-            case 1: 
-                // single root
-                goto singleRoot_270;
-            case 2:
-                // double root
-                goto doubleRoot_280;
-            case 3:
-                // Error termination
-                goto errorThenEnd_1000;
-            default:
-                // This should never happen, so if it does we free memory
-                // print an error message, then terminate.
-                freeMemory();
-                printf("Error in fortran subroutine. Check if assignment of retVal is correct\n");
-                return 2;
-        }
-postExceptionalShift_130:
-        its = its + 1;
-        itn = itn - 1;
-        m = doubleSubDiagonalSearch(n, B, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
-        // double qr step
-        qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
-        // For debugging purposes, we print out the contents of b1 to a file
-		/*
-        for (int i = 1; i <= n; i++){
-            for (int j = 1; j < n; j++) {
-                fprintf(testingFile, "%1.20f,", b1(i,j));
-            }
-            fprintf(testingFile, "%1.20f\n", b1(i,j));
-        }
-        fprintf(testingFile, "\n");
-		*/
-        goto subDiagonalSearch_70;
-
-singleRoot_270:
-        b1(en,en) = x + t;
-        eigenValsReal[en - 1] = b1(en,en);
-        eigenValsImag[en - 1] = 0;
-        en = na;
-        goto beginEigSearch_60;
-doubleRoot_280:
-        p = (y - x) / 2.0;
-        q = p * p + w;
-        zz = sqrt(fabs(q));
-        x = x + t;
-        if (q < 0)
-            goto complexPair_320;
-        // real pair
-        if (p >= 0)
-            zz = p + zz;
-        else 
-            zz = p - zz;
-        eigenValsReal[na - 1] = x + zz;
-        eigenValsReal[en - 1] = eigenValsReal[na - 1];
-        if (zz != 0)
-            eigenValsReal[en - 1] = x - w / zz;
-        eigenValsImag[na - 1] = 0;
-        eigenValsImag[en - 1] = 0;
-        goto postDoubleRoot_330;
-complexPair_320:
-        eigenValsReal[na - 1] = x + p;
-        eigenValsReal[en - 1] = x + p;
-        eigenValsImag[na - 1] = zz;
-        eigenValsImag[en - 1] = -zz;
-postDoubleRoot_330:
-        en = enm2;
-        goto beginEigSearch_60;
-errorThenEnd_1000:
-        indexOfError = en; 
-endOfProgram_1001:
-	for (int i = 0; i < n; i++) {
-            eigRealDiff[i] = eigenValsReal[i] - wr[i];
-            eigImagDiff[i] = eigenValsImag[i] - wi[i];
-	}
-        // Compute the 1-norms of eigRealDiff and eigImagDiff
-        double normReal = 0.;
-        double normImag = 0.;
-        for (int i = 0; i < n; i ++) {
-            if (eigRealDiff[i] != 0.)
-                normReal += fabs(eigRealDiff[i]);
-            if (eigImagDiff[i] != 0.)
-                normImag += fabs(eigImagDiff[i]);
-        }
-        if (printFlag && !testFlag){
-            printf("eigValReal = [\n");
-            for ( int i = 0; i < n; i++)
-                printf("    %5.8f,\n", eigenValsReal[i]);
-            printf("]\n");
-            printf("eigValImag = [\n");
-            for ( int i = 0; i < n; i++)
-                printf("    %5.8f,\n", eigenValsImag[i]);
-            printf("]\n");
-            printf("eigRealDiff = [\n");
-            for ( int i = 0; i < n; i++)
-                printf("    %1.20f,\n", eigRealDiff[i]);
-            printf("]\n");
-            printf("eigImagDiff = [\n");
-            for ( int i = 0; i < n; i++)
-                printf("    %1.20f,\n", eigImagDiff[i]);
-            printf("]\n");
-            printf("B = [\n");
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    printf("%3.8f,", b0(i,j));
+            printf("z = [\n");
+            for ( int i = 0; i < n; i++ ) {
+                for (int j = 0; j < n; j++ ) {
+                    printf("%3.8f, ",z0(i,j));
                 }
                 printf("\n");
             }
             printf("]\n");
-        } else if (testFlag) {
-            printf("Seed=%d, diff=%1.20f, diff is 0: %d\n",seed,normReal + normImag,normReal + normImag == 0.0);
-		}
-        freeMemory();
-        return 0;
+        }
+
 }
