@@ -1,5 +1,25 @@
 #include <stdlib.h>
-qrIteration(int n, double* h, int en, int na, int l, double* s,
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#define _PB_N n
+#define SCALAR_VAL(x) x
+#define b0(i,j) B[(i) + (j) * n]
+#define a0(i,j) A[(i) + (j) * n]
+#define b1(i,j) B[(i - 1) + (j - 1) * n]
+#define a1(i,j) A[(i - 1) + (j - 1) * n]
+
+// This may be bad practice, but we put all malloc'd entities
+// as global variables in order to make freeing the
+// memory easier
+double* A;
+double* B;
+double* wr;
+double* wi;
+double* eigenValsReal;
+double* eigenValsImag;
+
+extern int qrIteration(int n, double* h, int en, int na, int l, double* s,
         double* x, double* y, double* p, double* q, double* r, double* zz,
         int m);
 
@@ -30,11 +50,8 @@ void freeMemory()
     free(B);
     free(wr);
     free(wi);
-    free(z);
     free(eigenValsReal);
     free(eigenValsImag);
-	if (testingFile)
-	    fclose(testingFile);
 }
 
 int main(int argc, char ** argv) {
@@ -105,8 +122,6 @@ int main(int argc, char ** argv) {
 	// Create a vector to store the real parts of the eigenvalues
 	wi = (double *) malloc( n *  sizeof(double));
 
-        z = (double *) malloc( n * n * sizeof(double));
-
 	// Generate A as a random matrix.
  	for(i = 0; i < n; i++) {
             int start = 0;
@@ -137,7 +152,6 @@ int main(int argc, char ** argv) {
             }
             printf("]\n");
         }
-	hqr_( &n, &n, &ione, &n, A, wr, wi, &ierr);
 	/*
 	 * Below prints out wr and wi for inspection via 
 	 * MATLAB/visual inspection
