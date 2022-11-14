@@ -27,19 +27,15 @@
  * Note: we use malloc to create C, so if it is not null, 
  * the user must remember to free the memory.
  */
-double *matmul(double *A, int nA, int mA, double *B, int nB, int mB) {
-    if (mA != nB) {
+double *matsub(double *A, int nA, int mA, double *B, int nB, int mB) {
+    if (nA != nB || mA != mB) {
         // This means multiplication is not defined, so return null
         return NULL;
     }
-    double *C = (double *) malloc(nA * mB * sizeof(double)); 
+    double *C = (double *) malloc(nA * mA * sizeof(double)); 
     for (int i = 0; i < nA; i++) {
-        for (int j = 0; j < mB; j++) {
-            double sum = 0.0;
-            for (int k = 0; k < mA; k++) {
-                sum += a0(i,k) * b0(k,j);
-            }
-            c0(i,j) = sum;
+        for (int j = 0; j < mA; j++) {
+			c0(i,j) = a0(i,j) - b0(i,j);
         }
     }
     return C;

@@ -1,14 +1,32 @@
 #include <stdlib.h>
-
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
 #define a0(i,j) A[(i) + (j) * n]
+#define b0(i,j) B[(i) + (j) * n]
 #define z0(i,j) z[(i) + (j) * n]
 
+// This may be bad practice, but we put all malloc'd entities
+// as global variables in order to make freeing the
+// memory easier
+double* A;
+double* B;
+double* wr;
+double* wi;
+double* z;
+double* eigenValsReal;
+double* eigenValsImag;
+
+extern double*matmul(double*A, int nA, int mA, double *B, int nB, int mB);
+
+extern double*matsub(double*A, int nA, int mA, double *B, int nB, int mB);
+
 extern void hqr2_(int *nm,int *n,int *low,int *igh, double *h, double *wr,
-        double *wi, double *z, int *ierr)
+        double *wi, double *z, int *ierr);
 
 void usage()
 {
-    printf("main_hqr_test.exe [-n sizeOfMatrix | -v | -h]\n");
+    printf("test_hqr2_fortran.exe [-n sizeOfMatrix | -v | -h]\n");
     printf("\t-n: The following argument must be a positive integer\n");
     printf("\t\tThe default value is 20\n");
     printf("\t-v: verbose flag that prints out the results of eispack hqr\n");
@@ -16,7 +34,7 @@ void usage()
     printf("\t-t: testing flag that only prints the expected vs the");
     printf("\t\tactual computed eigenvalues.");
     printf("\t-h: Print this help dialogue\n");
-    printf("\t--jobv: Flag that tells us to compute the Schur vectors");
+    printf("\t--jobv: Flag that tells us to compute the eigenvectors");
 }
 
 void freeMemory()
@@ -28,8 +46,6 @@ void freeMemory()
     free(z);
     free(eigenValsReal);
     free(eigenValsImag);
-	if (testingFile)
-	    fclose(testingFile);
 }
 
 int main(int argc, char ** argv) {
@@ -155,5 +171,8 @@ int main(int argc, char ** argv) {
             }
             printf("]\n");
         }
+		// Check that AV = VH
+		double *leftMat = matmul(B,n,n,z,n,n);
+		double *rightMat = matmul(z,n,n,A,n,n);
 
 }
