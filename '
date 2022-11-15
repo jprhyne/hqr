@@ -8,7 +8,6 @@
 #define a0(i,j) A[(i) + (j) * n]
 #define b1(i,j) B[(i - 1) + (j - 1) * n]
 #define a1(i,j) A[(i - 1) + (j - 1) * n]
-#define z1(i,j) A[(i - 1) + (j - 1) * n]
 
 // This may be bad practice, but we put all malloc'd entities
 // as global variables in order to make freeing the
@@ -20,7 +19,6 @@ double* wi;
 double* z;
 double* eigenValsReal;
 double* eigenValsImag;
-double* eigenMatrix;
 
 extern int qrIteration(int n, double* h, int en, int na, int l, double* s,
         double* x, double* y, double* p, double* q, double* r, double* zz,
@@ -59,7 +57,6 @@ void freeMemory()
     free(z);
     free(eigenValsReal);
     free(eigenValsImag);
-    free(eigenMatrix);
 }
 
 int main(int argc, char ** argv) {
@@ -131,7 +128,6 @@ int main(int argc, char ** argv) {
 	wi = (double *) malloc( n *  sizeof(double));
 
         z = (double *) malloc( n * n * sizeof(double));
-        eigenMatrix = (double *) malloc( n * n * sizeof(double));
 
 	// Generate A as a random matrix.
  	for(i = 0; i < n; i++) {
@@ -213,7 +209,7 @@ int main(int argc, char ** argv) {
         itn = 30 * n;
 beginEigSearch_60:
         if (en < low)
-            goto backSub_340;
+            goto endOfProgram_1001;
         its = 0;
         na = en - 1;
         enm2 = na -1;
@@ -254,10 +250,7 @@ postExceptionalShift_130:
         itn = itn - 1;
         m = doubleSubDiagonalSearch(n, B, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
         // double qr step
-        if (eigenVectorFlag) 
-            qrIterationVec(n,B,en,na,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,eigenMatrix);
-        else 
-            qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
+        qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
         // For debugging purposes, we print out the contents of b1 to a file
 		/*
         for (int i = 1; i <= n; i++){
@@ -301,23 +294,10 @@ doubleRoot_280:
         r = sqrt(p*p + q*q);
         p = p/r;
         q = q/r;
-//c     .......... row modification ..........
         for (j = na; j <= n; j++) {
             zz = b1(na,j);
             b1(na,j) = q * zz + p * b1(en,j);
             b1(en,j) = q * b1(en,j) - p * zz;
-        }
-//c     .......... column modification ..........
-        for (i = 1; i <= en; i++) {
-            zz = b1(i,na);
-            b1(i,na) = q * zz + p * b1(i,en);
-            b1(i,en) = q * b1(i,en) - p * zz;
-        }
-//c     .......... accumulate transformations ..........
-        for (i = low, i <= igh; i++) {
-            zz = z1(i,na);
-            z1(i,na) = q * zz + p * z1(i,en);
-            z1(i,en) = q * z1(i,en) - p * zz;
         }
         goto postDoubleRoot_330;
 complexPair_320:
@@ -328,37 +308,6 @@ complexPair_320:
 postDoubleRoot_330:
         en = enm2;
         goto beginEigSearch_60;
-backSub_340:
-        if (norm == 0.)
-            goto endOfProgram_1001;
-        for (int nn = 1; nn <= n; nn++) {
-            en = n + 1 - nn;
-            p = eigenValsReal[en];
-            q = eigenValsImag[en];
-            na = en -1;
-            if (q) {
-                //Do something?
-                //fortran says if (q) 710, 600, 800
-            }
-a600:       m = en;
-            b1(en,en) = 1.0;
-            if (n == 0.0) {
-                goto b800;
-            }
-            for (int ii = 1; ii <= na; ii++) {
-                i = en - ii;
-                w = b1(i,i) - p;
-                r = 0.0;
-                for (j = m; j<= en; j++)
-                    r = r + b1(i,j) * b1(j,en);
-                if (eigenValsImag[i] >= 0.0)
-                    goto c630;
-                zz = w;
-                s = r;
-                continue;
-c630:           m = i;
-            }
-        }
 errorThenEnd_1000:
         indexOfError = en; 
 endOfProgram_1001:

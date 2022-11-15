@@ -40,13 +40,13 @@ main_hqr_loopByLoopConversion.o: main_hqr_loopByLoopConversion.c
 	$(CC) -c main_hqr_loopByLoopConversion.c -lm -g
 
 test_hqr2_fortran.o: test_hqr2_fortran.c
-	$(CC) -c $@ $^ -lm -g
+	$(CC) -c $^ -lm -g
 
 matmul.o: matmul.c
-	$(CC) -c $@ $^
+	$(CC) -c $^ 
 
 matsub.o: matsub.c
-	$(CC) -c $@ $^
+	$(CC) -c $^ 
 
 main_hqr_loopByLoopConversion.exe: main_hqr_loopByLoopConversion.o formShift.o hqr.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o hqr2.o cdiv.o
 	$(FC) -o $@ $^

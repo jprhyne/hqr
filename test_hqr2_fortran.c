@@ -171,8 +171,30 @@ int main(int argc, char ** argv) {
             }
             printf("]\n");
         }
-		// Check that AV = VH
-		double *leftMat = matmul(B,n,n,z,n,n);
-		double *rightMat = matmul(z,n,n,A,n,n);
-
+	// Check that AV = VH
+        double *leftMat = matmul(B,n,n,z,n,n);
+        double *rightMat = matmul(z,n,n,A,n,n);
+        double *diffMat = matsub(leftMat,n,n,rightMat,n,n);
+        if (printFlag && !testFlag) {
+            printf("diffMat=[\n");
+            for ( int i = 0; i < n; i++ ) {
+                for (int j = 0; j < n; j++ ) {
+                    printf("%3.8f, ",diffMat[i + j * n]);
+                }
+                printf("\n");
+            }
+            printf("]\n");
+        } else if (testFlag) {
+            //compute the absolute sum of the elements of diffMat
+            double norm = 0.;
+            for ( int i = 0; i < n; i++ ) {
+                for (int j = 0; j < n; j++ ) {
+                    norm += diffMat[i + j * n];
+                }
+            }
+            printf("DiffMat has sum of absolute elements equal to 0: %d\n",norm == 0.0);
+        }
+        free(leftMat);
+        free(rightMat);
+        free(diffMat);
 }

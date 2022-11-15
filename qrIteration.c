@@ -1,9 +1,6 @@
 #define b1(i,j) B[(i - 1) + (j - 1) * n]
 #include<stdbool.h>
 #include<math.h>
-extern void hqr_qriter_(int* nm, int* n, double* h, int* en, int* na,
-        int* l, double* s, double* x, double* y,
-        double* p, double* q, double* r, double* zz, int* m);
 /**
  * n: One dimension 
  */
