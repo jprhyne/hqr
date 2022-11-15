@@ -3,8 +3,8 @@ This repository works on transcribing hqr.f and hqr2.f from eispack into C to co
 
 # TODO
 * Create a port of hqr2.f (Seems to be just a few more lines compared to hqr.f)
-	* Maybe have a flag that will run this extra functionality?
-	* Underestimated the time it would take to get this done. Will be done next week
+	* Implement cdiv.f
+    * Implement new blocks inside the check for flag
 * Remove goto statements (and preserve readibility)
 * Create a single file hqr.c (keep the subroutines structure too)
 * Run timing comparisons against the Fortran77 subroutine
