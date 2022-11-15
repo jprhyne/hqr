@@ -351,12 +351,16 @@ a600:       m = en;
                 r = 0.0;
                 for (j = m; j<= en; j++)
                     r = r + b1(i,j) * b1(j,en);
-                if (eigenValsImag[i] >= 0.0)
-                    goto c630;
-                zz = w;
-                s = r;
-                continue;
-c630:           m = i;
+                if (eigenValsImag[i] < 0.0) {
+                    zz = w;
+                    s = r;
+                    continue;
+                }
+                m = i;
+                if (eigenValsImag[i] == 0) {
+                    t = w;
+                    if (
+                }
             }
         }
 errorThenEnd_1000:
