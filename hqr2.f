@@ -294,6 +294,9 @@ c     .......... for en=n step -1 until 1 do -- ..........
          p = wr(en)
          q = wi(en)
          na = en - 1
+c       if q < 0 goto 710
+c       if q == 0 goto 600
+c       if q > 0 goto 800
          if (q) 710, 600, 800
 c     .......... real vector ..........
   600    m = en

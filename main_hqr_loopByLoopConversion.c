@@ -213,8 +213,8 @@ int main(int argc, char ** argv) {
         // These deal with our boundary conditions
         int low = 1;
         int igh = n;
-        int en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal,mp2,ra,sa,vr,vi;
-        double x,y,z,t,w,s,r,q,p,zz,tst1,tst2;
+        int en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal,mp2;
+        double x,y,z,t,w,s,r,q,p,zz,tst1,tst2,ra,sa,vr,vi;
         // Converting one section at a time
         // This section is not being used in our case until a version of
         // balance is ported

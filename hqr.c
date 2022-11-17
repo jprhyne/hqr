@@ -1,26 +1,11 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#define _PB_N n
-#define SCALAR_VAL(x) x
-#define b0(i,j) B[(i) + (j) * n]
-#define b1(i,j) B[(i - 1) + (j - 1) * n]
-
-// This may be bad practice, but we put all malloc'd entities
-// as global variables in order to make freeing the
-// memory easier
-double* B;
-double* eigenValsReal;
-double* eigenValsImag;
-
-/*
- * This function is going to be similar to the one above, however
- * we are instead copying one loop at a time
- */
-extern void qrIteration(int n, double* h, int en, int na, int l, double* s,
+#define a1(i,j) A[(i - 1) + (j - 1) * n]
+extern int qrIteration(int n, double* B, int en, int na, int l, double* s,
         double* x, double* y, double* p, double* q, double* r, double* zz,
         int m);
+
+extern int qrIterationVec(int n, double* B, int en, int na, int l, double* s,
+        double* x, double* y, double* p, double* q, double* r, double* zz,
+        int m, int low, int igh, double* eigenMatrix);
 
 extern int formShift(int n, int low, double* B, int* ierr, int its, int itn,
         int en, int l, double* s, double* t, double* x, double* y, double* w);
@@ -30,7 +15,10 @@ extern int subDiagonalSearch(int n, int low, double* B, int en, double norm, dou
 extern int doubleSubDiagonalSearch(int n, double* B, int en, int enm2, int l, double* s, double x,
         double y, double w, double* p, double* q, double* r, double* zz);
 
-int hqr(int n, double *B, double *eigenValsReal, double *eigenValsImag) {
+extern void cdiv(double ar, double ai, double br, double bi, double *cr, double *ci); 
+
+int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag)
+{
         int indexOfError = 0;
         double norm = 0;
         int k = 1;
@@ -44,12 +32,12 @@ int hqr(int n, double *B, double *eigenValsReal, double *eigenValsImag) {
         // balance is ported
         for (i = 1; i <= n; i++) {
             for (j = k; j <= n; j++) {
-                norm += fabs(b1(i,j));
+                norm += fabs(a1(i,j));
             }
             k = i;
             if (i >= low && i <= igh)
                 continue;
-            eigenValsReal[i-1] = b1(i,i);
+            eigenValsReal[i-1] = a1(i,i);
             eigenValsImag[i-1] = 0.0;
         }
         //initializing some variables
@@ -57,8 +45,13 @@ int hqr(int n, double *B, double *eigenValsReal, double *eigenValsImag) {
         t = 0.0;
         itn = 30 * n;
 beginEigSearch_60:
-        if (en < low)
-            goto endOfProgram_1001;
+        if (en < low) {
+            if (eigenVectorFlag) {
+                goto backSub_340;
+            } else {
+                goto endOfProgram_1001;
+            }
+        }
         its = 0;
         na = en - 1;
         enm2 = na -1;
@@ -87,20 +80,17 @@ formShift_100:
             case 3:
                 // Error termination
                 goto errorThenEnd_1000;
-            default:
-                // This should never happen, so if it does we free memory
-                // print an error message, then terminate.
-                printf("Error in fortran subroutine. Check if assignment of retVal is correct\n");
-                return 2;
         }
 postExceptionalShift_130:
         its = its + 1;
         itn = itn - 1;
         m = doubleSubDiagonalSearch(n, B, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
         // double qr step
-        qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
+        if (schurVectorFlag) 
+            qrIterationVec(n,B,en,na,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,eigenMatrix);
+        else 
+            qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
         goto subDiagonalSearch_70;
-
 singleRoot_270:
         eigenValsReal[en - 1] = x + t;
         eigenValsImag[en - 1] = 0;
@@ -134,7 +124,6 @@ postDoubleRoot_330:
         en = enm2;
         goto beginEigSearch_60;
 errorThenEnd_1000:
-        indexOfError = en; 
 endOfProgram_1001:
-        return 0;
+        return en;
 }
