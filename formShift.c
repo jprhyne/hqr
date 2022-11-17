@@ -36,7 +36,7 @@ int formShift(int n, int low, double* B, int* ierr, int its, int itn,
     // if its is 10 or 20, then we perform an "exceptional" shift, otherwise
     // we terminate successfully
     if (its != 10 && its != 20) return 0;
-	*t = *t + *x;
+    *t = *t + *x;
     for (int i = low; i <= en; i++) 
         b1(i,i) -= *x;
     *s = fabs(b1(en,na)) + fabs(b1(na,enm2));

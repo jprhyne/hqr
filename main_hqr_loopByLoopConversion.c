@@ -2,13 +2,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
-#define _PB_N n
-#define SCALAR_VAL(x) x
 #define b0(i,j) B[(i) + (j) * n]
 #define a0(i,j) A[(i) + (j) * n]
 #define b1(i,j) B[(i - 1) + (j - 1) * n]
 #define a1(i,j) A[(i - 1) + (j - 1) * n]
-#define z1(i,j) A[(i - 1) + (j - 1) * n]
+#define z1(i,j) eigenMatrix[(i - 1) + (j - 1) * n]
 
 // This may be bad practice, but we put all malloc'd entities
 // as global variables in order to make freeing the
@@ -40,6 +38,9 @@ extern int doubleSubDiagonalSearch(int n, double* B, int en, int enm2, int l, do
 
 extern void hqr2_(int *nm, int *n, int *low, int *igh, double *h, double *wr,
         double *wi, double *z, int *ierr);
+
+extern void hqr_(int *nm, int *n, int *low, int *igh, double *h, double *wr,
+        double *wi, int *ierr);
 
 void usage()
 {
@@ -82,6 +83,7 @@ int main(int argc, char ** argv) {
         int printFlag = 0;
 	int testFlag = 0;
         int eigenVectorFlag = 0;
+        int schurVectorFlag = 0;
 
 	// Seeds the random number generator for repeatability
         // Old seed was 734
@@ -114,6 +116,8 @@ int main(int argc, char ** argv) {
                 if (seed <= 0)
                     usage();
                 i++;
+            } else if ( strcmp ( *(argv + i), "--schur" ) == 0 ) {
+                schurVectorFlag = 1;
             }
 	}
 		//Uncomment if we want to test the output of qrIteration.c
@@ -127,16 +131,20 @@ int main(int argc, char ** argv) {
 
 	// Allocate the memory for A to be generated. It will contain n^2 
 	// elements where each element is a double precision floating point number
-	A = (double *) malloc( n * n *  sizeof(double));
-	B = (double *) malloc( n * n *  sizeof(double));
+	A = (double *) calloc( n * n, sizeof(double));
+	B = (double *) calloc( n * n, sizeof(double));
 	// Create a vector to store the real parts of the eigenvalues
 	wr = (double *) malloc( n *  sizeof(double));
 	// Create a vector to store the real parts of the eigenvalues
 	wi = (double *) malloc( n *  sizeof(double));
 
-        z = (double *) malloc( n * n * sizeof(double));
-        eigenMatrix = (double *) malloc( n * n * sizeof(double));
-
+        z = (double *) calloc( n * n, sizeof(double)); //This needs to start as the identity matrix
+        eigenMatrix = (double *) calloc( n * n, sizeof(double));//This needs to start as the identity matrix
+        // Start z and eigenMatrix as the identity matrix
+        for (i = 0; i < n; i++) {
+            z[i + i * n] = 1;
+            eigenMatrix[i + i * n] = 1;
+        }
 	// Generate A as a random matrix.
  	for(i = 0; i < n; i++) {
             int start = 0;
@@ -167,7 +175,11 @@ int main(int argc, char ** argv) {
             }
             printf("]\n");
         }
-        hqr2_(&n, &n, &ione, &n, A, wr, wi, z, &ierr);
+        if (eigenVectorFlag || schurVectorFlag) {
+            hqr2_(&n, &n, &ione, &n, A, wr, wi, z, &ierr);
+        } else {
+            hqr_(&n,&n,&ione,&n,A,wr,wi,&ierr);
+        }
 	/*
 	 * Below prints out wr and wi for inspection via 
 	 * MATLAB/visual inspection
@@ -196,7 +208,7 @@ int main(int argc, char ** argv) {
         // These deal with our boundary conditions
         int low = 1;
         int igh = n;
-        int en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal,mp2;
+        int en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal,mp2,ra,sa,vr,vi;
         double x,y,z,t,w,s,r,q,p,zz,tst1,tst2;
         // Converting one section at a time
         // This section is not being used in our case until a version of
@@ -216,8 +228,13 @@ int main(int argc, char ** argv) {
         t = 0.0;
         itn = 30 * n;
 beginEigSearch_60:
-        if (en < low)
-            goto backSub_340;
+        if (en < low) {
+            if (eigenVectorFlag) {
+                goto backSub_340;
+            } else {
+                goto endOfProgram_1001;
+            }
+        }
         its = 0;
         na = en - 1;
         enm2 = na -1;
@@ -258,7 +275,7 @@ postExceptionalShift_130:
         itn = itn - 1;
         m = doubleSubDiagonalSearch(n, B, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
         // double qr step
-        if (eigenVectorFlag) 
+        if (eigenVectorFlag || schurVectorFlag) 
             qrIterationVec(n,B,en,na,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,eigenMatrix);
         else 
             qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
@@ -275,8 +292,10 @@ postExceptionalShift_130:
         goto subDiagonalSearch_70;
 
 singleRoot_270:
-        b1(en,en) = x + t;
-        eigenValsReal[en - 1] = b1(en,en);
+        if (eigenVectorFlag) {
+            b1(en,en) = x + t;
+        }
+        eigenValsReal[en - 1] = x + t;
         eigenValsImag[en - 1] = 0;
         en = na;
         goto beginEigSearch_60;
@@ -298,30 +317,32 @@ doubleRoot_280:
             eigenValsReal[en - 1] = x - w / zz;
         eigenValsImag[na - 1] = 0;
         eigenValsImag[en - 1] = 0;
-        x = b1(en,na);
-        s = fabs(x) + fabs(zz);
-        p = x / s;
-        q = zz / s;
-        r = sqrt(p*p + q*q);
-        p = p/r;
-        q = q/r;
+        if (eigenVectorFlag) {
+            x = b1(en,na);
+            s = fabs(x) + fabs(zz);
+            p = x / s;
+            q = zz / s;
+            r = sqrt(p*p + q*q);
+            p = p/r;
+            q = q/r;
 //c     .......... row modification ..........
-        for (j = na; j <= n; j++) {
-            zz = b1(na,j);
-            b1(na,j) = q * zz + p * b1(en,j);
-            b1(en,j) = q * b1(en,j) - p * zz;
-        }
+            for (j = na; j <= n; j++) {
+                zz = b1(na,j);
+                b1(na,j) = q * zz + p * b1(en,j);
+                b1(en,j) = q * b1(en,j) - p * zz;
+            }
 //c     .......... column modification ..........
-        for (i = 1; i <= en; i++) {
-            zz = b1(i,na);
-            b1(i,na) = q * zz + p * b1(i,en);
-            b1(i,en) = q * b1(i,en) - p * zz;
-        }
+            for (i = 1; i <= en; i++) {
+                zz = b1(i,na);
+                b1(i,na) = q * zz + p * b1(i,en);
+                b1(i,en) = q * b1(i,en) - p * zz;
+            }
 //c     .......... accumulate transformations ..........
-        for (i = low, i <= igh; i++) {
-            zz = z1(i,na);
-            z1(i,na) = q * zz + p * z1(i,en);
-            z1(i,en) = q * z1(i,en) - p * zz;
+            for (i = low; i <= igh; i++) {
+                zz = z1(i,na);
+                z1(i,na) = q * zz + p * z1(i,en);
+                z1(i,en) = q * z1(i,en) - p * zz;
+            }
         }
         goto postDoubleRoot_330;
 complexPair_320:
@@ -364,134 +385,135 @@ a600:       m = en;
                 if (eigenValsImag[i - 1] == 0) {
                     t = w;
                     if ( t == 0.0 ) {
-						do {
-							tst1 = norm;
-							t = tst1;
-							t = 0.01 * t;
-							tst2 = norm + t;
-						} while (tst2 > tst1);
-						b1(i,en) = -r / t;
-					}
-					goto overflowControl_680;
+                        do {
+                            tst1 = norm;
+                            t = tst1;
+                            t = 0.01 * t;
+                            tst2 = norm + t;
+                        } while (tst2 > tst1);
+                        b1(i,en) = -r / t;
+                    }
+                    goto overflowControl_680;
                 }
 //c			.......... solve real equations ..........
-				x = b1(i,i+1);
-				y = b1(i+1,i);
-				q = (eigenValsReal[i - 1] - p) * (eigenValsReal[i - 1] - p) + eigenValsImag[i - 1] * eigenValsImag[i - 1];
-				t = (x * s - zz * r) / q;
-				b1(i,en) = t;
-				if (fabs(x) > fabs(zz)) {
-					b1(i+1, en) = (-r - w * t) / x;
-				} else {
-					b1(i + 1, en) = (-s - y * t) / zz;
-				}
+                x = b1(i,i+1);
+                y = b1(i+1,i);
+                q = (eigenValsReal[i - 1] - p) * (eigenValsReal[i - 1] - p) + eigenValsImag[i - 1] * eigenValsImag[i - 1];
+                t = (x * s - zz * r) / q;
+                b1(i,en) = t;
+                if (fabs(x) > fabs(zz)) {
+                    b1(i+1, en) = (-r - w * t) / x;
+                } else {
+                    b1(i + 1, en) = (-s - y * t) / zz;
+                }
 //c				.......... overflow control ..........
 overflowControl_680:
-				t = fabs(b1(i,en));
-				if ( t == 0.0) continue; //go to 700 (end of for loop)
-				tst1 = t;
-				tst2 = tst1 + 1.0/tst1;
-				if ( tst2 > tst1) continue; //go to 700 (end of loop)
-				for (j = i; j <= en; j++)
-					b1(j,en) = b1(j,en) / t;
+                t = fabs(b1(i,en));
+                if ( t == 0.0) continue; //go to 700 (end of for loop)
+                tst1 = t;
+                tst2 = tst1 + 1.0/tst1;
+                if ( tst2 > tst1) continue; //go to 700 (end of loop)
+                for (j = i; j <= en; j++)
+                    b1(j,en) = b1(j,en) / t;
             }
         }
 //c		.......... end real vector ..........
-		goto b800;
+        goto b800;
 //c		.......... complex vector ..........
 complexVector_710:
-		m = na;
+        m = na;
 //c     .......... last vector component chosen imaginary so that
 //c                eigenvector matrix is triangular ..........
-		if (fabs(b1(en,na)) <= fabs(b1(na,en))) { //go to 720
-			//call cdiv(0.0d0,-h(na,en),h(na,na)-p,q,h(na,na),h(na,en))
-		} else {
-			b1(na,na) = q / b1(en,na);
-			b1(na,en) = -(b1(en,en) - p) / b1(en,na);
-		}
-		b1(en,na) = 0.0;
-		b1(en,en) = 1.0;
-		enm2 = na - 1;
-		if (enm2 == 0) goto b800; // go to 800
-		for (int ii = 1; ii<=enm2;ii++){
-			i = na - ii;
-			w = b1(i,i) - p;
-			ra = 0.0;
-			sa = 0.0;
-			for (j = m; j<=en; j++) {
-				ra = ra + b1(i,j) * b1(j,na);
-				sa = sa + b1(i,j) * b1(j,en);
-			}
-			if (eigenValsImag[i - 1] < 0.0) {
-				zz = w;
-				r = ra;
-				s = sa;
-				goto c795;
-			} 
-			m = i;
-			if (eigenValsImag[i - 1] == 0) {
-				//call cdiv(-ra,-sa,w,q,h(i,na),h(i,en))
-				goto overflowControl_790;
-			}
+        if (fabs(b1(en,na)) <= fabs(b1(na,en))) { //go to 720
+            //call cdiv(0.0d0,-h(na,en),h(na,na)-p,q,h(na,na),h(na,en))
+        } else {
+            b1(na,na) = q / b1(en,na);
+            b1(na,en) = -(b1(en,en) - p) / b1(en,na);
+        }
+        b1(en,na) = 0.0;
+        b1(en,en) = 1.0;
+        enm2 = na - 1;
+        if (enm2 == 0) goto b800; // go to 800
+        for (int ii = 1; ii<=enm2;ii++){
+            i = na - ii;
+            w = b1(i,i) - p;
+            ra = 0.0;
+            sa = 0.0;
+            for (j = m; j<=en; j++) {
+                ra = ra + b1(i,j) * b1(j,na);
+                sa = sa + b1(i,j) * b1(j,en);
+            }
+            if (eigenValsImag[i - 1] < 0.0) {
+                zz = w;
+                r = ra;
+                s = sa;
+                continue;
+            }
+            m = i;
+            if (eigenValsImag[i - 1] == 0) {
+                //call cdiv(-ra,-sa,w,q,h(i,na),h(i,en))
+                goto overflowControl_790;
+            }
 //c			.......... solve complex equations 
-			x = b1(i,i+1);
-			y = b1(i+1,i);
-			vr = (eigenValsReal[i - 1] - p) * (eigenValReal[i-1] - p) + eigenValsImag[i-1] * eigenValsImag[i-1] - q * q;
-			vi = (eigenValsReal[i-1] - p) * 2.0 * q;
-			if (vr == 0.0 && vi== 0.0) {
-				tst1 = norm * (fabs(w) + fabs(q) + fabs(x) + fabs(y) + fabs(zz));
-				do {
-					vr = tst1;
-					vr = 0.01 * vr;
-					tst2 = tst1 + vr;
-				} while (tst2 > tst1);
-			}
-			//call cdiv(x*r-zz*ra+q*sa,x*s-zz*sa-q*ra,vr,vi,h(i+1,na),h(i+1,en))
-			if (fabs(x) > fabs(zz) + fabs(q)) {
-				b1(i+1,na) = (-ra - w * b1(i,na) + q * b1(i,en)) / x;
-				b1(i+1,en) = (-sa - w * b1(i,en) - q * b1(i,na)) / x;
-			} else {
-				//call cdiv(-r-y*h(i,na),-s-y*h(i,en),zz,q,b1(i+1,na),b1(i+1,en)
-			}
+            x = b1(i,i+1);
+            y = b1(i+1,i);
+            vr = (eigenValsReal[i - 1] - p) * (eigenValsReal[i-1] - p) + eigenValsImag[i-1] * eigenValsImag[i-1] - q * q;
+            vi = (eigenValsReal[i-1] - p) * 2.0 * q;
+            if (vr == 0.0 && vi== 0.0) {
+                tst1 = norm * (fabs(w) + fabs(q) + fabs(x) + fabs(y) + fabs(zz));
+                do {
+                    vr = tst1;
+                    vr = 0.01 * vr;
+                    tst2 = tst1 + vr;
+                } while (tst2 > tst1);
+            }
+            //call cdiv(x*r-zz*ra+q*sa,x*s-zz*sa-q*ra,vr,vi,h(i+1,na),h(i+1,en))
+            if (fabs(x) > fabs(zz) + fabs(q)) {
+                b1(i+1,na) = (-ra - w * b1(i,na) + q * b1(i,en)) / x;
+                b1(i+1,en) = (-sa - w * b1(i,en) - q * b1(i,na)) / x;
+            } else {
+                //call cdiv(-r-y*h(i,na),-s-y*h(i,en),zz,q,b1(i+1,na),b1(i+1,en)
+            }
 overflowControl_790:
-			if (fabs(b1(i,na)) >= fabs(b1(i,en))) {
-				t = fabs(b1(i,na));
-			} else {
-				t = fabs(b1(i,en));
-			}
-			if (t == 0.0) continue;
-			tst1 = t;
-			tst2 = tst1 + 1.0/tst1;
-			if (tst2 > tst1) continue;
-			for (j = i; j <= en; j++) {
-				b1(j,na) = b1(j,na) / t;
-				b1(j,en) = b1(j,en) / t;
-			}
-		}	
+            if (fabs(b1(i,na)) >= fabs(b1(i,en))) {
+                t = fabs(b1(i,na));
+            } else {
+                t = fabs(b1(i,en));
+            }
+            if (t == 0.0) continue;
+            tst1 = t;
+            tst2 = tst1 + 1.0/tst1;
+            if (tst2 > tst1) continue;
+            for (j = i; j <= en; j++) {
+                b1(j,na) = b1(j,na) / t;
+                b1(j,en) = b1(j,en) / t;
+            }
+        }	
 //800 end complex vector
+b800:
 //c		.......... end back substitution.
 //c				   vectors of isolated roots ..........
-		for (i = 1; i <= n; i++) {
-			if ( i >= low && i <= igh ) continue;
-			for (j = i; j<=n; j++)
-				z1(i,j) = b1(i,j);
-		}
+        for (i = 1; i <= n; i++) {
+            if ( i >= low && i <= igh ) continue;
+            for (j = i; j<=n; j++)
+                z1(i,j) = b1(i,j);
+        }
 //c     .......... multiply by transformation matrix to give
 //c                vectors of original full matrix.
 //c                for j=n step -1 until low do -- ..........
-		for (int jj = low; jj <= n; jj++) {
-			j = n + low - jj;
-			m = j;
-			if (igh < j)
-				m = igh;
-			for (i = low; i <= igh) {
-				zz = 0.0;
-				for (int k = low; k <= m; k++) 
-					zz = zz + z1(i,k) * b1(k,j);
-				z1(i,j) = zz;
-			}
-		}
-		goto endOfProgram_1001;
+        for (int jj = low; jj <= n; jj++) {
+            j = n + low - jj;
+            m = j;
+            if (igh < j)
+                m = igh;
+            for (i = low; i <= igh; i++) {
+                zz = 0.0;
+                for (int k = low; k <= m; k++) 
+                    zz = zz + z1(i,k) * b1(k,j);
+                z1(i,j) = zz;
+            }
+        }
+        goto endOfProgram_1001;
 errorThenEnd_1000:
         indexOfError = en; 
 endOfProgram_1001:

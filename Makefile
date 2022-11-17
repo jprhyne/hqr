@@ -27,6 +27,9 @@ doubleSubDiagonalSearch.o: doubleSubDiagonalSearch.c
 qrIteration.o: qrIteration.c
 	$(CC) -c $^ -g -lm
 
+qrIterationVec.o: qrIterationVec.c
+	$(CC) -c $^ -g -lm
+
 main_hqr_test.o: main_hqr_test.c
 	$(CC) -c main_hqr_test.c -lm -g
 
@@ -48,7 +51,7 @@ matmul.o: matmul.c
 matsub.o: matsub.c
 	$(CC) -c $^ 
 
-main_hqr_loopByLoopConversion.exe: main_hqr_loopByLoopConversion.o formShift.o hqr.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o hqr2.o cdiv.o
+main_hqr_loopByLoopConversion.exe: main_hqr_loopByLoopConversion.o formShift.o hqr.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o hqr2.o cdiv.o qrIterationVec.o
 	$(FC) -o $@ $^
 
 test_hqr2_fortran.exe: test_hqr2_fortran.o hqr2.o cdiv.o matmul.o matsub.o
