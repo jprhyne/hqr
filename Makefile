@@ -9,8 +9,8 @@ hqr.o: hqr.f
 hqr2.o: hqr2.f
 	$(FC) -c hqr2.f -g
 
-cdiv.o: cdiv.f
-	$(FC) -c cdiv.f -g
+cdivF.o: cdiv.f
+	$(FC) -c cdiv.f -g -o cdivF.o
 
 hqr_destructive.o: hqr_destructive.f
 	$(FC) -c hqr_destructive.f -g
@@ -51,7 +51,10 @@ matmul.o: matmul.c
 matsub.o: matsub.c
 	$(CC) -c $^ 
 
-main_hqr_loopByLoopConversion.exe: main_hqr_loopByLoopConversion.o formShift.o hqr.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o hqr2.o cdiv.o qrIterationVec.o
+cdivC.o: cdiv.c
+	$(CC) -c $^ -o cdivC.o
+
+main_hqr_loopByLoopConversion.exe: main_hqr_loopByLoopConversion.o formShift.o hqr.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o hqr2.o cdivF.o cdivC.o qrIterationVec.o
 	$(FC) -o $@ $^
 
 test_hqr2_fortran.exe: test_hqr2_fortran.o hqr2.o cdiv.o matmul.o matsub.o

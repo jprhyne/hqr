@@ -42,17 +42,22 @@ extern void hqr2_(int *nm, int *n, int *low, int *igh, double *h, double *wr,
 extern void hqr_(int *nm, int *n, int *low, int *igh, double *h, double *wr,
         double *wi, int *ierr);
 
+extern void cdiv(double ar, double ai, double br, double bi, double *cr, double *ci); 
+
 void usage()
 {
-    printf("main_hqr_test.exe [-n sizeOfMatrix | -v | -h]\n");
+    printf("main_hqr_test.exe [-n sizeOfMatrix | -v | -h | -t | -h | --jobv | --schur]\n");
     printf("\t-n: The following argument must be a positive integer\n");
     printf("\t\tThe default value is 20\n");
     printf("\t-v: verbose flag that prints out the results of eispack hqr\n");
     printf("\t\tBy default, nothing is printed to the console\n");
-    printf("\t-t: testing flag that only prints the expected vs the");
-    printf("\t\tactual computed eigenvalues.");
+    printf("\t-t: testing flag that only prints the expected vs the\n");
+    printf("\t\tactual computed eigenvalues.\n");
     printf("\t-h: Print this help dialogue\n");
-    printf("\t--jobv: Flag that tells us to compute the Schur vectors");
+    printf("\t--jobv: Flag that tells us to compute the eigen vectors\n");
+    printf("\t\tOverrides --schur\n");
+    printf("\t--schur: Flag that tells us to compute the Schur vectors\n");
+    printf("\t\tOverridden by --jobv\n");
 }
 
 void freeMemory()
@@ -425,7 +430,11 @@ complexVector_710:
 //c     .......... last vector component chosen imaginary so that
 //c                eigenvector matrix is triangular ..........
         if (fabs(b1(en,na)) <= fabs(b1(na,en))) { //go to 720
-            //call cdiv(0.0d0,-h(na,en),h(na,na)-p,q,h(na,na),h(na,en))
+            double a;
+            double b;
+            cdiv(0.0,-b1(na,en),b1(na,na)-p,q,&a,&b);
+            b1(na,na) = a;
+            b1(na,en) = b;
         } else {
             b1(na,na) = q / b1(en,na);
             b1(na,en) = -(b1(en,en) - p) / b1(en,na);
@@ -451,7 +460,11 @@ complexVector_710:
             }
             m = i;
             if (eigenValsImag[i - 1] == 0) {
-                //call cdiv(-ra,-sa,w,q,h(i,na),h(i,en))
+                double a;
+                double b;
+                cdiv(-ra,-sa,w,q,&a,&b);
+                b1(i,na) = a;
+                b1(i,en) = b;
                 goto overflowControl_790;
             }
 //c			.......... solve complex equations 
@@ -467,12 +480,20 @@ complexVector_710:
                     tst2 = tst1 + vr;
                 } while (tst2 > tst1);
             }
-            //call cdiv(x*r-zz*ra+q*sa,x*s-zz*sa-q*ra,vr,vi,h(i+1,na),h(i+1,en))
+            double a;
+            double b;
+            cdiv(x*r-zz*ra+q*sa,x*s-zz*sa-q*ra,vr,vi,&a,&b);
+            b1(i+1,na) = a;
+            b1(i+1,en) = b;
             if (fabs(x) > fabs(zz) + fabs(q)) {
                 b1(i+1,na) = (-ra - w * b1(i,na) + q * b1(i,en)) / x;
                 b1(i+1,en) = (-sa - w * b1(i,en) - q * b1(i,na)) / x;
             } else {
-                //call cdiv(-r-y*h(i,na),-s-y*h(i,en),zz,q,b1(i+1,na),b1(i+1,en)
+                double a;
+                double b;
+                cdiv(-r-y*b1(i,na),-s-y*b1(i,en),zz,q,&a,&b);
+                b1(i+1,na) = a;
+                b1(i+1,en) = b;
             }
 overflowControl_790:
             if (fabs(b1(i,na)) >= fabs(b1(i,en))) {
