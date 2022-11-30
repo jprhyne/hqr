@@ -26,18 +26,18 @@ int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, doubl
         int low = 1;
         int igh = n;
         int en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal,mp2;
-        double x,y,z,t,w,s,r,q,p,zz,tst1,tst2;
+        double x,y,z,t,w,s,r,q,p,zz,tst1,tst2,ra,sa,vr,vi;
         // Converting one section at a time
         // This section is not being used in our case until a version of
         // balance is ported
         for (i = 1; i <= n; i++) {
             for (j = k; j <= n; j++) {
-                norm += fabs(a1(i,j));
+                norm += fabs(b1(i,j));
             }
             k = i;
             if (i >= low && i <= igh)
                 continue;
-            eigenValsReal[i-1] = a1(i,i);
+            eigenValsReal[i-1] = b1(i,i);
             eigenValsImag[i-1] = 0.0;
         }
         //initializing some variables
@@ -46,11 +46,7 @@ int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, doubl
         itn = 30 * n;
 beginEigSearch_60:
         if (en < low) {
-            if (eigenVectorFlag) {
-                goto backSub_340;
-            } else {
-                goto endOfProgram_1001;
-            }
+            goto endOfProgram_1001;
         }
         its = 0;
         na = en - 1;
@@ -80,18 +76,38 @@ formShift_100:
             case 3:
                 // Error termination
                 goto errorThenEnd_1000;
+            default:
+                // This should never happen, so if it does we free memory
+                // print an error message, then terminate.
+                freeMemory();
+                printf("Error in fortran subroutine. Check if assignment of retVal is correct\n");
+                return 2;
         }
 postExceptionalShift_130:
         its = its + 1;
         itn = itn - 1;
         m = doubleSubDiagonalSearch(n, B, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
         // double qr step
-        if (schurVectorFlag) 
+        if (eigenVectorFlag || schurVectorFlag) 
             qrIterationVec(n,B,en,na,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,eigenMatrix);
         else 
             qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
+        // For debugging purposes, we print out the contents of b1 to a file
+		/*
+        for (int i = 1; i <= n; i++){
+            for (int j = 1; j < n; j++) {
+                fprintf(testingFile, "%1.20f,", b1(i,j));
+            }
+            fprintf(testingFile, "%1.20f\n", b1(i,j));
+        }
+        fprintf(testingFile, "\n");
+		*/
         goto subDiagonalSearch_70;
+
 singleRoot_270:
+        if (eigenVectorFlag) {
+            b1(en,en) = x + t;
+        }
         eigenValsReal[en - 1] = x + t;
         eigenValsImag[en - 1] = 0;
         en = na;
