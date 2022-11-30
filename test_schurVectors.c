@@ -1,6 +1,8 @@
 #include<stdio.h>
 #include<string.h>
+#include<stdlib.h>
 #define a0(i,j) A[(i) + (j) * n]
+#define b0(i,j) A[(i) + (j) * n]
 
 extern int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag);
 
@@ -23,8 +25,8 @@ int main (int argc, char **argv)
     // Seeds the random number generator for repeatability
     int seed = 28;
     // Default size of the matrix A
-    n = 20;
-    for(i = 1; i < argc; i++){
+    int n = 20;
+    for(int i = 1; i < argc; i++){
         char *argument = argv[i];
         if (strcmp(argument, "-h") == 0) {
             usage();
@@ -52,11 +54,11 @@ int main (int argc, char **argv)
     double *eigValsReal = malloc(n*n*sizeof(double));
     double *eigValsImag = malloc(n*n*sizeof(double));
 	// Generate A as a random matrix.
-    for(i = 0; i < n; i++) {
+    for(int i = 0; i < n; i++) {
         int start = 0;
         if (i - 1 > 0)
             start = i - 1;
- 	    for(j = start; j < n; j++) {
+ 	    for(int j = start; j < n; j++) {
             double val = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 	        a0(i,j) = val; 
         }
@@ -72,4 +74,22 @@ int main (int argc, char **argv)
     }
     // Getting here means that we have successfully ran all of 
     // hqr and got an answer, so now we check if our Schur vectors are correct
+
+    //First, we have to compute A^\top
+    double *B = calloc(n*n,sizeof(double));
+    for (int i = 0; i < n; i++) 
+        for (int j = 0; j < n; j++)
+            b0(j,i) = a0(i,j);
+    double* C = matmul(A,n,n,B,n,n);
+    // Make an identity matrix
+    double* eye = calloc(n*n,sizeof(double));
+    for (int i = 0; i < n; i ++) 
+        eye[i + i * n] = 1; 
+    double* diffMat = matsub(C,n,n,eye,n,n);
+    // compute the sum of the absolute value of the elements of diffMat
+    double norm = 0;
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            norm += diffMat[i + j*n];
+    printf("Sum of the absolute elements of diffmat: %1.20f",norm);
 }

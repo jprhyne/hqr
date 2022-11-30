@@ -23,9 +23,7 @@ int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, doubl
         double norm = 0;
         int k = 1;
         // These deal with our boundary conditions
-        int low = 1;
-        int igh = n;
-        int en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal,mp2;
+        int en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal,mp2,i,j;
         double x,y,z,t,w,s,r,q,p,zz,tst1,tst2,ra,sa,vr,vi;
         // Converting one section at a time
         // This section is not being used in our case until a version of
