@@ -366,9 +366,11 @@ backSub_340:
             p = eigenValsReal[en - 1];
             q = eigenValsImag[en - 1];
             na = en -1;
-            if (q) {
-                //Do something?
                 //fortran says if (q) 710, 600, 800
+            if (q < 0) {
+                goto complexVector_710;
+            } else if (q > 0) {
+                goto b800; 
             }
 a600:       m = en;
             b1(en,en) = 1.0;
