@@ -7,7 +7,7 @@ hqr.o: hqr.f
 	$(FC) -c hqr.f -g
 
 hqrC.o: hqr.c
-	$(CC) -c hqr.c -g
+	$(CC) -c hqr.c -g -o hqrC.o
 
 hqr2.o: hqr2.f
 	$(FC) -c hqr2.f -g
@@ -48,20 +48,23 @@ main_hqr_loopByLoopConversion.o: main_hqr_loopByLoopConversion.c
 test_hqr2_fortran.o: test_hqr2_fortran.c
 	$(CC) -c $^ -lm -g
 
+test_schurVectors.o: test_schurVectors.c
+	$(CC) -c $^ -lm -g
+
 matmul.o: matmul.c
-	$(CC) -c $^ 
+	$(CC) -c $^ -g
 
 matsub.o: matsub.c
-	$(CC) -c $^ 
+	$(CC) -c $^ -g
 
 cdivC.o: cdiv.c
-	$(CC) -c $^ -o cdivC.o
+	$(CC) -c $^ -o cdivC.o -g
 
 main_hqr_loopByLoopConversion.exe: main_hqr_loopByLoopConversion.o formShift.o hqr.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o hqr2.o cdivF.o cdivC.o qrIterationVec.o
-	$(FC) -o $@ $^
+	$(FC) -o $@ $^ -g
 
-test_schurVectors.exe: test_schurVectors.o formShift.o hqrC.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o cdivC.o qrIterationVec.o
-	$(FC) -o $@ $^
+test_schurVectors.exe: test_schurVectors.o formShift.o hqrC.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o cdivC.o qrIterationVec.o matmul.o matsub.o
+	$(FC) -o $@ $^ -g
 
 test_hqr2_fortran.exe: test_hqr2_fortran.o hqr2.o cdiv.o matmul.o matsub.o
 	$(FC) -o $@ $^

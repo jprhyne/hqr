@@ -1,10 +1,11 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
+#include<math.h>
 #define a0(i,j) A[(i) + (j) * n]
 #define b0(i,j) A[(i) + (j) * n]
 
-extern int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag);
+extern int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag, double *eigMat);
 
 extern double*matmul(double*A, int nA, int mA, double *B, int nB, int mB);
 
@@ -48,11 +49,11 @@ int main (int argc, char **argv)
     }
     srand(seed);
     // First create a matrix A as upper hessenberg matrix.
-    double *A = calloc(n*n,sizeof(double));
+    double *A = (double *) calloc(n*n,sizeof(double));
     // These values are not needed for this particular file's
     // testing, however this is needed to run hqr.c
-    double *eigValsReal = malloc(n*n*sizeof(double));
-    double *eigValsImag = malloc(n*n*sizeof(double));
+    double *eigValsReal = (double *) malloc(n*n*sizeof(double));
+    double *eigValsImag = (double *) malloc(n*n*sizeof(double));
 	// Generate A as a random matrix.
     for(int i = 0; i < n; i++) {
         int start = 0;
@@ -63,14 +64,24 @@ int main (int argc, char **argv)
 	        a0(i,j) = val; 
         }
     }
-    // Now we call hqr. At the end A will contain the schur vectors
-    int ret = hqr(n,n,1,n,A,eigValsReal,eigValsImag,1);
-    if (ret != n) {
+    // Create a matrix to store the Schur Vectors
+    double *schurMat = (double *) calloc(n*n,sizeof(double));
+    for (int i = 0; i < n; i++)
+        schurMat[i + i * n] = 1;
+    // Now we call hqr. At the end schurMat will contain the schur vectors
+    int ret = hqr(n,n,1,n,A,eigValsReal,eigValsImag,1,schurMat);
+    if (ret != 0) {
         // This means that hqr did not converge to at some index,
         // so we print it out and terminate execution as our Schur
         // vectors will not be correct
         printf("Did not converge at index: %d\n",ret);
         return 1;
+    }
+    for (int i = 0; i < n; i++){
+        for(int j=0;j<n;j++) {
+            printf("%1.11f", schurMat[i + j * n]);
+        }
+        printf("\n");
     }
     // Getting here means that we have successfully ran all of 
     // hqr and got an answer, so now we check if our Schur vectors are correct
@@ -79,8 +90,14 @@ int main (int argc, char **argv)
     double *B = calloc(n*n,sizeof(double));
     for (int i = 0; i < n; i++) 
         for (int j = 0; j < n; j++)
-            b0(j,i) = a0(i,j);
+            B[j + i*n] = A[i + j * n];
     double* C = matmul(A,n,n,B,n,n);
+    for (int i = 0; i < n; i++){
+        for(int j=0;j<n;j++) {
+            printf("%1.11f ", C[i + j * n]);
+        }
+        printf("\n");
+    }
     // Make an identity matrix
     double* eye = calloc(n*n,sizeof(double));
     for (int i = 0; i < n; i ++) 
@@ -90,6 +107,13 @@ int main (int argc, char **argv)
     double norm = 0;
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
-            norm += diffMat[i + j*n];
-    printf("Sum of the absolute elements of diffmat: %1.20f",norm);
+            norm += fabs(diffMat[i + j*n]);
+    printf("Sum of the absolute elements of diffmat: %1.20f\n",norm);
+    free(A);
+    free(B);
+    free(C);
+    free(schurMat);
+    free(eye);
+    free(diffMat);
+    return 0;
 }

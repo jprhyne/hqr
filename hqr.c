@@ -1,3 +1,4 @@
+#include<math.h>
 #define a1(i,j) A[(i - 1) + (j - 1) * n]
 extern int qrIteration(int n, double* B, int en, int na, int l, double* s,
         double* x, double* y, double* p, double* q, double* r, double* zz,
@@ -17,25 +18,25 @@ extern int doubleSubDiagonalSearch(int n, double* B, int en, int enm2, int l, do
 
 extern void cdiv(double ar, double ai, double br, double bi, double *cr, double *ci); 
 
-int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag)
+int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag, double *eigenMatrix)
 {
         int indexOfError = 0;
         double norm = 0;
         int k = 1;
         // These deal with our boundary conditions
-        int en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal,mp2,i,j;
+        int en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal,mp2,i,j,ierr;
         double x,y,z,t,w,s,r,q,p,zz,tst1,tst2,ra,sa,vr,vi;
         // Converting one section at a time
         // This section is not being used in our case until a version of
         // balance is ported
         for (i = 1; i <= n; i++) {
             for (j = k; j <= n; j++) {
-                norm += fabs(b1(i,j));
+                norm += fabs(a1(i,j));
             }
             k = i;
             if (i >= low && i <= igh)
                 continue;
-            eigenValsReal[i-1] = b1(i,i);
+            eigenValsReal[i-1] = a1(i,i);
             eigenValsImag[i-1] = 0.0;
         }
         //initializing some variables
@@ -50,9 +51,9 @@ beginEigSearch_60:
         na = en - 1;
         enm2 = na -1;
 subDiagonalSearch_70:
-        l = subDiagonalSearch(n,low,B,en,norm,&s);
+        l = subDiagonalSearch(n,low,A,en,norm,&s);
 formShift_100:
-        retVal = formShift(n,low, B, &ierr, its, itn, en, l, &s, &t, &x, &y, &w);
+        retVal = formShift(n,low, A, &ierr, its, itn, en, l, &s, &t, &x, &y, &w);
         // In order to emulate the behavior of the fortran code, instead 
         // of jumping to the right code inside there, we instead set a
         // return value and check what it is on exit
@@ -77,35 +78,30 @@ formShift_100:
             default:
                 // This should never happen, so if it does we free memory
                 // print an error message, then terminate.
-                freeMemory();
-                printf("Error in fortran subroutine. Check if assignment of retVal is correct\n");
-                return 2;
+                return -1;
         }
 postExceptionalShift_130:
         its = its + 1;
         itn = itn - 1;
-        m = doubleSubDiagonalSearch(n, B, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
+        m = doubleSubDiagonalSearch(n, A, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
         // double qr step
-        if (eigenVectorFlag || schurVectorFlag) 
-            qrIterationVec(n,B,en,na,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,eigenMatrix);
+        if (schurVectorFlag) 
+            qrIterationVec(n,A,en,na,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,eigenMatrix);
         else 
-            qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
-        // For debugging purposes, we print out the contents of b1 to a file
+            qrIteration(n,A,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
+        // For debugging purposes, we print out the contents of a1 to a file
 		/*
         for (int i = 1; i <= n; i++){
             for (int j = 1; j < n; j++) {
-                fprintf(testingFile, "%1.20f,", b1(i,j));
+                fprintf(testingFile, "%1.20f,", a1(i,j));
             }
-            fprintf(testingFile, "%1.20f\n", b1(i,j));
+            fprintf(testingFile, "%1.20f\n", a1(i,j));
         }
         fprintf(testingFile, "\n");
 		*/
         goto subDiagonalSearch_70;
 
 singleRoot_270:
-        if (eigenVectorFlag) {
-            b1(en,en) = x + t;
-        }
         eigenValsReal[en - 1] = x + t;
         eigenValsImag[en - 1] = 0;
         en = na;
