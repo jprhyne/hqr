@@ -75,91 +75,93 @@ void freeMemory()
 }
 
 int main(int argc, char ** argv) {
-	/*
-	 * Declaring variables to pass into the hqr_ subroutine
-	 */
-	int i, ierr, j, n;
-	// Store the constant 1 as a variable to be sent into hqr_
-	int ione=1;
+/*
+ * Declaring variables to pass into the hqr_ subroutine
+ */
+    int i, ierr, j, n;
+
+// Store the constant 1 as a variable to be sent into hqr_
+    int ione=1;
         
-        /*
-         * flag that determines if we want to print the results
-         * of hqr_ to the console
-         * By default, we do not do this
-         */
-        int printFlag = 0;
-	int testFlag = 0;
-        int eigenVectorFlag = 0;
-        int schurVectorFlag = 0;
+/*
+ * flag that determines if we want to print the results
+ * of hqr_ to the console
+ * By default, we do not do this
+ */
+    int printFlag = 0;
+    int testFlag = 0;
+    int eigenVectorFlag = 0;
+    int schurVectorFlag = 0;
 
-	// Seeds the random number generator for repeatability
-        // Old seed was 734
-        int seed = 28;
-	// Default size of the matrix A
-    	n = 20;
-	
-	// Checking for if the user wants to set the size of the matrix A
+// Seeds the random number generator for repeatability
+// Old seed was 734
+    int seed = 28;
+
+// Default size of the matrix A
+    n = 20;
+
+// Checking for if the user wants to set the size of the matrix A
     for(i = 1; i < argc; i++){
-            char *argument = argv[i];
-            if (strcmp(argument, "-h") == 0) {
+        char *argument = argv[i];
+        if (strcmp(argument, "-h") == 0) {
+            usage();
+            return 0;
+        } else if( strcmp( *(argv + i), "-n") == 0) {
+            // Grab the next term as this is the size
+            n  = atoi( *(argv + i + 1) );
+            //If the size is non-positive, exit immediately
+            if ( n <= 0 )
                 usage();
-                return 0;
-            } else if( strcmp( *(argv + i), "-n") == 0) {
-                // Grab the next term as this is the size
-                n  = atoi( *(argv + i + 1) );
-                //If the size is non-positive, exit immediately
-                if ( n <= 0 )
-                    usage();
-                // Increment i to skip over this number
-                i++;
-            } else if ( strcmp ( *(argv + i), "-v") == 0) {
-                printFlag=1;
-            } else if ( strcmp ( *(argv + i), "-t") == 0) {
-		testFlag=1;
-	    } else if ( strcmp ( *(argv + i), "--jobv") == 0) {
-                eigenVectorFlag=1;
-            } else if ( strcmp ( *(argv + i), "-s") == 0) {
-                seed = atoi( *(argv + i + 1) ); 
-                if (seed <= 0)
-                    usage();
-                i++;
-            } else if ( strcmp ( *(argv + i), "--schur" ) == 0 ) {
-                schurVectorFlag = 1;
-            }
-	}
-		//Uncomment if we want to test the output of qrIteration.c
-		//testingFile = fopen("outputFileC.txt","w");
-        srand(seed);
-        // arrays that will hold the differences in the eigenvalues of hqr
-        // and this implementation
-	double eigRealDiff[n];
-	double eigImagDiff[n];
-        double eigVec[n*n];
-
-	// Allocate the memory for A to be generated. It will contain n^2 
-	// elements where each element is a double precision floating point number
-	A = (double *) calloc( n * n, sizeof(double));
-	B = (double *) calloc( n * n, sizeof(double));
-	// Create a vector to store the real parts of the eigenvalues
-	wr = (double *) malloc( n *  sizeof(double));
-	// Create a vector to store the real parts of the eigenvalues
-	wi = (double *) malloc( n *  sizeof(double));
-
-        z = (double *) calloc( n * n, sizeof(double)); //This needs to start as the identity matrix
-        eigenMatrix = (double *) calloc( n * n, sizeof(double));//This needs to start as the identity matrix
-        // Start z and eigenMatrix as the identity matrix
-        for (i = 0; i < n; i++) {
-            z[i + i * n] = 1;
-            eigenMatrix[i + i * n] = 1;
+            // Increment i to skip over this number
+            i++;
+        } else if ( strcmp ( *(argv + i), "-v") == 0) {
+            printFlag=1;
+        } else if ( strcmp ( *(argv + i), "-t") == 0) {
+            testFlag=1;
+        } else if ( strcmp ( *(argv + i), "--jobv") == 0) {
+            eigenVectorFlag=1;
+        } else if ( strcmp ( *(argv + i), "-s") == 0) {
+            seed = atoi( *(argv + i + 1) ); 
+            if (seed <= 0)
+                usage();
+            i++;
+        } else if ( strcmp ( *(argv + i), "--schur" ) == 0 ) {
+            schurVectorFlag = 1;
         }
-	// Generate A as a random matrix.
+    }
+//Uncomment if we want to test the output of qrIteration.c
+//testingFile = fopen("outputFileC.txt","w");
+    srand(seed);
+    // arrays that will hold the differences in the eigenvalues of hqr
+    // and this implementation
+    double eigRealDiff[n];
+    double eigImagDiff[n];
+    double eigVec[n*n];
+
+// Allocate the memory for A to be generated. It will contain n^2 
+// elements where each element is a double precision floating point number
+    A = (double *) calloc( n * n, sizeof(double));
+    B = (double *) calloc( n * n, sizeof(double));
+// Create a vector to store the real parts of the eigenvalues
+    wr = (double *) malloc( n *  sizeof(double));
+// Create a vector to store the real parts of the eigenvalues
+    wi = (double *) malloc( n *  sizeof(double));
+
+    z = (double *) calloc( n * n, sizeof(double)); //This needs to start as the identity matrix
+    eigenMatrix = (double *) calloc( n * n, sizeof(double));//This needs to start as the identity matrix
+    // Start z and eigenMatrix as the identity matrix
+    for (i = 0; i < n; i++) {
+        z[i + i * n] = 1;
+        eigenMatrix[i + i * n] = 1;
+    }
+//  Generate A as a random matrix.
     for(i = 0; i < n; i++) {
         int start = 0;
         if (i - 1 > 0)
             start = i - 1;
- 	    for(j = start; j < n; j++) {
+        for(j = start; j < n; j++) {
             double val = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
-	        a0(i,j) = val; 
+            a0(i,j) = val; 
         }
     }
 
@@ -168,10 +170,10 @@ int main(int argc, char ** argv) {
     for ( int i = 0; i < n; i++ )
         for ( int j = 0; j < n; j++ )
             b0(i,j) = a0(i,j);
-	/*
-	 * Here, we print out A for finding the eigenvalues via MATLAB
-	 * This must be done before calling hqr_ because it destroys A
-	 */
+/*
+ * Here, we print out A for finding the eigenvalues via MATLAB
+ * This must be done before calling hqr_ because it destroys A
+ */
     if (printFlag && !testFlag) {
         printf("A = [\n");
         for (int i = 0; i < n; i++) {
@@ -187,10 +189,10 @@ int main(int argc, char ** argv) {
     } else {
         hqr_(&n,&n,&ione,&n,A,wr,wi,&ierr);
     }
-	/*
-	 * Below prints out wr and wi for inspection via 
-	 * MATLAB/visual inspection
-	 */
+/*
+ * Below prints out wr and wi for inspection via 
+ * MATLAB/visual inspection
+ */
     if (printFlag && !testFlag) {
         printf("wr = [\n");
         for ( int i = 0; i < n; i++)
@@ -284,7 +286,7 @@ postExceptionalShift_130:
         qrIterationVec(n,B,en,na,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,eigenMatrix);        else 
         qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
     // For debugging purposes, we print out the contents of b1 to a file
-	/*
+/*
     for (int i = 1; i <= n; i++){
         for (int j = 1; j < n; j++) {
             fprintf(testingFile, "%1.20f,", b1(i,j));
@@ -292,7 +294,7 @@ postExceptionalShift_130:
         fprintf(testingFile, "%1.20f\n", b1(i,j));
     }
     fprintf(testingFile, "\n");
-	*/
+*/
     goto subDiagonalSearch_70;
 singleRoot_270:
     if (eigenVectorFlag) {
@@ -400,7 +402,7 @@ a600:   m = en;
                 }
                 goto overflowControl_680;
             }
-//c			.......... solve real equations ..........
+//c.......... solve real equations ..........
             x = b1(i,i+1);
             y = b1(i+1,i);
             q = (eigenValsReal[i - 1] - p) * (eigenValsReal[i - 1] - p) + eigenValsImag[i - 1] * eigenValsImag[i - 1];
@@ -411,7 +413,7 @@ a600:   m = en;
             } else {
                 b1(i + 1, en) = (-s - y * t) / zz;
             }
-//c				.......... overflow control ..........
+//c.......... overflow control ..........
 overflowControl_680:
             t = fabs(b1(i,en));
             if ( t == 0.0) continue; //go to 700 (end of for loop)
@@ -422,9 +424,9 @@ overflowControl_680:
                 b1(j,en) = b1(j,en) / t;
         }
     }
-//c		.......... end real vector ..........
+//c.......... end real vector ..........
     goto b800;
-//c		.......... complex vector ..........
+//c.......... complex vector ..........
 complexVector_710:
     m = na;
 //c     .......... last vector component chosen imaginary so that
@@ -467,7 +469,7 @@ complexVector_710:
             b1(i,en) = b;
             goto overflowControl_790;
         }
-//c			.......... solve complex equations 
+//c.......... solve complex equations 
         x = b1(i,i+1);
         y = b1(i+1,i);
         vr = (eigenValsReal[i - 1] - p) * (eigenValsReal[i-1] - p) + eigenValsImag[i-1] * eigenValsImag[i-1] - q * q;
@@ -509,15 +511,16 @@ overflowControl_790:
             b1(j,na) = b1(j,na) / t;
             b1(j,en) = b1(j,en) / t;
         }
-    }	
+    }
 //800 end complex vector
 b800:
-//c		.......... end back substitution.
-//c				   vectors of isolated roots ..........
+//c.......... end back substitution.
+//c   vectors of isolated roots ..........
     for (i = 1; i <= n; i++) {
         if ( i >= low && i <= igh ) continue;
         for (j = i; j<=n; j++)
             z1(i,j) = b1(i,j);
+    }
 //c     .......... multiply by transformation matrix to give
 //c                vectors of original full matrix.
 //c                for j=n step -1 until low do -- ..........
@@ -537,7 +540,7 @@ b800:
 errorThenEnd_1000:
     indexOfError = en; 
 endOfProgram_1001:
-	for (int i = 0; i < n; i++) {
+for (int i = 0; i < n; i++) {
         eigRealDiff[i] = eigenValsReal[i] - wr[i];
         eigImagDiff[i] = eigenValsImag[i] - wi[i];
     }
@@ -577,7 +580,7 @@ endOfProgram_1001:
         printf("]\n");
     } else if (testFlag) {
         printf("Seed=%d, diff=%1.20f, diff is 0: %d\n",seed,normReal + normImag,normReal + normImag == 0.0);
-	}
+    }
     freeMemory();
     return 0;
 }
