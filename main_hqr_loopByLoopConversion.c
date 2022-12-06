@@ -4,6 +4,7 @@
 #include <math.h>
 #define b0(i,j) B[(i) + (j) * n]
 #define a0(i,j) A[(i) + (j) * n]
+#define z0(i,j) z[(i) + (j) * n]
 #define b1(i,j) B[(i - 1) + (j - 1) * n]
 #define a1(i,j) A[(i - 1) + (j - 1) * n]
 #define z1(i,j) eigenMatrix[(i - 1) + (j - 1) * n]
@@ -129,8 +130,8 @@ int main(int argc, char ** argv) {
             schurVectorFlag = 1;
         }
     }
-//Uncomment if we want to test the output of qrIteration.c
-//testingFile = fopen("outputFileC.txt","w");
+    //Uncomment if we want to test the output of qrIteration.c
+    //testingFile = fopen("outputFileC.txt","w");
     srand(seed);
     // arrays that will hold the differences in the eigenvalues of hqr
     // and this implementation
@@ -138,13 +139,13 @@ int main(int argc, char ** argv) {
     double eigImagDiff[n];
     double eigVec[n*n];
 
-// Allocate the memory for A to be generated. It will contain n^2 
-// elements where each element is a double precision floating point number
+//  Allocate the memory for A to be generated. It will contain n^2 
+//  elements where each element is a double precision floating point number
     A = (double *) calloc( n * n, sizeof(double));
     B = (double *) calloc( n * n, sizeof(double));
-// Create a vector to store the real parts of the eigenvalues
+//  Create a vector to store the real parts of the eigenvalues
     wr = (double *) malloc( n *  sizeof(double));
-// Create a vector to store the real parts of the eigenvalues
+//  Create a vector to store the imaginary parts of the eigenvalues
     wi = (double *) malloc( n *  sizeof(double));
 
     z = (double *) calloc( n * n, sizeof(double)); //This needs to start as the identity matrix
@@ -175,20 +176,67 @@ int main(int argc, char ** argv) {
  * This must be done before calling hqr_ because it destroys A
  */
     if (printFlag && !testFlag) {
+        printf("clear;\n");
+        printf("n = %d;\n", n);
         printf("A = [\n");
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 printf("%3.8f,", a0(i,j));
             }
-            printf("\n");
+            printf(";\n");
         }
-        printf("]\n");
+        printf("];\n");
     }
     if (eigenVectorFlag || schurVectorFlag) {
         hqr2_(&n, &n, &ione, &n, A, wr, wi, z, &ierr);
+
+//  check || Z' * Z - I ||_F
+    double orthZ, tmp;
+    printf("%% [ ORTH ] n = %4d; checks = [ ", n );
+    orthZ = 0e+00;
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            tmp = ( i == j ) ? 1.0e+00 : 0.00e+00;
+            for (int k = 0; k < n; k++) {
+                tmp -= z0(k,i)*z0(k,j);
+            }
+            orthZ += tmp * tmp;
+        }
+    }
+    orthZ = sqrt( orthZ );
+    printf(" %6.2e", orthZ );
+
+//  check || A * Z - Z * T ||_F / || A ||_F
+    double normR, normA;
+    normR = 0.0e+00;
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            tmp = 0.0e+00;
+            for (int k = 0; (k < n)&&(k < j+2); k++) {
+                tmp += z0(i,k)*a0(k,j);
+            }
+            for (int k = 0; k < n; k++) {
+                tmp -= b0(i,k)*z0(k,j);
+            }
+            normR += tmp * tmp ;
+        }
+    }
+    normR = sqrt( normR );
+    normA = 0.0e+00;
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            normA += b0(i,j) * b0(i,j) ;
+        }
+    }
+    normA = sqrt( normA );
+    printf(" %6.2e", normR / normA );
+    printf(" ];\n");
+
     } else {
         hqr_(&n,&n,&ione,&n,A,wr,wi,&ierr);
     }
+
+
 /*
  * Below prints out wr and wi for inspection via 
  * MATLAB/visual inspection
@@ -196,13 +244,34 @@ int main(int argc, char ** argv) {
     if (printFlag && !testFlag) {
         printf("wr = [\n");
         for ( int i = 0; i < n; i++)
-            printf("    %5.8f,\n", wr[i]);
-        printf("]\n");
+            printf("    %5.8f;\n", wr[i]);
+        printf("];\n");
         printf("wi = [\n");
         for ( int i = 0; i < n; i++)
-            printf("    %5.8f,\n", wi[i]);
-        printf("]\n");
+            printf("    %5.8f;\n", wi[i]);
+        printf("];\n");
     }
+    //if (eigenVectorFlag || schurVectorFlag) {
+    if (printFlag && !testFlag) {
+        printf("Z = [\n");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                printf("%3.8f,", z0(i,j));
+            }
+            printf(";\n");
+        }
+        printf("];\n");
+        printf("T = [\n");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                printf("%3.8f,", a0(i,j));
+            }
+            printf(";\n");
+        }
+        printf("];\n");
+    }
+    //}
+    return 0;
     // Now, we write our version. This next section is just
     // a C implementation of EISPACK's HQR.f where we move from an upper
     // Hessenberg matrix to the Schur form.      
@@ -283,7 +352,8 @@ postExceptionalShift_130:
     m = doubleSubDiagonalSearch(n, B, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
     // double qr step
     if (eigenVectorFlag || schurVectorFlag) 
-        qrIterationVec(n,B,en,na,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,eigenMatrix);        else 
+        qrIterationVec(n,B,en,na,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,eigenMatrix);
+    else 
         qrIteration(n,B,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
     // For debugging purposes, we print out the contents of b1 to a file
 /*
@@ -577,7 +647,14 @@ for (int i = 0; i < n; i++) {
             }
             printf("\n");
         }
-        printf("]\n");
+	printf("Z = [\n");
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                printf("%3.8f,", z1(i,j));
+            }
+            printf(";\n");
+        }
+        printf("];\n");
     } else if (testFlag) {
         printf("Seed=%d, diff=%1.20f, diff is 0: %d\n",seed,normReal + normImag,normReal + normImag == 0.0);
     }

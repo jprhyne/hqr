@@ -287,7 +287,14 @@ c     .......... complex pair ..........
       go to 60
 c     .......... all roots found.  backsubstitute to find
 c                vectors of upper triangular form ..........
-  340 if (norm .eq. 0.0d0) go to 1001
+c
+CCCCCCCCCCC brutal exit here
+  340 goto 1001
+      if (norm .eq. 0.0d0) go to 1001
+c
+CCCCCCCCCCC softer exit here
+c 340 if (norm .eq. 0.0d0) go to 1001
+c
 c     .......... for en=n step -1 until 1 do -- ..........
       do 800 nn = 1, n
          en = n + 1 - nn
