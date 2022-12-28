@@ -5,9 +5,10 @@
 #define b0(i,j) B[(i) + (j) * n]
 #define a0(i,j) A[(i) + (j) * n]
 #define z0(i,j) z[(i) + (j) * n]
+
 #define b1(i,j) B[(i - 1) + (j - 1) * n]
 #define a1(i,j) A[(i - 1) + (j - 1) * n]
-#define z1(i,j) eigenMatrix[(i - 1) + (j - 1) * n]
+#define eigenMatrix1(i,j) eigenMatrix[(i - 1) + (j - 1) * n]
 
 // This may be bad practice, but we put all malloc'd entities
 // as global variables in order to make freeing the
@@ -52,7 +53,7 @@ void usage()
     printf("\t-n: Sets the size of the matrix. The following argument must be a positive integer\n");
     printf("\t\tThe default value is 20\n");
     printf("\t-s: Sets the seed. The following argument must be a positive integer.\n");
-    printf("\t\tThe default value is 28.");
+    printf("\t\tThe default value is 28.\n");
     printf("\t-t: testing flag that only prints the expected vs the\n");
     printf("\t\tactual computed eigenvalues.\n");
     printf("\t-v: verbose flag that prints out the results of eispack hqr\n");
@@ -130,8 +131,8 @@ int main(int argc, char ** argv) {
             schurVectorFlag = 1;
         }
     }
-    //Uncomment if we want to test the output of qrIteration.c
-    //testingFile = fopen("outputFileC.txt","w");
+    //Uncomment if we want to test the output of qrIterationVec.c
+    FILE *testingFile = fopen("outputFileC.txt","w");
     srand(seed);
     // arrays that will hold the differences in the eigenvalues of hqr
     // and this implementation
@@ -152,7 +153,7 @@ int main(int argc, char ** argv) {
     eigenMatrix = (double *) calloc( n * n, sizeof(double));//This needs to start as the identity matrix
     // Start z and eigenMatrix as the identity matrix
     for (i = 0; i < n; i++) {
-        z[i + i * n] = 1;
+        z0(i,i) = 1;
         eigenMatrix[i + i * n] = 1;
     }
 //  Generate A as a random matrix.
@@ -176,62 +177,62 @@ int main(int argc, char ** argv) {
  * This must be done before calling hqr_ because it destroys A
  */
     if (printFlag && !testFlag) {
-        printf("clear;\n");
-        printf("n = %d;\n", n);
+        printf("n = %d\n", n);
         printf("A = [\n");
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 printf("%3.8f,", a0(i,j));
             }
-            printf(";\n");
+            printf("\n");
         }
-        printf("];\n");
+        printf("]\n");
     }
     if (eigenVectorFlag || schurVectorFlag) {
         hqr2_(&n, &n, &ione, &n, A, wr, wi, z, &ierr);
 
-//  check || Z' * Z - I ||_F
-    double orthZ, tmp;
-    printf("%% [ ORTH ] n = %4d; checks = [ ", n );
-    orthZ = 0e+00;
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < n; j++) {
-            tmp = ( i == j ) ? 1.0e+00 : 0.00e+00;
-            for (int k = 0; k < n; k++) {
-                tmp -= z0(k,i)*z0(k,j);
+    //  check || Z' * Z - I ||_F
+        double orthZ, tmp;
+        printf("%% [ ORTH ] n = %4d; checks = [ ", n );
+        orthZ = 0e+00;
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < n; j++) {
+                tmp = ( i == j ) ? 1.0e+00 : 0.00e+00;
+                for (int k = 0; k < n; k++) {
+                    tmp -= z0(k,i)*z0(k,j);
+                }
+                orthZ += tmp * tmp;
             }
-            orthZ += tmp * tmp;
         }
-    }
-    orthZ = sqrt( orthZ );
-    printf(" %6.2e", orthZ );
+        orthZ = sqrt( orthZ );
+        printf(" %6.2e", orthZ );
 
-//  check || A * Z - Z * T ||_F / || A ||_F
-    double normR, normA;
-    normR = 0.0e+00;
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < n; j++) {
-            tmp = 0.0e+00;
-            for (int k = 0; (k < n)&&(k < j+2); k++) {
-                tmp += z0(i,k)*a0(k,j);
+    //  check || A * Z - Z * T ||_F / || A ||_F
+        double normR, normA;
+        normR = 0.0e+00;
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < n; j++) {
+                tmp = 0.0e+00;
+                for (int k = 0; (k < n)&&(k < j+2); k++) {
+                    tmp += z0(i,k)*a0(k,j);
+                }
+                for (int k = 0; k < n; k++) {
+                    tmp -= b0(i,k)*z0(k,j);
+                }
+                normR += tmp * tmp ;
             }
-            for (int k = 0; k < n; k++) {
-                tmp -= b0(i,k)*z0(k,j);
+        }
+        normR = sqrt( normR );
+        normA = 0.0e+00;
+        for (i = 0; i < n; i++) {
+            for (j = 0; j < n; j++) {
+                normA += b0(i,j) * b0(i,j) ;
             }
-            normR += tmp * tmp ;
         }
-    }
-    normR = sqrt( normR );
-    normA = 0.0e+00;
-    for (i = 0; i < n; i++) {
-        for (j = 0; j < n; j++) {
-            normA += b0(i,j) * b0(i,j) ;
-        }
-    }
-    normA = sqrt( normA );
-    printf(" %6.2e", normR / normA );
-    printf(" ];\n");
-
+        normA = sqrt( normA );
+        printf(" %6.2e", normR / normA );
+        printf(" ];\n");
+        //We see from a few testing cases (n going up to around 1000) that the first check is accurate up to around 1e-13 w
+        //while the second is accurate to around 1e-15. This is the accuracy that we want to achieve, so we need only 
     } else {
         hqr_(&n,&n,&ione,&n,A,wr,wi,&ierr);
     }
@@ -251,32 +252,33 @@ int main(int argc, char ** argv) {
             printf("    %5.8f;\n", wi[i]);
         printf("];\n");
     }
-    //if (eigenVectorFlag || schurVectorFlag) {
-    if (printFlag && !testFlag) {
-        printf("Z = [\n");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                printf("%3.8f,", z0(i,j));
+    if (eigenVectorFlag || schurVectorFlag) {
+        if (printFlag && !testFlag) {
+            printf("Z = [\n");
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    printf("%3.8f,", z0(i,j));
+                }
+                printf(";\n");
             }
-            printf(";\n");
-        }
-        printf("];\n");
-        printf("T = [\n");
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                printf("%3.8f,", a0(i,j));
+            printf("];\n");
+            printf("T = [\n");
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    printf("%3.8f,", a0(i,j));
+                }
+                printf(";\n");
             }
-            printf(";\n");
+            printf("];\n");
         }
-        printf("];\n");
     }
-    //}
-    return 0;
     // Now, we write our version. This next section is just
     // a C implementation of EISPACK's HQR.f where we move from an upper
-    // Hessenberg matrix to the Schur form.      
+    // Hessenberg matrix to the quasi-Schur form.      
     eigenValsReal = (double *) malloc(n * sizeof(double));
     eigenValsImag = (double *) malloc(n * sizeof(double));
+    //Print out the size of the matrix to the file for use in reading it in
+    fprintf(testingFile, "%d\n", n);
 
     int indexOfError = 0;
     double norm = 0;
@@ -306,14 +308,14 @@ int main(int argc, char ** argv) {
 beginEigSearch_60:
     if (en < low) {
         if (eigenVectorFlag) {
-            goto backSub_340;
+            goto backSub_340; // If we want to compute the eigenvectors, we go to solving the equations to compute them
         } else {
-            goto endOfProgram_1001;
+            goto endOfProgram_1001; // Otherwise, we are done
         }
     }
     its = 0;
     na = en - 1;
-    enm2 = na -1;
+    enm2 = na - 1;
 subDiagonalSearch_70:
     l = subDiagonalSearch(n,low,B,en,norm,&s);
 formShift_100:
@@ -365,6 +367,20 @@ postExceptionalShift_130:
     }
     fprintf(testingFile, "\n");
 */
+    /*
+     * For debugging purposes, we print out the contents of
+     * eigenMatrix to a file, this is done as a csv to 
+     * facilitate ease of reading in 
+     */
+    for (int i = 1; i <= n; i++){
+        for (int j = 1; j < n; j++) {
+            fprintf(testingFile, "%1.20f,", eigenMatrix1(i,j));
+        }
+        if (i != n)
+            fprintf(testingFile, "%1.20f,\n", eigenMatrix1(i,n));
+        else 
+            fprintf(testingFile, "%1.20f\n\n", eigenMatrix1(i,n));
+    }
     goto subDiagonalSearch_70;
 singleRoot_270:
     if (eigenVectorFlag) {
@@ -392,7 +408,7 @@ doubleRoot_280:
         eigenValsReal[en - 1] = x - w / zz;
     eigenValsImag[na - 1] = 0;
     eigenValsImag[en - 1] = 0;
-    if (eigenVectorFlag) {
+    if (eigenVectorFlag || schurVectorFlag) {
         x = b1(en,na);
         s = fabs(x) + fabs(zz);
         p = x / s;
@@ -414,9 +430,9 @@ doubleRoot_280:
         }
 //c     .......... accumulate transformations ..........
         for (i = low; i <= igh; i++) {
-            zz = z1(i,na);
-            z1(i,na) = q * zz + p * z1(i,en);
-            z1(i,en) = q * z1(i,en) - p * zz;
+            zz = eigenMatrix1(i,na);
+            eigenMatrix1(i,na) = q * zz + p * eigenMatrix1(i,en);
+            eigenMatrix1(i,en) = q * eigenMatrix1(i,en) - p * zz;
         }
     }
     goto postDoubleRoot_330;
@@ -589,7 +605,7 @@ b800:
     for (i = 1; i <= n; i++) {
         if ( i >= low && i <= igh ) continue;
         for (j = i; j<=n; j++)
-            z1(i,j) = b1(i,j);
+            eigenMatrix1(i,j) = b1(i,j);
     }
 //c     .......... multiply by transformation matrix to give
 //c                vectors of original full matrix.
@@ -602,8 +618,8 @@ b800:
         for (i = low; i <= igh; i++) {
             zz = 0.0;
             for (int k = low; k <= m; k++) 
-                zz = zz + z1(i,k) * b1(k,j);
-            z1(i,j) = zz;
+                zz = zz + eigenMatrix1(i,k) * b1(k,j);
+            eigenMatrix1(i,j) = zz;
         }
     }
     goto endOfProgram_1001;
@@ -650,7 +666,7 @@ for (int i = 0; i < n; i++) {
 	printf("Z = [\n");
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                printf("%3.8f,", z1(i,j));
+                printf("%3.8f,", eigenMatrix1(i,j));
             }
             printf(";\n");
         }
@@ -659,5 +675,8 @@ for (int i = 0; i < n; i++) {
         printf("Seed=%d, diff=%1.20f, diff is 0: %d\n",seed,normReal + normImag,normReal + normImag == 0.0);
     }
     freeMemory();
+    // Quick and dirty way of letting the file reader know we are done
+    fprintf(testingFile, "EOF");
+    fflush(testingFile);
     return 0;
 }

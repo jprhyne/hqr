@@ -18,7 +18,6 @@ int formShift(int n, int low, double* B, int* ierr, int its, int itn,
         int en, int l, double* s, double* t, double* x, double* y, double* w)
 {
     int retVal = 0;
-    int ione = 1;
     int na = en - 1;
     int enm2 = na - 1;
     *x = b1(en,en);
@@ -38,7 +37,7 @@ int formShift(int n, int low, double* B, int* ierr, int its, int itn,
     if (its != 10 && its != 20) return 0;
     *t = *t + *x;
     for (int i = low; i <= en; i++) 
-        b1(i,i) -= *x;
+        b1(i,i) = b1(i,i) - *x;
     *s = fabs(b1(en,na)) + fabs(b1(na,enm2));
     *x = 0.75 * *s;
     *y = *x;

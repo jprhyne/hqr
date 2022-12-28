@@ -77,12 +77,14 @@ int main (int argc, char **argv)
         printf("Did not converge at index: %d\n",ret);
         return 1;
     }
+    /*
     for (int i = 0; i < n; i++){
         for(int j=0;j<n;j++) {
             printf("%1.11f", schurMat[i + j * n]);
         }
         printf("\n");
     }
+    */
     // Getting here means that we have successfully ran all of 
     // hqr and got an answer, so now we check if our Schur vectors are correct
 
@@ -90,14 +92,16 @@ int main (int argc, char **argv)
     double *B = calloc(n*n,sizeof(double));
     for (int i = 0; i < n; i++) 
         for (int j = 0; j < n; j++)
-            B[j + i*n] = A[i + j * n];
-    double* C = matmul(A,n,n,B,n,n);
+            B[j + i*n] = schurMat[i + j * n];
+    double* C = matmul(schurMat,n,n,B,n,n);
+    printf("VV^T = [\n");
     for (int i = 0; i < n; i++){
         for(int j=0;j<n;j++) {
-            printf("%1.11f ", C[i + j * n]);
+            printf("%1.11f, ", C[i + j * n]);
         }
         printf("\n");
     }
+    printf("]\n");
     // Make an identity matrix
     double* eye = calloc(n*n,sizeof(double));
     for (int i = 0; i < n; i ++) 
