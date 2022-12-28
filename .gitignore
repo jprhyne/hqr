@@ -10,3 +10,6 @@
 
 # Jupyter notebook files
 *.ipynb
+
+# Debugging file, can be exceptionally large
+outputFileC.txt

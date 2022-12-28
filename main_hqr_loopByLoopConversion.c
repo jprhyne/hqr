@@ -278,7 +278,7 @@ int main(int argc, char ** argv) {
     eigenValsReal = (double *) malloc(n * sizeof(double));
     eigenValsImag = (double *) malloc(n * sizeof(double));
     //Print out the size of the matrix to the file for use in reading it in
-    fprintf(testingFile, "%d\n", n);
+    //fprintf(testingFile, "%d\n", n);
 
     int indexOfError = 0;
     double norm = 0;
@@ -372,6 +372,7 @@ postExceptionalShift_130:
      * eigenMatrix to a file, this is done as a csv to 
      * facilitate ease of reading in 
      */
+    /*
     for (int i = 1; i <= n; i++){
         for (int j = 1; j < n; j++) {
             fprintf(testingFile, "%1.20f,", eigenMatrix1(i,j));
@@ -381,6 +382,7 @@ postExceptionalShift_130:
         else 
             fprintf(testingFile, "%1.20f\n\n", eigenMatrix1(i,n));
     }
+    */
     goto subDiagonalSearch_70;
 singleRoot_270:
     if (eigenVectorFlag || schurVectorFlag) {
