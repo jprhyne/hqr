@@ -92,6 +92,8 @@ postExceptionalShift_130:
         qrIteration(n,A,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
     goto subDiagonalSearch_70;
 singleRoot_270:
+    if (schurVectorFlag)
+        a1(en,en) = x + t;
     eigenValsReal[en - 1] = x + t;
     eigenValsImag[en - 1] = 0;
     en = na;
@@ -100,6 +102,10 @@ doubleRoot_280:
     p = (y - x) / 2.0;
     q = p * p + w;
     zz = sqrt(fabs(q));
+    if (schurVectorFlag) {
+        a1(en,en) = x + t;
+        a1(na,na) = y + t;
+    }
     x = x + t;
     if (q < 0)
         goto complexPair_320;
@@ -114,6 +120,7 @@ doubleRoot_280:
         eigenValsReal[en - 1] = x - w / zz;
     eigenValsImag[na - 1] = 0;
     eigenValsImag[en - 1] = 0;
+
     if (schurVectorFlag) {
         x = a1(en,na);
         s = fabs(x) + fabs(zz);

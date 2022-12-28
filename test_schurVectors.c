@@ -3,7 +3,8 @@
 #include<stdlib.h>
 #include<math.h>
 #define a0(i,j) A[(i) + (j) * n]
-#define b0(i,j) A[(i) + (j) * n]
+#define schurMat0(i,j) schurMat[(i) + (j) * n]
+#define t0(i,j) T[(i) + (j) * n]
 
 extern int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag, double *eigMat);
 
@@ -50,6 +51,7 @@ int main (int argc, char **argv)
     srand(seed);
     // First create a matrix A as upper hessenberg matrix.
     double *A = (double *) calloc(n*n,sizeof(double));
+    double *T = (double *) calloc(n*n,sizeof(double));
     // These values are not needed for this particular file's
     // testing, however this is needed to run hqr.c
     double *eigValsReal = (double *) malloc(n*n*sizeof(double));
@@ -62,6 +64,7 @@ int main (int argc, char **argv)
  	    for(int j = start; j < n; j++) {
             double val = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 	        a0(i,j) = val; 
+	        t0(i,j) = val; 
         }
     }
     // Create a matrix to store the Schur Vectors
@@ -69,7 +72,7 @@ int main (int argc, char **argv)
     for (int i = 0; i < n; i++)
         schurMat[i + i * n] = 1;
     // Now we call hqr. At the end schurMat will contain the schur vectors
-    int ret = hqr(n,n,1,n,A,eigValsReal,eigValsImag,1,schurMat);
+    int ret = hqr(n,n,1,n,T,eigValsReal,eigValsImag,1,schurMat);
     if (ret != 0) {
         // This means that hqr did not converge to at some index,
         // so we print it out and terminate execution as our Schur
@@ -87,37 +90,49 @@ int main (int argc, char **argv)
     */
     // Getting here means that we have successfully ran all of 
     // hqr and got an answer, so now we check if our Schur vectors are correct
-
-    //First, we have to compute A^\top
-    double *B = calloc(n*n,sizeof(double));
-    for (int i = 0; i < n; i++) 
-        for (int j = 0; j < n; j++)
-            B[j + i*n] = schurMat[i + j * n];
-    double* C = matmul(schurMat,n,n,B,n,n);
-    printf("VV^T = [\n");
-    for (int i = 0; i < n; i++){
-        for(int j=0;j<n;j++) {
-            printf("%1.11f, ", C[i + j * n]);
+    //  check || Z' * Z - I ||_F
+        double orthZ, tmp;
+        printf("%% [ ORTH ] n = %4d; checks = [ ", n );
+        orthZ = 0e+00;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                tmp = ( i == j ) ? 1.0e+00 : 0.00e+00;
+                for (int k = 0; k < n; k++) {
+                    tmp -= schurMat0(k,i)*schurMat0(k,j);
+                }
+                orthZ += tmp * tmp;
+            }
         }
-        printf("\n");
-    }
-    printf("]\n");
-    // Make an identity matrix
-    double* eye = calloc(n*n,sizeof(double));
-    for (int i = 0; i < n; i ++) 
-        eye[i + i * n] = 1; 
-    double* diffMat = matsub(C,n,n,eye,n,n);
-    // compute the sum of the absolute value of the elements of diffMat
-    double norm = 0;
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            norm += fabs(diffMat[i + j*n]);
-    printf("Sum of the absolute elements of diffmat: %1.20f\n",norm);
+        orthZ = sqrt( orthZ );
+        printf(" %1.10e", orthZ );
+
+    //  check || A * Z - Z * T ||_F / || A ||_F
+        double normR, normA;
+        normR = 0.0e+00;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                tmp = 0.0e+00;
+                for (int k = 0; (k < n)&&(k < j+2); k++) {
+                    tmp += schurMat0(i,k)*t0(k,j);
+                }
+                for (int k = 0; k < n; k++) {
+                    tmp -= a0(i,k)*schurMat0(k,j);
+                }
+                normR += tmp * tmp ;
+            }
+        }
+        normR = sqrt( normR );
+        normA = 0.0e+00;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                normA += t0(i,j) * t0(i,j) ;
+            }
+        }
+        normA = sqrt( normA );
+        printf(" %1.10e", normR / normA );
+        printf(" ];\n");
     free(A);
-    free(B);
-    free(C);
+    free(T);
     free(schurMat);
-    free(eye);
-    free(diffMat);
     return 0;
 }

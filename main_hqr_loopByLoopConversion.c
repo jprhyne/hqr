@@ -204,7 +204,7 @@ int main(int argc, char ** argv) {
             }
         }
         orthZ = sqrt( orthZ );
-        printf(" %6.2e", orthZ );
+        printf(" %1.10e", orthZ );
 
     //  check || A * Z - Z * T ||_F / || A ||_F
         double normR, normA;
@@ -229,7 +229,7 @@ int main(int argc, char ** argv) {
             }
         }
         normA = sqrt( normA );
-        printf(" %6.2e", normR / normA );
+        printf(" %1.10e", normR / normA );
         printf(" ];\n");
         //We see from a few testing cases (n going up to around 1000) that the first check is accurate up to around 1e-13 w
         //while the second is accurate to around 1e-15. This is the accuracy that we want to achieve, so we need only 
@@ -383,7 +383,7 @@ postExceptionalShift_130:
     }
     goto subDiagonalSearch_70;
 singleRoot_270:
-    if (eigenVectorFlag) {
+    if (eigenVectorFlag || schurVectorFlag) {
         b1(en,en) = x + t;
     }
     eigenValsReal[en - 1] = x + t;
@@ -394,6 +394,10 @@ doubleRoot_280:
     p = (y - x) / 2.0;
     q = p * p + w;
     zz = sqrt(fabs(q));
+    if (eigenVectorFlag || schurVectorFlag) {
+        a1(en,en) = x + t;
+        a1(na,na) = y + t;
+    }
     x = x + t;
     if (q < 0)
         goto complexPair_320;
