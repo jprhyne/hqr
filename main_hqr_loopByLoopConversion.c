@@ -682,7 +682,7 @@ for (int i = 0; i < n; i++) {
     }
     freeMemory();
     // Quick and dirty way of letting the file reader know we are done
-    fprintf(testingFile, "EOF");
-    fflush(testingFile);
+    // fprintf(testingFile, "EOF");
+    // fflush(testingFile);
     return 0;
 }
