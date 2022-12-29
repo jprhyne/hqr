@@ -1,7 +1,7 @@
-CC = gcc
-FC = gfortran
 
-all: main_hqr_loopByLoopConversion.exe
+include make.inc
+
+all: main_hqr_loopByLoopConversion.exe test_schurVectors.exe test_hqr2_fortran.exe testBitwiseEquality.exe
 
 hqr.o: hqr.f
 	$(FC) -c hqr.f -g
@@ -64,19 +64,19 @@ cdivC.o: cdiv.c
 	$(CC) -c $^ -o cdivC.o -g
 
 main_hqr_loopByLoopConversion.exe: main_hqr_loopByLoopConversion.o formShift.o hqr.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o hqr2.o cdivF.o cdivC.o qrIterationVec.o
-	$(CC) -o $@ $^ -g
+	$(LOADER) -o $@ $^
 
 test_schurVectors.exe: test_schurVectors.o formShift.o hqrC.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o cdivC.o qrIterationVec.o matmul.o matsub.o
-	$(CC) -o $@ $^ -g
+	$(LOADER) -o $@ $^
 
 test_hqr2_fortran.exe: test_hqr2_fortran.o hqr2.o cdiv.o matmul.o matsub.o
-	$(CC) -o $@ $^
+	$(LOADER) -o $@ $^
 
 main_hqr_test.exe: main_hqr_test.o hqr.o
-	$(CC) hqr.o main_hqr_test.o -o $@
+	$(LOADER) hqr.o main_hqr_test.o -o $@
 
 testBitwiseEquality.exe: testBitwiseEquality.o formShift.o hqrC.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o cdivC.o qrIterationVec.o hqr2.o
-	$(CC) -o $@ $^ -g
+	$(LOADER) -o $@ $^
 
 clean:
 	rm -f *.exe *.o *.out .*swp
