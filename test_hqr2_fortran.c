@@ -173,8 +173,21 @@ int main(int argc, char ** argv) {
                 printf("\n");
             }
             printf("]\n");
+	    printf("H = [\n");
+            for ( int i = 0; i < n; i++ ) {
+                for (int j = 0; j < n; j++ ) {
+                    printf("%+3.8f, ",a0(i,j));
+                }
+                printf("\n");
+            }
+            printf("]\n");
         }
+	// Check that V^T V = I 
+
+	// zero-out below quasi diagonal of H by looking wi
+
 	// Check that AV = VH
+	// Check that A = V * H * V^T
         double *leftMat = matmul(B,n,n,z,n,n);
         double *rightMat = matmul(z,n,n,A,n,n);
         double *diffMat = matsub(leftMat,n,n,rightMat,n,n);
@@ -182,7 +195,7 @@ int main(int argc, char ** argv) {
             printf("diffMat=[\n");
             for ( int i = 0; i < n; i++ ) {
                 for (int j = 0; j < n; j++ ) {
-                    printf("%3.8f, ",diffMat[i + j * n]);
+                    printf("%3.8e, ",diffMat[i + j * n]);
                 }
                 printf("\n");
             }
@@ -190,12 +203,20 @@ int main(int argc, char ** argv) {
         } else if (testFlag) {
             //compute the absolute sum of the elements of diffMat
             double norm = 0.;
+            double repres = 0.;
             for ( int i = 0; i < n; i++ ) {
                 for (int j = 0; j < n; j++ ) {
+// either absolute value, or square and take square root after
                     norm += diffMat[i + j * n];
                 }
+// please look at || A V - V H ||_{fro} / || A ||_{fro}
             }
-            printf("DiffMat has sum of absolute elements equal to 0: %d\n",norm == 0.0);
+            //printf("DiffMat has sum of absolute elements equal to 0: %d\n",norm == 0.0);
+	    // repres = norm / normA;
+	    repres = norm;
+	    double orthog = 0.0 / 0.0;
+            printf("repres: %e\n",repres);
+            printf("orthog: %e\n",orthog);
         }
         free(leftMat);
         free(rightMat);
