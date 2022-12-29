@@ -2,8 +2,10 @@
 This repository works on transcribing hqr.f and hqr2.f from eispack into C to convert a Hessenberg matrix into the quasi-Schur form using orthogonal similarity transformation.
 
 # Compilation Instructions
-There have been issues in compilation with Linux and Mac devices, the current workaround is to create a file titled ```make.inc``` and then
-inside it, change the LOADER flag from CC to FC if you cannot compile as it is. 
+There have been issues in compilation with Linux and Mac devices, the current workaround is
+* ```cp make.inc.example make.inc```
+* run ```make```
+* edit ```make.inc``` from ```FC``` to ```CC``` if you have compilation issues
 
 # TODO
 * Create a test suite (python or matlab probably)

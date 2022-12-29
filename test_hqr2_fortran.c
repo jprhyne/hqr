@@ -118,6 +118,9 @@ int main(int argc, char ** argv) {
 
         z = (double *) malloc( n * n * sizeof(double));
 
+        for (i = 0; i < n; i++) 
+            z0(i,i) = 1;
+
 	// Generate A as a random matrix.
  	for(i = 0; i < n; i++) {
             int start = 0;
