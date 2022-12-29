@@ -9,3 +9,4 @@ n=710,schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagD
 n=810,schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
 n=910,schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
 n=1010,schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
+n=20,schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00

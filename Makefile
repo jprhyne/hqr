@@ -64,19 +64,19 @@ cdivC.o: cdiv.c
 	$(CC) -c $^ -o cdivC.o -g
 
 main_hqr_loopByLoopConversion.exe: main_hqr_loopByLoopConversion.o formShift.o hqr.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o hqr2.o cdivF.o cdivC.o qrIterationVec.o
-	$(FC) -o $@ $^ -g
+	$(CC) -o $@ $^ -g
 
 test_schurVectors.exe: test_schurVectors.o formShift.o hqrC.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o cdivC.o qrIterationVec.o matmul.o matsub.o
-	$(FC) -o $@ $^ -g
+	$(CC) -o $@ $^ -g
 
 test_hqr2_fortran.exe: test_hqr2_fortran.o hqr2.o cdiv.o matmul.o matsub.o
-	$(FC) -o $@ $^
+	$(CC) -o $@ $^
 
 main_hqr_test.exe: main_hqr_test.o hqr.o
-	$(FC) hqr.o main_hqr_test.o -o $@
+	$(CC) hqr.o main_hqr_test.o -o $@
 
 testBitwiseEquality.exe: testBitwiseEquality.o formShift.o hqrC.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o cdivC.o qrIterationVec.o hqr2.o
-	$(FC) -o $@ $^ -g
+	$(CC) -o $@ $^ -g
 
 clean:
 	rm -f *.exe *.o *.out .*swp
