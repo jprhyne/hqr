@@ -14,7 +14,7 @@ extern double*matsub(double*A, int nA, int mA, double *B, int nB, int mB);
 
 void usage()
 {
-    printf("main_hqr_test.exe [-h | -n sizeOfMatrix | -s seed]\n");
+    printf("test_schurVectors.exe [-h | -n sizeOfMatrix | -s seed]\n");
     printf("\t-h: Print this help dialogue\n");
     printf("\t-n: The following argument must be a positive integer\n");
     printf("\t\tThe default value is 20\n");

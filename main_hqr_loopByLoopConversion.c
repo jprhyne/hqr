@@ -132,7 +132,7 @@ int main(int argc, char ** argv) {
         }
     }
     //Uncomment if we want to test the output of qrIterationVec.c
-    FILE *testingFile = fopen("outputFileC.txt","w");
+    // FILE *testingFile = fopen("outputFileC.txt","w");
     srand(seed);
     // arrays that will hold the differences in the eigenvalues of hqr
     // and this implementation

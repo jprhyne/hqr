@@ -51,6 +51,9 @@ test_hqr2_fortran.o: test_hqr2_fortran.c
 test_schurVectors.o: test_schurVectors.c
 	$(CC) -c $^ -lm -g
 
+testBitwiseEquality.o: testBitwiseEquality.c
+	$(CC) -c $^ -lm -g
+
 matmul.o: matmul.c
 	$(CC) -c $^ -g
 
@@ -71,6 +74,9 @@ test_hqr2_fortran.exe: test_hqr2_fortran.o hqr2.o cdiv.o matmul.o matsub.o
 
 main_hqr_test.exe: main_hqr_test.o hqr.o
 	$(FC) hqr.o main_hqr_test.o -o $@
+
+testBitwiseEquality.exe: testBitwiseEquality.o formShift.o hqrC.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o cdivC.o qrIterationVec.o hqr2.o
+	$(FC) -o $@ $^ -g
 
 clean:
 	rm -f *.exe *.o *.out .*swp
