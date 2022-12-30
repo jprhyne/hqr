@@ -1,4 +1,4 @@
-      subroutine hqr2(nm,n,low,igh,h,wr,wi,z,ierr)
+      subroutine hqr2Eigen(nm,n,low,igh,h,wr,wi,z,ierr)
 c
       integer i,j,k,l,m,n,en,ii,jj,ll,mm,na,nm,nn,
      x        igh,itn,its,low,mp2,enm2,ierr
@@ -288,12 +288,8 @@ c     .......... complex pair ..........
 c     .......... all roots found.  backsubstitute to find
 c                vectors of upper triangular form ..........
 c
-CCCCCCCCCCC brutal exit here
-  340 goto 1001
-      if (norm .eq. 0.0d0) go to 1001
+  340 if (norm .eq. 0.0d0) go to 1001
 c
-CCCCCCCCCCC softer exit here
-c 340 if (norm .eq. 0.0d0) go to 1001
 c
 c     .......... for en=n step -1 until 1 do -- ..........
       do 800 nn = 1, n

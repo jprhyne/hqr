@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include "externalFunctions.h"
 #define b0(i,j) B[(i) + (j) * n]
 #define a0(i,j) A[(i) + (j) * n]
 #define z0(i,j) z[(i) + (j) * n]
@@ -22,29 +23,6 @@ double* eigenValsReal;
 double* eigenValsImag;
 double* eigenMatrix;
 
-extern int qrIteration(int n, double* B, int en, int na, int l, double* s,
-        double* x, double* y, double* p, double* q, double* r, double* zz,
-        int m);
-
-extern int qrIterationVec(int n, double* B, int en, int na, int l, double* s,
-        double* x, double* y, double* p, double* q, double* r, double* zz,
-        int m, int low, int igh, double* eigenMatrix);
-
-extern int formShift(int n, int low, double* B, int* ierr, int its, int itn,
-        int en, int l, double* s, double* t, double* x, double* y, double* w);
-
-extern int subDiagonalSearch(int n, int low, double* B, int en, double norm, double* s);
-
-extern int doubleSubDiagonalSearch(int n, double* B, int en, int enm2, int l, double* s, double x,
-        double y, double w, double* p, double* q, double* r, double* zz);
-
-extern void hqr2_(int *nm, int *n, int *low, int *igh, double *h, double *wr,
-        double *wi, double *z, int *ierr);
-
-extern void hqr_(int *nm, int *n, int *low, int *igh, double *h, double *wr,
-        double *wi, int *ierr);
-
-extern void cdiv(double ar, double ai, double br, double bi, double *cr, double *ci); 
 
 void usage()
 {
@@ -187,8 +165,8 @@ int main(int argc, char ** argv) {
         }
         printf("]\n");
     }
-    if (eigenVectorFlag || schurVectorFlag) {
-        hqr2_(&n, &n, &ione, &n, A, wr, wi, z, &ierr);
+    if (schurVectorFlag) {
+        hqr2schur_(&n, &n, &ione, &n, A, wr, wi, z, &ierr);
 
     //  check || Z' * Z - I ||_F
         double orthZ, tmp;
@@ -233,6 +211,8 @@ int main(int argc, char ** argv) {
         printf(" ];\n");
         //We see from a few testing cases (n going up to around 1000) that the first check is accurate up to around 1e-13 w
         //while the second is accurate to around 1e-15. This is the accuracy that we want to achieve, so we need only 
+    } else if (eigenVectorFlag) {
+        hqr2eigen_(&n, &n, &ione, &n, A, wr, wi, z, &ierr);
     } else {
         hqr_(&n,&n,&ione,&n,A,wr,wi,&ierr);
     }

@@ -2,15 +2,12 @@
 #include<string.h>
 #include<stdlib.h>
 #include<math.h>
+#include "externalFunctions.h"
 #define a0(i,j) A[(i) + (j) * n]
 #define b0(i,j) B[(i) + (j) * n]
 #define schurMatC0(i,j) schurMatC[(i) + (j) * n]
 #define schurMatF0(i,j) schurMatF[(i) + (j) * n]
 
-extern void hqr2_(int *nm, int *n, int *low, int *igh, double *h, double *wr,
-        double *wi, double *z, int *ierr);
-
-extern int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag, double *eigMat);
 
 void usage()
 {
@@ -88,7 +85,7 @@ int main (int argc, char **argv)
     // Call the (modified) hqr2.f function 
     int ione = 1;
     int ierr;
-    hqr2_(&n,&n,&ione,&n,B,eigValsRealF,eigValsImagF,schurMatF,&ierr);
+    hqr2schur_(&n,&n,&ione,&n,B,eigValsRealF,eigValsImagF,schurMatF,&ierr);
     // Now, we need to check if 
     // 1) A = B
     // 2) eigVals{Real,Imag}C = eigVals{Real,Imag}F

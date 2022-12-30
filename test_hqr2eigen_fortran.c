@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <math.h>
+#include "externalFunctions.h"
 #define a0(i,j) A[(i) + (j) * n]
 #define b0(i,j) B[(i) + (j) * n]
 #define z0(i,j) z[(i) + (j) * n]
@@ -16,13 +17,6 @@ double* wi;
 double* z;
 double* eigenValsReal;
 double* eigenValsImag;
-
-extern double*matmul(double*A, int nA, int mA, double *B, int nB, int mB);
-
-extern double*matsub(double*A, int nA, int mA, double *B, int nB, int mB);
-
-extern void hqr2_(int *nm,int *n,int *low,int *igh, double *h, double *wr,
-        double *wi, double *z, int *ierr);
 
 void usage()
 {
@@ -137,7 +131,7 @@ int main(int argc, char ** argv) {
         for ( int i = 0; i < n; i++ )
             for ( int j = 0; j < n; j++ )
                 b0(i,j) = a0(i,j);
-	hqr2_( &n, &n, &ione, &n, A, wr, wi, z, &ierr);
+	hqr2schur_( &n, &n, &ione, &n, A, wr, wi, z, &ierr);
 	/*
 	 * Below prints out wr and wi for inspection via 
 	 * MATLAB/visual inspection

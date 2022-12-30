@@ -2,15 +2,10 @@
 #include<string.h>
 #include<stdlib.h>
 #include<math.h>
+#include "externalFunctions.h"
 #define a0(i,j) A[(i) + (j) * n]
 #define schurMat0(i,j) schurMat[(i) + (j) * n]
 #define t0(i,j) T[(i) + (j) * n]
-
-extern int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag, double *eigMat);
-
-extern double*matmul(double*A, int nA, int mA, double *B, int nB, int mB);
-
-extern double*matsub(double*A, int nA, int mA, double *B, int nB, int mB);
 
 void usage()
 {
