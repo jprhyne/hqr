@@ -7,6 +7,5 @@ if [ -f "bitEq.txt" ]; then
 fi
 
 for n in {10..1010..100}; do
-	echo "Running for n = $n"
 	./testBitwiseEquality.exe -n $n
 done

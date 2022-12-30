@@ -1,25 +1,29 @@
-#include<math.h>
-#define a1(i,j) A[(i - 1) + (j - 1) * n]
-#define eigenMatrix1(i,j) eigenMatrix[(i - 1) + (j - 1) * n]
-extern int qrIteration(int n, double* A, int en, int na, int l, double* s,
-        double* x, double* y, double* p, double* q, double* r, double* zz,
-        int m);
-
-extern int qrIterationVec(int n, double* A, int en, int na, int l, double* s,
-        double* x, double* y, double* p, double* q, double* r, double* zz,
-        int m, int low, int igh, double* eigenMatrix);
-
-extern int formShift(int n, int low, double* A, int* ierr, int its, int itn,
-        int en, int l, double* s, double* t, double* x, double* y, double* w);
-
-extern int subDiagonalSearch(int n, int low, double* A, int en, double norm, double* s);
-
-extern int doubleSubDiagonalSearch(int n, double* A, int en, int enm2, int l, double* s, double x,
-        double y, double w, double* p, double* q, double* r, double* zz);
-
-extern void cdiv(double ar, double ai, double br, double bi, double *cr, double *ci); 
-
-int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag, double *eigenMatrix)
+#include "hqr.h"
+/**
+ * nm: leading dimension for A
+ * n: number of columns in A
+ * low: lowest index value we are considering for our matrix
+ * igh: highest index value we are considering for our matrix 
+ * A: The upper hessenberg matrix we are finding the eigenvalues of
+ *      and, and computing the Quasi-Schur form of
+ * eigenValsReal: Array to store the real parts of the eigenvalues of A
+ * eigenValsImag: Array to store the imaginary parts of the eigenvalues of A
+ * schurVectorFlag: flag that determines of we compute the schur vectors or not.
+ *      if we are not computing the schur vectors, then schurMatrix can be a null ptr
+ * schurMatrix: 2D array that will store the SchurVectors. This must start as either
+ *      the Identity matrix or as a collection of transformations such that
+ *      B = schurMatrix * A * schurMatrix^T (ie a hessenberg reduction to A)
+ *
+ * return:
+ *  The return value takes 2 possible ranges of values: [-n,0) and [0,\inf)
+ *  [-n,0): then it will be an integer value containing the negative index of 
+ *      where we failed to converge. IE: -2 means that we failed to converge 
+ *      when we were trying to compute the 2nd eigenvalue. So the eigenvalues 
+ *      3,...,n are correct
+ *  [0,\inf): Then it will be a floating point number containing the sum of
+ *      the absolute values of the upper triangular part of A
+ */
+double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag, double *schurMatrix)
 {
     int indexOfError = 0;
     double norm = 0;
@@ -79,7 +83,7 @@ formShift_100:
         default:
             // This should never happen, so if it does we free memory
             // print an error message, then terminate.
-            return -1;
+            return -n - 1;
     }
 postExceptionalShift_130:
     its = its + 1;
@@ -87,7 +91,7 @@ postExceptionalShift_130:
     m = doubleSubDiagonalSearch(n, A, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
     // double qr step
     if (schurVectorFlag) 
-        qrIterationVec(n,A,en,na,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,eigenMatrix);
+        qrIterationVec(n,A,en,na,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,schurMatrix);
     else 
         qrIteration(n,A,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
     goto subDiagonalSearch_70;
@@ -143,9 +147,9 @@ doubleRoot_280:
         }
 //c     .......... accumulate transformations ..........
         for (i = low; i <= igh; i++) {
-            zz = eigenMatrix1(i,na);
-            eigenMatrix1(i,na) = q * zz + p * eigenMatrix1(i,en);
-            eigenMatrix1(i,en) = q * eigenMatrix1(i,en) - p * zz;
+            zz = schurMatrix1(i,na);
+            schurMatrix1(i,na) = q * zz + p * schurMatrix1(i,en);
+            schurMatrix1(i,en) = q * schurMatrix1(i,en) - p * zz;
         }
     }
     goto postDoubleRoot_330;
@@ -158,6 +162,7 @@ postDoubleRoot_330:
     en = enm2;
     goto beginEigSearch_60;
 errorThenEnd_1000:
+    return -en;
 endOfProgram_1001:
-    return en;
+    return norm;
 }

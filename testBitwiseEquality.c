@@ -74,12 +74,12 @@ int main (int argc, char **argv)
         schurMatF[i + i * n] = 1;
     }
     // Now we call hqr. At the end schurMat will contain the schur vectors
-    int ret = hqr(n,n,1,n,A,eigValsRealC,eigValsImagC,1,schurMatC);
-    if (ret != 0) {
+    double norm = hqr(n,n,1,n,A,eigValsRealC,eigValsImagC,1,schurMatC);
+    if (norm < 0) {
         // This means that hqr did not converge to at some index,
         // so we print it out and terminate execution as our Schur
         // vectors will not be correct
-        printf("Did not converge at index: %d\n",ret);
+        printf("Did not converge at index: %d\n",-norm);
         return 1;
     }
     // Call the (modified) hqr2.f function 
@@ -128,7 +128,7 @@ int main (int argc, char **argv)
 
     // Now we print these results to a file titled "bitEq.txt
     FILE *testingFile = fopen("bitEq.txt","a");
-    fprintf(testingFile, "n=%d,schurDiff=%1.10e, eigValsRealDiff=%1.10e, eigValsImagDiff=%1.10e, zMatDiff=%1.10e\n",n,schurEq,eigRealEq,eigImagEq,zEq);
+    fprintf(testingFile, "n=%8d, schurDiff=%1.10e, eigValsRealDiff=%1.10e, eigValsImagDiff=%1.10e, zMatDiff=%1.10e\n",n,schurEq,eigRealEq,eigImagEq,zEq);
     fclose(testingFile);
 
     free(A);

@@ -4,7 +4,7 @@ extern int qrIteration(int n, double* B, int en, int na, int l, double* s,
 
 extern int qrIterationVec(int n, double* B, int en, int na, int l, double* s,
         double* x, double* y, double* p, double* q, double* r, double* zz,
-        int m, int low, int igh, double* eigenMatrix);
+        int m, int low, int igh, double* schurMatrix);
 
 extern int formShift(int n, int low, double* B, int* ierr, int its, int itn,
         int en, int l, double* s, double* t, double* x, double* y, double* w);
@@ -23,7 +23,7 @@ extern void hqr2eigen_(int *nm, int *n, int *low, int *igh, double *h, double *w
 extern void hqr_(int *nm, int *n, int *low, int *igh, double *h, double *wr,
         double *wi, int *ierr);
 
-extern int hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag, double *eigMat);
+extern double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag, double *eigMat);
 
 extern void cdiv(double ar, double ai, double br, double bi, double *cr, double *ci); 
 

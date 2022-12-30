@@ -1,6 +1,6 @@
 include make.inc
 
-all: main_hqr_loopByLoopConversion.exe test_schurVectors.exe test_hqr2schur_fortran.exe test_hqr2eigen_fortran.exe testBitwiseEquality.exe
+all: main_hqr_loopByLoopConversion.exe test_schurVectors.exe test_hqr2schur_fortran.exe test_hqr2eigen_fortran.exe testBitwiseEquality.exe test_schurToEigen.exe
 
 cdivF.o: cdiv.f
 	$(FC) -c cdiv.f -g -o cdivF.o
@@ -44,6 +44,9 @@ qrIterationVec.o: qrIterationVec.c
 subDiagonalSearch.o: subDiagonalSearch.c
 	$(CC) -c $^ -g
 
+schurToEigen.o: schurToEigen.c
+	$(CC) -c $^ -g
+
 testBitwiseEquality.o: testBitwiseEquality.c
 	$(CC) -c $^ -lm -g
 
@@ -56,10 +59,16 @@ test_hqr2eigen_fortran.o: test_hqr2eigen_fortran.c
 test_schurVectors.o: test_schurVectors.c
 	$(CC) -c $^ -lm -g
 
+test_schurToEigen.o: test_schurToEigen.c
+	$(CC) -c $^ -lm -g
+
 main_hqr_loopByLoopConversion.exe: main_hqr_loopByLoopConversion.o formShift.o hqr.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o hqr2Schur.o hqr2Eigen.o cdivF.o cdivC.o qrIterationVec.o
 	$(LOADER) -o $@ $^
 
 test_schurVectors.exe: test_schurVectors.o formShift.o hqrC.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o cdivC.o qrIterationVec.o matmul.o matsub.o
+	$(LOADER) -o $@ $^
+
+test_schurToEigen.exe: test_schurToEigen.o formShift.o hqrC.o subDiagonalSearch.o doubleSubDiagonalSearch.o qrIteration.o cdivC.o qrIterationVec.o matmul.o matsub.o schurToEigen.o
 	$(LOADER) -o $@ $^
 
 test_hqr2schur_fortran.exe: test_hqr2schur_fortran.o hqr2Schur.o hqr2Eigen.o cdivC.o matmul.o matsub.o cdivF.o

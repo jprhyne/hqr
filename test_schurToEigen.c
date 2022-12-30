@@ -2,14 +2,16 @@
 #include<string.h>
 #include<stdlib.h>
 #include<math.h>
-#include "externalFunctions.h"
+#include"externalFunctions.h"
+extern void schurToEigen(int low, int igh, double norm, int n, double *eigenValsReal,
+            double *eigenValsImag, double *T, double *eigenMatrix);
 #define a0(i,j) A[(i) + (j) * n]
-#define schurMat0(i,j) schurMat[(i) + (j) * n]
+#define eigenMat0(i,j) eigenMat[(i) + (j) * n]
 #define t0(i,j) T[(i) + (j) * n]
 
 void usage()
 {
-    printf("test_schurVectors.exe [-h | -n sizeOfMatrix | -s seed]\n");
+    printf("test_schurToEigen.exe [-h | -n sizeOfMatrix | -s seed]\n");
     printf("\t-h: Print this help dialogue\n");
     printf("\t-n: The following argument must be a positive integer\n");
     printf("\t\tThe default value is 20\n");
@@ -63,11 +65,11 @@ int main (int argc, char **argv)
         }
     }
     // Create a matrix to store the Schur Vectors
-    double *schurMat = (double *) calloc(n*n,sizeof(double));
+    double *eigenMat = (double *) calloc(n*n,sizeof(double));
     for (int i = 0; i < n; i++)
-        schurMat[i + i * n] = 1;
-    // Now we call hqr. At the end schurMat will contain the schur vectors
-    double norm = hqr(n,n,1,n,T,eigValsReal,eigValsImag,1,schurMat);
+        eigenMat[i + i * n] = 1;
+    // Now we call hqr. At the end eigenMat will contain the schur vectors
+    double norm = hqr(n,n,1,n,T,eigValsReal,eigValsImag,1,eigenMat);
     if (norm < 0) {
         // This means that hqr did not converge to at some index,
         // so we print it out and terminate execution as our Schur
@@ -75,32 +77,11 @@ int main (int argc, char **argv)
         printf("Did not converge at index: %d\n",-norm);
         return 1;
     }
-    /*
-    for (int i = 0; i < n; i++){
-        for(int j=0;j<n;j++) {
-            printf("%1.11f", schurMat[i + j * n]);
-        }
-        printf("\n");
-    }
-    */
-    // Getting here means that we have successfully ran all of 
-    // hqr and got an answer, so now we check if our Schur vectors are correct
-    //  check || Z' * Z - I ||_F
-    double orthZ, tmp;
-    printf("%% [ ORTH ] n = %4d; checks = [ ", n );
-    orthZ = 0e+00;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            tmp = ( i == j ) ? 1.0e+00 : 0.00e+00;
-            for (int k = 0; k < n; k++) {
-                tmp -= schurMat0(k,i)*schurMat0(k,j);
-            }
-            orthZ += tmp * tmp;
-        }
-    }
-    orthZ = sqrt( orthZ );
-    printf(" %1.10e", orthZ );
 
+    schurToEigen(1, n, norm, n, eigValsReal, eigValsImag, T, eigenMat);
+
+    // Getting here means that we have successfully ran all of 
+    // hqr and got an answer. 
     // Zero out below quasi diagonal elements of T
     // First, zero out everything below the 1st subdiagonal
     for (int i = 0; i < n; i++) 
@@ -120,18 +101,14 @@ int main (int argc, char **argv)
         }
     }
 
-    //  check || A - Z * T * Z^T ||_F / || A ||_F
+    //  check || A * Z - Z * T  ||_F / || A ||_F
     double normR, normA;
     normR = 0.0e+00;
-    double *Zt = malloc(n * n * sizeof(double));
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            Zt[i + j * n] = schurMat0(j,i);
     // Yes, this is lazy and inefficient, however it 
     // accomplishes our goals in a reasonable time frame
-    double *ZT = matmul(schurMat,n,n,T,n,n);
-    double *rhs = matmul(ZT,n,n,Zt,n,n);
-    double *ans = matsub(rhs,n,n,A,n,n);
+    double *lhs = matmul(A,n,n,eigenMat,n,n);
+    double *rhs = matmul(eigenMat,n,n,T,n,n);
+    double *ans = matsub(lhs,n,n,rhs,n,n);
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             normR += ans[i + j * n] * ans[i + j * n];
@@ -143,14 +120,26 @@ int main (int argc, char **argv)
         }
     }
     normA = sqrt( normA );
-    printf(" %1.10e", normR / normA );
-    printf(" ];\n");
+    
+    // Now we check if our eigenMatrix is invertible
+    // Since finding the inverse is expensive, and inaccurate, we will get around
+    // The invertability check by finding the eigenvalues and checking to make 
+    // sure none of them are 0, then we check representation.
+    //
+    // This assumes that hqr works correctly
+    double *eigEigValReal = malloc(n * sizeof(double));
+    double *eigEigValImag = malloc(n * sizeof(double));
+    hqr(n,n,1,n,eigenMat,eigEigValReal,eigEigValImag,0,NULL);
+    // Check if any eigenvalue is 0
+    for (int k = 0; k < n; k++) 
+        if (eigEigValReal[k] == 0 && eigEigValImag[k] == 0)
+            printf("eigenValue of the eigenMatrix is 0 at index %4d",k);
+    printf("%% [ REPRES ] n = %4d; check = [ %1.10e ];", n, normR / normA );
     free(A);
     free(T);
-    free(schurMat);
-    free(Zt);
-    free(ZT);
+    free(eigenMat);
     free(rhs);
+    free(lhs);
     free(ans);
     return 0;
 }
