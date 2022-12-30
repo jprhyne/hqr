@@ -91,48 +91,71 @@ int main (int argc, char **argv)
     // Getting here means that we have successfully ran all of 
     // hqr and got an answer, so now we check if our Schur vectors are correct
     //  check || Z' * Z - I ||_F
-        double orthZ, tmp;
-        printf("%% [ ORTH ] n = %4d; checks = [ ", n );
-        orthZ = 0e+00;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                tmp = ( i == j ) ? 1.0e+00 : 0.00e+00;
-                for (int k = 0; k < n; k++) {
-                    tmp -= schurMat0(k,i)*schurMat0(k,j);
-                }
-                orthZ += tmp * tmp;
+    double orthZ, tmp;
+    printf("%% [ ORTH ] n = %4d; checks = [ ", n );
+    orthZ = 0e+00;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            tmp = ( i == j ) ? 1.0e+00 : 0.00e+00;
+            for (int k = 0; k < n; k++) {
+                tmp -= schurMat0(k,i)*schurMat0(k,j);
             }
+            orthZ += tmp * tmp;
         }
-        orthZ = sqrt( orthZ );
-        printf(" %1.10e", orthZ );
+    }
+    orthZ = sqrt( orthZ );
+    printf(" %1.10e", orthZ );
 
-    //  check || A * Z - Z * T ||_F / || A ||_F
-        double normR, normA;
-        normR = 0.0e+00;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                tmp = 0.0e+00;
-                for (int k = 0; (k < n)&&(k < j+2); k++) {
-                    tmp += schurMat0(i,k)*t0(k,j);
-                }
-                for (int k = 0; k < n; k++) {
-                    tmp -= a0(i,k)*schurMat0(k,j);
-                }
-                normR += tmp * tmp ;
-            }
+    // Zero out below quasi diagonal elements of T
+    // First, zero out everything below the 1st subdiagonal
+    for (int i = 0; i < n; i++) 
+        for (int j = 0; j < i - 1; j++) 
+            t0(i,j) = 0;
+    // if eigValsImag[k]  = 0 then the sub diagonal elements need to be 0
+    // If eigValsImag[k] != 0 then we have a schur block  
+    int k;
+    for (k = 0; k < n-1; k++) {
+        if (eigValsImag[k] == 0) {
+            t0(k+1,k) = 0;
+        } else if (k < n-2){
+            // This means we are in a schur block, so the next sub diagonal
+            // element must be 0
+            t0(k+2,k+1) = 0;
+            k++;
         }
-        normR = sqrt( normR );
-        normA = 0.0e+00;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n; j++) {
-                normA += t0(i,j) * t0(i,j) ;
-            }
+    }
+
+    //  check || A - Z * T * Z^T ||_F / || A ||_F
+    double normR, normA;
+    normR = 0.0e+00;
+    double *Zt = malloc(n * n * sizeof(double));
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            Zt[i + j * n] = schurMat0(j,i);
+    // Yes, this is lazy and inefficient, however it 
+    // accomplishes our goals in a reasonable time frame
+    double *ZT = matmul(schurMat,n,n,T,n,n);
+    double *rhs = matmul(ZT,n,n,Zt,n,n);
+    double *ans = matsub(rhs,n,n,A,n,n);
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            normR += ans[i + j * n] * ans[i + j * n];
+    normR = sqrt( normR );
+    normA = 0.0e+00;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            normA += a0(i,j) * a0(i,j) ;
         }
-        normA = sqrt( normA );
-        printf(" %1.10e", normR / normA );
-        printf(" ];\n");
+    }
+    normA = sqrt( normA );
+    printf(" %1.10e", normR / normA );
+    printf(" ];\n");
     free(A);
     free(T);
     free(schurMat);
+    free(Zt);
+    free(ZT);
+    free(rhs);
+    free(ans);
     return 0;
 }

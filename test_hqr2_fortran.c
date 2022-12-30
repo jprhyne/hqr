@@ -137,88 +137,75 @@ int main(int argc, char ** argv) {
         for ( int i = 0; i < n; i++ )
             for ( int j = 0; j < n; j++ )
                 b0(i,j) = a0(i,j);
-	/*
-	 * Here, we print out A for finding the eigenvalues via MATLAB
-	 * This must be done before calling hqr_ because it destroys A
-	 */
-        if (printFlag && !testFlag) {
-            printf("A = [\n");
-            for (int i = 0; i < n; i++) {
-                for (int j = 0; j < n; j++) {
-                    printf("%3.8f,", a0(i,j));
-                }
-                printf("\n");
-            }
-            printf("]\n");
-        }
 	hqr2_( &n, &n, &ione, &n, A, wr, wi, z, &ierr);
 	/*
 	 * Below prints out wr and wi for inspection via 
 	 * MATLAB/visual inspection
 	 */
-        if (printFlag && !testFlag) {
-            printf("wr = [\n");
-            for ( int i = 0; i < n; i++)
-                printf("    %5.8f,\n", wr[i]);
-            printf("]\n");
-            printf("wi = [\n");
-            for ( int i = 0; i < n; i++)
-                printf("    %5.8f,\n", wi[i]);
-            printf("]\n");
-            printf("z = [\n");
-            for ( int i = 0; i < n; i++ ) {
-                for (int j = 0; j < n; j++ ) {
-                    printf("%3.8f, ",z0(i,j));
-                }
-                printf("\n");
-            }
-            printf("]\n");
-	    printf("H = [\n");
-            for ( int i = 0; i < n; i++ ) {
-                for (int j = 0; j < n; j++ ) {
-                    printf("%+3.8f, ",a0(i,j));
-                }
-                printf("\n");
-            }
-            printf("]\n");
-        }
 	// Check that V^T V = I 
+    double orthZ, tmp;
+    printf("%% [ ORTH ] n = %4d; checks = [ ", n );
+    orthZ = 0e+00;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            tmp = ( i == j ) ? 1.0e+00 : 0.00e+00;
+            for (int k = 0; k < n; k++) {
+                tmp -= z[k + i *n]*z[k + j * n];
+            }
+            orthZ += tmp * tmp;
+        }
+    }
+    orthZ = sqrt( orthZ );
+    printf(" %1.10e", orthZ );
 
 	// zero-out below quasi diagonal of H by looking wi
-
-	// Check that AV = VH
-	// Check that A = V * H * V^T
-        double *leftMat = matmul(B,n,n,z,n,n);
-        double *rightMat = matmul(z,n,n,A,n,n);
-        double *diffMat = matsub(leftMat,n,n,rightMat,n,n);
-        if (printFlag && !testFlag) {
-            printf("diffMat=[\n");
-            for ( int i = 0; i < n; i++ ) {
-                for (int j = 0; j < n; j++ ) {
-                    printf("%3.8e, ",diffMat[i + j * n]);
-                }
-                printf("\n");
-            }
-            printf("]\n");
-        } else if (testFlag) {
-            //compute the absolute sum of the elements of diffMat
-            double norm = 0.;
-            double repres = 0.;
-            for ( int i = 0; i < n; i++ ) {
-                for (int j = 0; j < n; j++ ) {
-// either absolute value, or square and take square root after
-                    norm += diffMat[i + j * n];
-                }
-// please look at || A V - V H ||_{fro} / || A ||_{fro}
-            }
-            //printf("DiffMat has sum of absolute elements equal to 0: %d\n",norm == 0.0);
-	    // repres = norm / normA;
-	    repres = norm;
-	    double orthog = 0.0 / 0.0;
-            printf("repres: %e\n",repres);
-            printf("orthog: %e\n",orthog);
+    // First, zero out everything below the 1st subdiagonal
+    for (int i = 0; i < n; i++) 
+        for (int j = 0; j < i - 1; j++) 
+            A[i + j * n] = 0;
+    // if eigValsImag[k]  = 0 then the sub diagonal elements need to be 0
+    // If eigValsImag[k] != 0 then we have a schur block  
+    int k;
+    for (k = 0; k < n-1; k++) {
+        if (wi[k] == 0) {
+            A[(k + 1) + (k) * n] = 0;
+        } else if (k < n-2){
+            // This means we are in a schur block, so the next sub diagonal
+            // element must be 0
+            A[(k + 2) + (k + 1) * n] = 0;
+            k++;
         }
-        free(leftMat);
-        free(rightMat);
-        free(diffMat);
+    }
+	// Check that A = V * H * V^T
+    double normR, normA;
+    normR = 0.0e+00;
+    double *Zt = malloc(n * n * sizeof(double));
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            Zt[i + j * n] = z[j + i * n];
+    // Yes, this is lazy and inefficient, however it 
+    // accomplishes our goals in a reasonable time frame
+    double *ZT = matmul(z,n,n,A,n,n);
+    double *rhs = matmul(ZT,n,n,Zt,n,n);
+    double *ans = matsub(rhs,n,n,B,n,n);
+    for (int i = 0; i < n; i++)
+        for (int j = 0; j < n; j++)
+            normR += ans[i + j * n] * ans[i + j * n];
+    normR = sqrt( normR );
+    normA = 0.0e+00;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            normA += B[i + j * n] * B[i + j * n];
+        }
+    }
+    normA = sqrt( normA );
+    printf(" %1.10e", normR / normA );
+    printf(" ];\n");
+    free(A);
+    free(B);
+    free(Zt);
+    free(ZT);
+    free(rhs);
+    free(ans);
+    return 0;
 }
