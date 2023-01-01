@@ -4,23 +4,21 @@
 #include <math.h>
 #include "externalFunctions.h"
 #define a0(i,j) A[(i) + (j) * n]
-#define b0(i,j) B[(i) + (j) * n]
-#define z0(i,j) z[(i) + (j) * n]
+#define t0(i,j) T[(i) + (j) * n]
+#define z0(i,j) Z[(i) + (j) * n]
 
 // This may be bad practice, but we put all malloc'd entities
 // as global variables in order to make freeing the
 // memory easier
 double* A;
-double* B;
-double* wr;
-double* wi;
-double* z;
-double* eigenValsReal;
-double* eigenValsImag;
+double* T;
+double* Z;
+double* eigValsReal;
+double* eigValsImag;
 
 void usage()
 {
-    printf("test_hqr2_fortran.exe [-n sizeOfMatrix | -v | -h]\n");
+    printf("test_hqr2eigen_fortran.exe [-n sizeOfMatrix | -v | -h]\n");
     printf("\t-n: The following argument must be a positive integer\n");
     printf("\t\tThe default value is 20\n");
     printf("\t-v: verbose flag that prints out the results of eispack hqr\n");
@@ -29,17 +27,6 @@ void usage()
     printf("\t\tactual computed eigenvalues.");
     printf("\t-h: Print this help dialogue\n");
     printf("\t--jobv: Flag that tells us to compute the eigenvectors");
-}
-
-void freeMemory()
-{
-    free(A);
-    free(B);
-    free(wr);
-    free(wi);
-    free(z);
-    free(eigenValsReal);
-    free(eigenValsImag);
 }
 
 int main(int argc, char ** argv) {
@@ -95,22 +82,17 @@ int main(int argc, char ** argv) {
 		//Uncomment if we want to test the output of qrIteration.c
 		//testingFile = fopen("outputFileC.txt","w");
         srand(seed);
-        // arrays that will hold the differences in the eigenvalues of hqr
-        // and this implementation
-	double eigRealDiff[n];
-	double eigImagDiff[n];
-        double eigVec[n*n];
 
 	// Allocate the memory for A to be generated. It will contain n^2 
 	// elements where each element is a double precision floating point number
 	A = (double *) malloc( n * n *  sizeof(double));
-	B = (double *) malloc( n * n *  sizeof(double));
+	T = (double *) malloc( n * n *  sizeof(double));
 	// Create a vector to store the real parts of the eigenvalues
-	wr = (double *) malloc( n *  sizeof(double));
+	eigValsReal = (double *) malloc( n *  sizeof(double));
 	// Create a vector to store the real parts of the eigenvalues
-	wi = (double *) malloc( n *  sizeof(double));
+	eigValsImag = (double *) malloc( n *  sizeof(double));
 
-        z = (double *) malloc( n * n * sizeof(double));
+        Z = (double *) malloc( n * n * sizeof(double));
 
         for (i = 0; i < n; i++) 
             z0(i,i) = 1;
@@ -123,65 +105,39 @@ int main(int argc, char ** argv) {
  	    for(j = start; j < n; j++) {
                 double val = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 	        a0(i,j) = val; 
+                t0(i,j) = val;
             }
         }
-
-        // Store a copy of A into B so that we can run our own
-        // version of hqr written in C 
-        for ( int i = 0; i < n; i++ )
-            for ( int j = 0; j < n; j++ )
-                b0(i,j) = a0(i,j);
-	hqr2schur_( &n, &n, &ione, &n, A, wr, wi, z, &ierr);
-	/*
-	 * Below prints out wr and wi for inspection via 
-	 * MATLAB/visual inspection
-	 */
-	// Check that V^T V = I 
-    double orthZ, tmp;
-    printf("%% [ ORTH ] n = %4d; checks = [ ", n );
-    orthZ = 0e+00;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            tmp = ( i == j ) ? 1.0e+00 : 0.00e+00;
-            for (int k = 0; k < n; k++) {
-                tmp -= z[k + i *n]*z[k + j * n];
-            }
-            orthZ += tmp * tmp;
-        }
-    }
-    orthZ = sqrt( orthZ );
-    printf(" %1.10e", orthZ );
-
-	// zero-out below quasi diagonal of H by looking wi
+	hqr2eigen_( &n, &n, &ione, &n, T, eigValsReal, eigValsImag, Z, &ierr);
+    // Getting here means that we have successfully ran all of 
+    // hqr and got an answer. 
+    // Zero out below quasi diagonal elements of T
     // First, zero out everything below the 1st subdiagonal
     for (int i = 0; i < n; i++) 
         for (int j = 0; j < i - 1; j++) 
-            A[i + j * n] = 0;
+            t0(i,j) = 0;
     // if eigValsImag[k]  = 0 then the sub diagonal elements need to be 0
     // If eigValsImag[k] != 0 then we have a schur block  
     int k;
     for (k = 0; k < n-1; k++) {
-        if (wi[k] == 0) {
-            A[(k + 1) + (k) * n] = 0;
+        if (eigValsImag[k] == 0) {
+            t0(k+1,k) = 0;
         } else if (k < n-2){
             // This means we are in a schur block, so the next sub diagonal
             // element must be 0
-            A[(k + 2) + (k + 1) * n] = 0;
+            t0(k+2,k+1) = 0;
             k++;
         }
     }
-	// Check that A = V * H * V^T
+
+    //  check || A * Z - Z * T  ||_F / || A ||_F
     double normR, normA;
     normR = 0.0e+00;
-    double *Zt = malloc(n * n * sizeof(double));
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            Zt[i + j * n] = z[j + i * n];
     // Yes, this is lazy and inefficient, however it 
     // accomplishes our goals in a reasonable time frame
-    double *ZT = matmul(z,n,n,A,n,n);
-    double *rhs = matmul(ZT,n,n,Zt,n,n);
-    double *ans = matsub(rhs,n,n,B,n,n);
+    double *lhs = matmul(A,n,n,Z,n,n);
+    double *rhs = matmul(Z,n,n,T,n,n);
+    double *ans = matsub(lhs,n,n,rhs,n,n);
     for (int i = 0; i < n; i++)
         for (int j = 0; j < n; j++)
             normR += ans[i + j * n] * ans[i + j * n];
@@ -189,17 +145,38 @@ int main(int argc, char ** argv) {
     normA = 0.0e+00;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
-            normA += B[i + j * n] * B[i + j * n];
+            normA += a0(i,j) * a0(i,j) ;
         }
     }
     normA = sqrt( normA );
-    printf(" %1.10e", normR / normA );
-    printf(" ];\n");
+    
+    // Now we check if our eigen matrix is invertible
+    // Since finding the inverse is expensive, and inaccurate, we will get around
+    // The invertability check by finding the eigenvalues and checking to make 
+    // sure none of them are 0, then we check representation.
+    //
+    // This assumes that hqr works correctly
+    double *eigEigValReal = malloc(n * sizeof(double));
+    double *eigEigValImag = malloc(n * sizeof(double));
+    hqr(n,n,1,n,Z,eigEigValReal,eigEigValImag,0,NULL);
+    // Check if any eigenvalue is 0
+    for (int k = 0; k < n; k++) 
+        if (eigEigValReal[k] == 0 && eigEigValImag[k] == 0)
+            printf("eigenValue of the Zrix is 0 at index %4d",k);
+    printf("%% [ REPRES ] n = %4d; check = [ %1.10e ];\n", n, normR / normA );
+    /*
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            printf("%1.10e",t0(i,j));
+        }
+        printf("\n");
+    }
+    */
     free(A);
-    free(B);
-    free(Zt);
-    free(ZT);
+    free(T);
+    free(Z);
     free(rhs);
+    free(lhs);
     free(ans);
     return 0;
 }

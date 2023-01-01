@@ -5,8 +5,13 @@
 #include "externalFunctions.h"
 #define a0(i,j) A[(i) + (j) * n]
 #define b0(i,j) B[(i) + (j) * n]
+#define c0(i,j) C[(i) + (j) * n]
 #define schurMatC0(i,j) schurMatC[(i) + (j) * n]
 #define schurMatF0(i,j) schurMatF[(i) + (j) * n]
+#define eigMatC0(i,j) eigMatC[(i) + (j) * n]
+#define eigMatF0(i,j) eigMatF[(i) + (j) * n]
+extern void schurToEigen(int low, int igh, double norm, int n, double *eigenValsReal,
+            double *eigenValsImag, double *T, double *eigenMatrix);
 
 
 void usage()
@@ -51,6 +56,7 @@ int main (int argc, char **argv)
     // B will be a copy of A, and passed into hqr2.f. This is because we want to 
     // test if our port is exactly the same
     double *B = (double *) calloc(n*n,sizeof(double));
+    double *C = (double *) calloc(n*n,sizeof(double));
     double *eigValsRealC = (double *) malloc(n*n*sizeof(double));
     double *eigValsImagC = (double *) malloc(n*n*sizeof(double));
     double *eigValsRealF = (double *) malloc(n*n*sizeof(double));
@@ -61,9 +67,10 @@ int main (int argc, char **argv)
         if (i - 1 > 0)
             start = i - 1;
  	    for(int j = start; j < n; j++) {
-            double val = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
+                double val = (double)rand() / (double)(RAND_MAX) - 0.5e+00;
 	        a0(i,j) = val; 
 	        b0(i,j) = val; 
+                c0(i,j) = val;
         }
     }
     // Create a matrix to store the Schur Vectors
@@ -129,15 +136,71 @@ int main (int argc, char **argv)
     // Now we print these results to a file titled "bitEq.txt
     FILE *testingFile = fopen("bitEq.txt","a");
     fprintf(testingFile, "n=%8d, schurDiff=%1.10e, eigValsRealDiff=%1.10e, eigValsImagDiff=%1.10e, zMatDiff=%1.10e\n",n,schurEq,eigRealEq,eigImagEq,zEq);
-    fclose(testingFile);
 
+    // The above tested if we have bitwise equality for the schur vectors Now we test if the eigenvector computations are equal
+
+    // C contains the original A
+    for (int i = 0; i < n; i++) 
+        for (int j = 0; j < n; j++) 
+            b0(i,j) = c0(i,j);
+    double *eigMatF = (double *) calloc(n*n,sizeof(double));
+    for (int i = 0; i < n; i++) 
+        eigMatF0(i,i) = 1;
+    schurToEigen(1,n,norm,n,eigValsRealC,eigValsImagC,A,schurMatC);
+
+    hqr2eigen_(&n,&n,&ione,&n,B,eigValsRealF,eigValsImagF,eigMatF,&ierr);
+
+    // Now, we need to check if 
+    // 1) A = B
+    // 2) eigVals{Real,Imag}C = eigVals{Real,Imag}F
+    // 3) schurMatC = eigMatF
+    // These will all be done by looking at the relative error in the frobenius 
+    // norm for 1 and 3, and the euclidean norm for 2
+    
+    // Checking 1
+    schurEq = 0.0;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            tmp = a0(i,j) - b0(i,j);
+            schurEq += tmp * tmp;
+        }
+    }
+    schurEq = sqrt(schurEq);
+
+    // Checking 2
+    eigRealEq = 0.0;
+    eigImagEq = 0.0;
+    for (int i = 0; i < n; i++) {
+        tmp = eigValsRealC[i] - eigValsRealF[i];
+        eigRealEq = tmp * tmp;
+        tmp = eigValsImagC[i] - eigValsImagF[i];
+        eigImagEq = tmp * tmp;
+    }
+    eigRealEq = sqrt(eigRealEq);
+    eigImagEq = sqrt(eigImagEq);
+
+    // Checking 3
+    zEq = 0.0;
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            tmp = schurMatC0(i,j) - eigMatF0(i,j);
+            zEq += tmp * tmp;
+        }
+    }
+    zEq = sqrt(zEq);
+
+    // Now we print these results to a file titled "bitEq.txt
+    fprintf(testingFile, "n=%8d,     HDiff=%1.10e, eigValsRealDiff=%1.10e, eigValsImagDiff=%1.10e, zMatDiff=%1.10e\n",n,schurEq,eigRealEq,eigImagEq,zEq);
+    fclose(testingFile);
     free(A);
     free(B);
+    free(C);
     free(eigValsRealC);
     free(eigValsImagC);
     free(eigValsRealF);
     free(eigValsImagF);
     free(schurMatC);
     free(schurMatF);
+    free(eigMatF);
     return 0;
 }

@@ -1,4 +1,4 @@
-#include <math.h>
+#include<math.h>
 /**
  *  This function divides two complex numbers in real arithmetic
  *  and stores the result in cr and ci
@@ -11,7 +11,7 @@ void cdiv(double ar, double ai, double br, double bi, double *cr, double *ci) {
     ais = ai/s;
     brs = br/s;
     bis = bi/s;
-    s = pow(brs,2.0) + pow(bis,2.0);
+    s = brs * brs + bis * bis; 
     *cr = (ars*brs + ais*bis) / s;
     *ci = (ais*brs - ars*bis) / s;
 }

@@ -293,6 +293,7 @@ c
 c
 c     .......... for en=n step -1 until 1 do -- ..........
       do 800 nn = 1, n
+c         write(*,*) h
          en = n + 1 - nn
          p = wr(en)
          q = wi(en)

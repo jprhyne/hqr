@@ -134,9 +134,9 @@ int main (int argc, char **argv)
     for (int k = 0; k < n; k++) 
         if (eigEigValReal[k] == 0 && eigEigValImag[k] == 0)
             printf("eigenValue of the eigenMatrix is 0 at index %4d",k);
-    printf("%% [ REPRES ] n = %4d; check = [ %1.10e ];", n, normR / normA );
+    printf("%% [ REPRES ] n = %4d; check = [ %1.10e ];\n", n, normR / normA );
     free(A);
-    free(T);
+    //free(T);
     free(eigenMat);
     free(rhs);
     free(lhs);
