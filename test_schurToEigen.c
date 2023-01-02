@@ -123,7 +123,7 @@ int main (int argc, char **argv)
     
     // Now we check if our eigenMatrix is invertible
     // Since finding the inverse is expensive, and inaccurate, we will get around
-    // The invertability check by finding the eigenvalues and checking to make 
+    // The invertibility check by finding the eigenvalues and checking to make 
     // sure none of them are 0, then we check representation.
     //
     // This assumes that hqr works correctly
