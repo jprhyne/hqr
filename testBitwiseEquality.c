@@ -2,6 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include<math.h>
+#include<errno.h>
 #include "externalFunctions.h"
 #define a0(i,j) A[(i) + (j) * n]
 #define b0(i,j) B[(i) + (j) * n]
@@ -135,6 +136,12 @@ int main (int argc, char **argv)
 
     // Now we print these results to a file titled "bitEq.txt
     FILE *testingFile = fopen("bitEq.txt","a");
+    if (testingFile == NULL) {
+        perror( "Error opening file" );
+        printf( "Error code opening file: %d\n", errno );
+        printf( "Error opening file: %s\n", strerror( errno ) );
+        exit(-1);
+    }
     fprintf(testingFile, "n=%8d, schurDiff=%1.10e, eigValsRealDiff=%1.10e, eigValsImagDiff=%1.10e, zMatDiff=%1.10e\n",n,schurEq,eigRealEq,eigImagEq,zEq);
 
     // The above tested if we have bitwise equality for the schur vectors Now we test if the eigenvector computations are equal

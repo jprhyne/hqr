@@ -2,6 +2,7 @@
 #include<stdbool.h>
 #include<math.h>
 /**
+ * This file is responsible for the QR Step 
  * n: One dimension 
  */
 void qrIteration(int n, double* B, int en, int na, int l, double* s, double* x, 

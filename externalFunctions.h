@@ -6,7 +6,7 @@ extern int qrIterationVec(int n, double* B, int en, int na, int l, double* s,
         double* x, double* y, double* p, double* q, double* r, double* zz,
         int m, int low, int igh, double* schurMatrix);
 
-extern int formShift(int n, int low, double* B, int* ierr, int its, int itn,
+extern int formShift(int n, int low, double* B, int its, int itn,
         int en, int l, double* s, double* t, double* x, double* y, double* w);
 
 extern int subDiagonalSearch(int n, int low, double* B, int en, double norm, double* s);

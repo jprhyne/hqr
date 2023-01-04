@@ -13,8 +13,12 @@
  *      n - Size of the matrix B
  *      low - The lower bound of 
  *  Outputs:
+ *  0: If we did not find any roots
+ *  1: If we found a single root
+ *  2: If we found a double root
+ *  3: If we exhausted our total number of iterations
  */
-int formShift(int n, int low, double* B, int* ierr, int its, int itn,
+int formShift(int n, int low, double* B, int its, int itn,
         int en, int l, double* s, double* t, double* x, double* y, double* w)
 {
     int retVal = 0;
@@ -29,7 +33,6 @@ int formShift(int n, int low, double* B, int* ierr, int its, int itn,
     if (l == na) return 2;
     // This means we errored out, so we set the error index variable, then return a 3
     if (itn == 0) {
-        *ierr = en;
         return 3;
     }
     // if its is 10 or 20, then we perform an "exceptional" shift, otherwise

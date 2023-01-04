@@ -5,13 +5,18 @@
  *  This file is responsible for the sub-diagonal search behavior. 
  *  The intention is that it will be a translation of 
  *  label 70 to right before label 100
- */
-/**
- * Only s will be changed after execution.
- * The return value, l, is either low or the
- * index where, for a block like [a b\\c d] we
- * have c being small enough such that a*d + c = a*d
- * in machine arithmetic
+ *
+ *  Inputs:
+ *  n: The dimension of B
+ *  low: The lowest index we are considering for eigenvalues
+ *  B: The matrix we are trying to find the eigenvalues of
+ *  en: The index of the eigenvalue we are currently trying to find
+ *  norm: The sum of the absolute elements of the original matrix A
+ *  s: Value used for testing sub-diagonal elements
+ *
+ *  Return:
+ *  l: The index that contains a small sub-diagonal element and thus we
+ *      have as a candidate for an eigenvalue
  */
 int subDiagonalSearch(int n, int low, double* B, int en, double norm, double* s)
 {

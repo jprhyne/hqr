@@ -2,16 +2,28 @@
 #define b1(i,j) B[(i - 1) + (j - 1) * n]
 #include<math.h>
 /**
- *  This file is responsible for the form shift behavior. 
- *  The intention is that it will be a translation of 
- *  after the modification of itn,its from around label 130  
- *  to label 160 
- */
-/**
  *  Inputs that are passed as a pointer are modified after calling
  *  this function. 
  *  the index m is returned after this 
+ *
+ *  Inputs:
+ *  n: The dimension of our matrix B
+ *  B: The Matrix we are searching for small sub-diagonal elements
+ *  en: The index of the eigenvalue we are currently trying to find
+ *  l: The index that was returned by subDiagonalSearch
+ *  s: Value that is used for testing for small elements in other functions
+ *  x: Value used to help construct our testing criteria
+ *  y: Value used to help construct our testing criteria
+ *  w: Value used to help construct our testing criteria
+ *  p: Value used to help construct our testing criteria
+ *  q: Value used to help construct our testing criteria
+ *  r: Value used to help construct our testing criteria
+ *  zz: Value used to help construct our testing criteria
+ *
+ *  Return:
+ *  m: The index under which we have as a candidate for a double root
  */
+
 int doubleSubDiagonalSearch(int n, double* B, int en, int enm2, int l, double* s, 
         double x, double y, double w, double* p, double* q, double* r, double* zz
         )
