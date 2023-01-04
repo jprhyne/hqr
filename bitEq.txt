@@ -1,164 +1,202 @@
-n=      10, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      10,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      20, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      20,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      30, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      30,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      40, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      40,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      50, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      50,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      60, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      60,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      70, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      70,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      80, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      80,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      90, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=      90,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     100, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     100,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     110, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     110,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     120, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     120,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     130, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     130,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     140, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     140,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     150, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     150,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     160, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     160,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     170, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     170,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     180, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     180,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     190, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     190,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     200, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     200,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     210, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     210,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     220, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     220,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     230, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     230,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     240, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     240,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     250, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     250,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     260, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     260,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     270, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     270,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     280, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     280,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     290, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     290,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     300, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     300,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     310, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     310,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     320, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     320,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     330, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     330,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     340, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     340,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     350, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     350,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     360, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     360,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     370, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     370,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     380, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     380,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     390, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     390,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     400, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     400,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     410, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     410,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     420, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     420,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     430, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     430,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     440, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     440,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     450, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     450,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     460, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     460,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     470, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     470,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     480, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     480,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     490, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     490,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     500, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     500,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     510, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     510,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     520, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     520,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     530, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     530,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     540, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     540,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     550, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     550,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     560, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     560,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     570, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     570,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     580, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     580,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     590, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     590,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     600, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     600,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     610, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     610,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     620, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     620,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     630, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     630,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     640, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     640,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     650, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     650,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     660, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     660,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     670, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     670,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     680, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     680,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     690, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     690,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     700, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     700,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     710, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     710,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     720, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     720,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     730, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     730,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     740, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     740,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     750, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     750,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     760, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     760,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     770, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     770,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     780, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     780,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     790, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     790,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     800, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     800,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     810, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     810,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     820, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
-n=     820,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00
+n=      10, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      10,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      20, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      20,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      30, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      30,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      40, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      40,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      50, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      50,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      60, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      60,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      70, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      70,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      80, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      80,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      90, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=      90,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     100, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     100,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     110, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     110,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     120, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     120,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     130, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     130,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     140, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     140,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     150, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     150,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     160, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     160,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     170, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     170,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     180, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     180,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     190, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     190,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     200, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     200,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     210, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     210,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     220, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     220,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     230, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     230,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     240, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     240,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     250, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     250,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     260, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     260,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     270, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     270,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     280, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     280,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     290, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     290,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     300, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     300,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     310, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     310,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     320, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     320,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     330, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     330,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     340, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     340,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     350, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     350,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     360, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     360,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     370, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     370,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     380, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     380,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     390, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     390,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     400, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     400,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     410, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     410,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     420, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     420,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     430, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     430,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     440, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     440,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     450, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     450,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     460, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     460,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     470, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     470,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     480, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     480,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     490, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     490,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     500, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     500,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     510, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     510,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     520, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     520,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     530, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     530,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     540, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     540,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     550, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     550,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     560, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     560,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     570, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     570,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     580, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     580,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     590, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     590,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     600, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     600,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     610, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     610,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     620, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     620,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     630, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     630,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     640, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     640,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     650, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     650,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     660, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     660,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     670, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     670,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     680, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     680,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     690, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     690,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     700, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     700,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     710, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     710,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     720, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     720,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     730, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     730,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     740, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     740,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     750, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     750,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     760, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     760,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     770, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     770,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     780, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     780,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     790, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     790,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     800, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     800,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     810, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     810,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     820, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     820,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     830, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     830,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     840, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     840,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     850, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     850,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     860, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     860,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     870, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     870,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     880, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     880,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     890, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     890,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     900, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     900,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     910, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     910,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     920, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     920,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     930, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     930,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     940, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     940,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     950, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     950,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     960, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     960,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     970, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     970,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     980, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     980,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     990, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=     990,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=    1000, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=    1000,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=    1010, schurDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1
+n=    1010,     HDiff=0.0000000000e+00, eigValsRealDiff=0.0000000000e+00, eigValsImagDiff=0.0000000000e+00, zMatDiff=0.0000000000e+00, allZero=1

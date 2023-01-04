@@ -142,7 +142,8 @@ int main (int argc, char **argv)
         printf( "Error opening file: %s\n", strerror( errno ) );
         exit(-1);
     }
-    fprintf(testingFile, "n=%8d, schurDiff=%1.10e, eigValsRealDiff=%1.10e, eigValsImagDiff=%1.10e, zMatDiff=%1.10e\n",n,schurEq,eigRealEq,eigImagEq,zEq);
+    int allEqual = schurEq == 0 && eigRealEq == 0 && eigImagEq == 0 && zEq == 0;
+    fprintf(testingFile, "n=%8d, schurDiff=%1.10e, eigValsRealDiff=%1.10e, eigValsImagDiff=%1.10e, zMatDiff=%1.10e, allZero=%d\n",n,schurEq,eigRealEq,eigImagEq,zEq,allEqual);
 
     // The above tested if we have bitwise equality for the schur vectors Now we test if the eigenvector computations are equal
 
@@ -195,9 +196,9 @@ int main (int argc, char **argv)
         }
     }
     zEq = sqrt(zEq);
-
+    allEqual = schurEq == 0 && eigRealEq == 0 && eigImagEq == 0 && zEq == 0;
     // Now we print these results to a file titled "bitEq.txt
-    fprintf(testingFile, "n=%8d,     HDiff=%1.10e, eigValsRealDiff=%1.10e, eigValsImagDiff=%1.10e, zMatDiff=%1.10e\n",n,schurEq,eigRealEq,eigImagEq,zEq);
+    fprintf(testingFile, "n=%8d,     HDiff=%1.10e, eigValsRealDiff=%1.10e, eigValsImagDiff=%1.10e, zMatDiff=%1.10e, allZero=%d\n",n,schurEq,eigRealEq,eigImagEq,zEq,allEqual);
     fclose(testingFile);
     free(A);
     free(B);
