@@ -7,3 +7,12 @@
 
 # Vim swap files
 .*.swp
+
+# Jupyter notebook files
+*.ipynb
+
+# Debugging file, can be exceptionally large
+outputFileC.txt
+
+# File used to allow cross platform compilation more streamlined
+make.inc

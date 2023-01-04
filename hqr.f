@@ -74,7 +74,6 @@ c        computations.
          wr(i) = h(i,i)
          wi(i) = 0.0d0
    50 continue
-         write(*,*) norm
 c
       en = igh
       t = 0.0d0
@@ -205,6 +204,11 @@ c     .......... column modification ..........
 c
   260 continue
 c
+c Here, we are adding a write command to help with debugging purposes
+c This writes out the entire matrix on a single line in memory order
+c so this will be column major (first n elements is the first column
+c not the first row
+c      write(*,*) h
       go to 70
 c     .......... one root found ..........
   270 wr(en) = x + t
