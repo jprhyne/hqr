@@ -131,7 +131,6 @@ void schurToEigen(int low, int igh, double norm, int n, double *eigenValsReal, d
                     cdiv(-ra, -sa, w, q, &a, &b);
                     t1(i,na) = a;
                     t1(i,en) = b;
-                    // goto overflow control 790
                 } else {
                     // solve complex equations
                     x = t1(i, i + 1);
