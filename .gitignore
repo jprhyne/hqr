@@ -13,6 +13,7 @@
 
 # Debugging file, can be exceptionally large
 outputFileC.txt
+bitEq.txt
 
 # File used to allow cross platform compilation more streamlined
 make.inc
