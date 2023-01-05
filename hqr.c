@@ -37,10 +37,12 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
     // This section looks for any isolated eigenvalues. This is
     // really only useful if a function like 'balance' is ported or used 
     for (i = 1; i <= n; i++) {
+        // TODO: please have this loop from 0 to n-1
+        // TODO: please try to not use a1(i,j) but a0(i,j)
         for (j = k; j <= n; j++) {
             norm += fabs(a1(i,j));
         }
-        k = i;
+        k = i; // TODO: please remove this k
         if (i >= low && i <= igh)
             continue;
         eigenValsReal[i-1] = a1(i,i);
@@ -81,6 +83,7 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
                 itn = itn - 1;
                 m = doubleSubDiagonalSearch(n, A, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
                 // double qr step
+		// TODO: if possible . . . try to push yhe 
                 if (schurVectorFlag) 
                     qrIterationVec(n,A,en,na,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,schurMatrix);
                 else 
