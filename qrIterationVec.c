@@ -7,14 +7,14 @@
 /**
  * n: One dimension 
  */
-void qrIterationVec(int n, double* B, int en, int na, int l, double* s, double* x, 
+void qrIterationVec(int n, double* B, int en, int l, double* s, double* x, 
         double * y, double* p, double* q, double* r, double* zz, int m, int low,
         int igh, double *Z)
 {
     int i,j,k;
     bool notLast;
-    for (k = m; k <= na; k++) {
-        notLast = k != na;
+    for (k = m; k <= en - 1; k++) {
+        notLast = k != en - 1;
         if (k != m) {
             *p = b0(k,k-1);
             *q = b0(k+1,k-1);

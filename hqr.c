@@ -32,7 +32,7 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
     int indexOfError = 0;
     double norm = 0.0;
     // These deal with our boundary conditions
-    int i,j,en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal,mp2;
+    int i,j,en,m,mm,notLast,itn,its,l,ll,retVal,mp2;
     double x,y,z,t,w,s,r,q,p,zz,tst1,tst2,ra,sa,vr,vi;
     // This section looks for any isolated eigenvalues. This is
     // really only useful if a function like 'balance' is ported or used 
@@ -50,15 +50,12 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
     t = 0.0;
     itn = 30 * n;
     // This flag tells us if we did not do a QR Step, and only if we did, do we 
-    // change na,enm2, and reset the iterations. This means we found an eigenvalue
+    // reset the iterations. This means we found an eigenvalue
     // and thus need to start looking for the next one
     int didQRStep = 0;
     while (en >= low) {
-        if (!didQRStep) {
+        if (!didQRStep) 
             its = 0;
-            na = en - 1;
-            enm2 = na - 1;
-        }
         didQRStep = 0; //Resetting after we use it's value to prevent infinite loops
         l = subDiagonalSearch(n,low,A,en,norm,&s);
         // Formshift does not need updating, just to change the inputs
@@ -79,14 +76,13 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
                 // This means we need to perform our QR step then look again for an eigenvalue
                 its = its + 1;
                 itn = itn - 1;
-                // TODO: decrement m inside doubleSubDiagonal... after everything else is changed
-                m = doubleSubDiagonalSearch(n, A, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
+                m = doubleSubDiagonalSearch(n, A, en, l, &s, x, y, w, &p, &q, &r, &zz);
                 // double qr step
 		// TODO: if possible . . . try to push yhe 
                 if (schurVectorFlag) 
-                    qrIterationVec(n,A,en,na,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,schurMatrix);
+                    qrIterationVec(n,A,en,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,schurMatrix);
                 else 
-                    qrIteration(n,A,en,na,l, &s,&x,&y,&p,&q,&r,&zz,m);
+                    qrIteration(n,A,en,l,&s,&x,&y,&p,&q,&r,&zz,m);
                 didQRStep = 1;
                 break;
             case 1: 
@@ -95,7 +91,7 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
                     a0(en,en) = x + t;
                 eigenValsReal[en] = x + t;
                 eigenValsImag[en] = 0.0;
-                en = na;
+                en = en - 1;
                 break;
             case 2:
                 // double root
@@ -104,14 +100,14 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
                 zz = sqrt(fabs(q));
                 if (schurVectorFlag) {
                     a0(en,en) = x + t;
-                    a0(na,na) = y + t;
+                    a0(en - 1,en - 1) = y + t;
                 }
                 x = x + t;
                 if (q < 0) {
                     // Complex pair
-                    eigenValsReal[na] = x + p;
+                    eigenValsReal[en - 1] = x + p;
                     eigenValsReal[en] = x + p;
-                    eigenValsImag[na] = zz;
+                    eigenValsImag[en - 1] = zz;
                     eigenValsImag[en] = -zz;
                 } else {
                     // real pair
@@ -119,15 +115,15 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
                         zz = p + zz;
                     else 
                         zz = p - zz;
-                    eigenValsReal[na] = x + zz;
-                    eigenValsReal[en] = eigenValsReal[na];
+                    eigenValsReal[en - 1] = x + zz;
+                    eigenValsReal[en] = eigenValsReal[en - 1];
                     if (zz != 0)
                         eigenValsReal[en] = x - w / zz;
-                    eigenValsImag[na] = 0.0;
+                    eigenValsImag[en - 1] = 0.0;
                     eigenValsImag[en] = 0.0;
 
                     if (schurVectorFlag) {
-                        x = a0(en,na);
+                        x = a0(en,en - 1);
                         s = fabs(x) + fabs(zz);
                         p = x / s;
                         q = zz / s;
@@ -135,26 +131,26 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
                         p = p/r;
                         q = q/r;
                 //c     .......... row modification ..........
-                        for (j = na; j < n; j++) {
-                            zz = a0(na, j);
-                            a0(na, j) = q * zz + p * a0(en, j);
+                        for (j = en - 1; j < n; j++) {
+                            zz = a0(en - 1, j);
+                            a0(en - 1, j) = q * zz + p * a0(en, j);
                             a0(en, j) = q * a0(en, j) - p * zz;
                         }
                 //c     .......... column modification ..........
                         for (i = 0; i <= en; i++) {
-                            zz = a0(i, na);
-                            a0(i, na) = q * zz + p * a0(i, en);
+                            zz = a0(i, en - 1);
+                            a0(i, en - 1) = q * zz + p * a0(i, en);
                             a0(i, en) = q * a0(i, en) - p * zz;
                         }
                 //c     .......... accumulate transformations ..........
                         for (i = low; i <= igh; i++) {
-                            zz = schurMatrix0(i, na);
-                            schurMatrix0(i, na) = q * zz + p * schurMatrix0(i, en);
+                            zz = schurMatrix0(i, en - 1);
+                            schurMatrix0(i, en - 1) = q * zz + p * schurMatrix0(i, en);
                             schurMatrix0(i, en) = q * schurMatrix0(i, en) - p * zz;
                         }
                     }
                 }
-                en = enm2;
+                en = en - 2;
                 break;
             case 3:
                 // Error termination, we now return the index at which we failed to find the eigenvalue

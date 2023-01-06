@@ -22,15 +22,13 @@ int formShift(int n, int low, double* B, int its, int itn,
         int en, int l, double* s, double* t, double* x, double* y, double* w)
 {
     int retVal = 0;
-    int na = en - 1;
-    int enm2 = na - 1;
     *x = b0(en,en);
     // We have found a single root, so we return 1.
     if (l == en) return 1;
-    *y = b0(na,na);
-    *w = b0(en,na) * b0(na,en);
+    *y = b0(en - 1,en - 1);
+    *w = b0(en,en - 1) * b0(en - 1,en);
     // This means we have found a double root, so we return 2
-    if (l == na) return 2;
+    if (l == en - 1) return 2;
     // This means we errored out, so we set the error index variable, then return a 3
     if (itn == 0) {
         return 3;
@@ -41,7 +39,7 @@ int formShift(int n, int low, double* B, int its, int itn,
     *t = *t + *x;
     for (int i = low; i <= en; i++) 
         b0(i,i) = b0(i,i) - *x;
-    *s = fabs(b0(en,na)) + fabs(b0(na,enm2));
+    *s = fabs(b0(en,en - 1)) + fabs(b0(en - 1,en - 2));
     *x = 0.75 * *s;
     *y = *x;
     *w = -0.4375 * *s * *s;

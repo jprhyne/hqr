@@ -24,13 +24,13 @@
  *  m: The index under which we have as a candidate for a double root
  */
 
-int doubleSubDiagonalSearch(int n, double* B, int en, int enm2, int l, double* s, 
+int doubleSubDiagonalSearch(int n, double* B, int en, int l, double* s, 
         double x, double y, double w, double* p, double* q, double* r, double* zz
         )
 {
     int m;
-    for (int mm = l; mm <= enm2; mm++) {
-        m = enm2 + l - mm;
+    for (int mm = l; mm <= en - 2; mm++) {
+        m = en - 2 + l - mm;
         *zz = b0(m,m);
         *r = x - *zz;
         *s = y - *zz;
