@@ -24,10 +24,10 @@ int subDiagonalSearch(int n, int low, double* B, int en, double norm, double* s)
     for (int ll = low; ll <= en; ll++) {
         l = en + low - ll;
         if (l == low) break;
-        *s = fabs(b1(l-1,l-1)) + fabs(b1(l,l));
+        *s = fabs(b0(l-1,l-1)) + fabs(b0(l,l));
         if (*s == 0.0) *s = norm;
         double tst1 = *s;
-        double tst2 = tst1 + fabs(b1(l,l-1));
+        double tst2 = tst1 + fabs(b0(l,l-1));
         if (tst1 == tst2) break;
     }
     return l;

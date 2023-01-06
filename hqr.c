@@ -28,25 +28,22 @@
  */
 double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag, double *schurMatrix)
 {
+
     int indexOfError = 0;
-    double norm = 0;
-    int k = 1;
+    double norm = 0.0;
     // These deal with our boundary conditions
     int i,j,en,m,mm,notLast,itn,its,na,enm2,l,ll,retVal,mp2;
     double x,y,z,t,w,s,r,q,p,zz,tst1,tst2,ra,sa,vr,vi;
     // This section looks for any isolated eigenvalues. This is
     // really only useful if a function like 'balance' is ported or used 
-    for (i = 1; i <= n; i++) {
-        // TODO: please have this loop from 0 to n-1
-        // TODO: please try to not use a1(i,j) but a0(i,j)
-        for (j = k; j <= n; j++) {
-            norm += fabs(a1(i,j));
+    for (i = 0; i < n; i++) {
+        for (j = (i == 0) ? (i):(i-1); j <= n; j++) {
+            norm += fabs(a0(i,j));
         }
-        k = i; // TODO: please remove this k
         if (i >= low && i <= igh)
             continue;
-        eigenValsReal[i-1] = a1(i,i);
-        eigenValsImag[i-1] = 0.0;
+        eigenValsReal[i] = a0(i,i);
+        eigenValsImag[i] = 0.0;
     }
     //initializing some variables
     en = igh;
@@ -64,6 +61,7 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
         }
         didQRStep = 0; //Resetting after we use it's value to prevent infinite loops
         l = subDiagonalSearch(n,low,A,en,norm,&s);
+        // Formshift does not need updating, just to change the inputs
         retVal = formShift(n,low, A, its, itn, en, l, &s, &t, &x, &y, &w);
         // In order to emulate the behavior of the fortran code, instead 
         // of jumping to the right code inside there, we instead set a
@@ -81,6 +79,7 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
                 // This means we need to perform our QR step then look again for an eigenvalue
                 its = its + 1;
                 itn = itn - 1;
+                // TODO: decrement m inside doubleSubDiagonal... after everything else is changed
                 m = doubleSubDiagonalSearch(n, A, en, enm2, l, &s, x, y, w, &p, &q, &r, &zz);
                 // double qr step
 		// TODO: if possible . . . try to push yhe 
@@ -93,9 +92,9 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
             case 1: 
                 // single root was found
                 if (schurVectorFlag)
-                    a1(en,en) = x + t;
-                eigenValsReal[en - 1] = x + t;
-                eigenValsImag[en - 1] = 0;
+                    a0(en,en) = x + t;
+                eigenValsReal[en] = x + t;
+                eigenValsImag[en] = 0.0;
                 en = na;
                 break;
             case 2:
@@ -104,31 +103,31 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
                 q = p * p + w;
                 zz = sqrt(fabs(q));
                 if (schurVectorFlag) {
-                    a1(en,en) = x + t;
-                    a1(na,na) = y + t;
+                    a0(en,en) = x + t;
+                    a0(na,na) = y + t;
                 }
                 x = x + t;
                 if (q < 0) {
                     // Complex pair
-                    eigenValsReal[na - 1] = x + p;
-                    eigenValsReal[en - 1] = x + p;
-                    eigenValsImag[na - 1] = zz;
-                    eigenValsImag[en - 1] = -zz;
+                    eigenValsReal[na] = x + p;
+                    eigenValsReal[en] = x + p;
+                    eigenValsImag[na] = zz;
+                    eigenValsImag[en] = -zz;
                 } else {
                     // real pair
                     if (p >= 0)
                         zz = p + zz;
                     else 
                         zz = p - zz;
-                    eigenValsReal[na - 1] = x + zz;
-                    eigenValsReal[en - 1] = eigenValsReal[na - 1];
+                    eigenValsReal[na] = x + zz;
+                    eigenValsReal[en] = eigenValsReal[na];
                     if (zz != 0)
-                        eigenValsReal[en - 1] = x - w / zz;
-                    eigenValsImag[na - 1] = 0;
-                    eigenValsImag[en - 1] = 0;
+                        eigenValsReal[en] = x - w / zz;
+                    eigenValsImag[na] = 0.0;
+                    eigenValsImag[en] = 0.0;
 
                     if (schurVectorFlag) {
-                        x = a1(en,na);
+                        x = a0(en,na);
                         s = fabs(x) + fabs(zz);
                         p = x / s;
                         q = zz / s;
@@ -136,22 +135,22 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
                         p = p/r;
                         q = q/r;
                 //c     .......... row modification ..........
-                        for (j = na; j <= n; j++) {
-                            zz = a1(na,j);
-                            a1(na,j) = q * zz + p * a1(en,j);
-                            a1(en,j) = q * a1(en,j) - p * zz;
+                        for (j = na; j < n; j++) {
+                            zz = a0(na, j);
+                            a0(na, j) = q * zz + p * a0(en, j);
+                            a0(en, j) = q * a0(en, j) - p * zz;
                         }
                 //c     .......... column modification ..........
-                        for (i = 1; i <= en; i++) {
-                            zz = a1(i,na);
-                            a1(i,na) = q * zz + p * a1(i,en);
-                            a1(i,en) = q * a1(i,en) - p * zz;
+                        for (i = 0; i <= en; i++) {
+                            zz = a0(i, na);
+                            a0(i, na) = q * zz + p * a0(i, en);
+                            a0(i, en) = q * a0(i, en) - p * zz;
                         }
                 //c     .......... accumulate transformations ..........
                         for (i = low; i <= igh; i++) {
-                            zz = schurMatrix1(i,na);
-                            schurMatrix1(i,na) = q * zz + p * schurMatrix1(i,en);
-                            schurMatrix1(i,en) = q * schurMatrix1(i,en) - p * zz;
+                            zz = schurMatrix0(i, na);
+                            schurMatrix0(i, na) = q * zz + p * schurMatrix0(i, en);
+                            schurMatrix0(i, en) = q * schurMatrix0(i, en) - p * zz;
                         }
                     }
                 }

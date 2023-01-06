@@ -1,3 +1,4 @@
+#define b0(i,j) B[(i) + (j) * n]
 #define b1(i,j) B[(i - 1) + (j - 1) * n]
 #include<stdbool.h>
 #include<math.h>
@@ -13,11 +14,11 @@ void qrIteration(int n, double* B, int en, int na, int l, double* s, double* x,
     for (k = m; k <= na; k++) {
         notLast = k != na;
         if (k != m) {
-            *p = b1(k,k-1);
-            *q = b1(k+1,k-1);
+            *p = b0(k,k-1);
+            *q = b0(k+1,k-1);
             *r = 0.0;
             if (notLast) {
-                *r = b1(k+2,k-1);
+                *r = b0(k+2,k-1);
             }
             *x = fabs(*p) + fabs(*q) + fabs(*r);
             if (*x == 0.0) {
@@ -34,9 +35,9 @@ void qrIteration(int n, double* B, int en, int na, int l, double* s, double* x,
                 *s = -sqrt(insideSqrt);
             }
             if (k != m) {
-                b1(k,k-1) = -*s * *x;
+                b0(k,k-1) = -*s * *x;
             } else if (l != m) {
-                b1(k,k-1) = -b1(k,k-1);
+                b0(k,k-1) = -b0(k,k-1);
             }
             *p = *p + *s;
             *x = *p / *s;
@@ -48,29 +49,29 @@ void qrIteration(int n, double* B, int en, int na, int l, double* s, double* x,
                 // Try doing nothing depending on behavior
 //c     .......... row modification ..........
                 for (j = k; j <= en; j++) {
-                    *p = b1(k,j) + *q * b1(k+1,j) + *r * b1(k+2,j);
-                    b1(k,j) = b1(k,j) - *p * *x;
-                    b1(k+1,j) = b1(k+1,j) - *p * *y;
-                    b1(k+2,j) = b1(k+2,j) - *p * *zz;
+                    *p = b0(k,j) + *q * b0(k+1,j) + *r * b0(k+2,j);
+                    b0(k,j) = b0(k,j) - *p * *x;
+                    b0(k+1,j) = b0(k+1,j) - *p * *y;
+                    b0(k+2,j) = b0(k+2,j) - *p * *zz;
                 }
                 if (en <= k+3) {
                     j = en;
                 } else {
                     j = k+3;
                 }
-                for (i = l; i <= j; i++) {
-                    *p = *x * b1(i,k) + *y * b1(i,k+1) + *zz * b1(i,k+2);
-                    b1(i,k) = b1(i,k) - *p;
-                    b1(i,k+1) = b1(i,k+1) - *p * *q;
-                    b1(i,k+2) = b1(i,k+2) - *p * *r;
-                }
 //c     .......... column modification ..........
+                for (i = l; i <= j; i++) {
+                    *p = *x * b0(i,k) + *y * b0(i,k+1) + *zz * b0(i,k+2);
+                    b0(i,k) = b0(i,k) - *p;
+                    b0(i,k+1) = b0(i,k+1) - *p * *q;
+                    b0(i,k+2) = b0(i,k+2) - *p * *r;
+                }
             } else {
 //c     .......... row modification ..........
                 for (j = k; j <= en; j++) {
-                    *p = b1(k,j) + *q * b1(k+1,j);
-                    b1(k,j) = b1(k,j) - *p * *x;
-                    b1(k+1,j) = b1(k+1,j) - *p * *y; 
+                    *p = b0(k,j) + *q * b0(k+1,j);
+                    b0(k,j) = b0(k,j) - *p * *x;
+                    b0(k+1,j) = b0(k+1,j) - *p * *y; 
                 }
                 if (en <= k+3) {
                     j = en;
@@ -79,9 +80,9 @@ void qrIteration(int n, double* B, int en, int na, int l, double* s, double* x,
                 }
 //c     .......... column modification ..........
                 for (i = l; i <= j; i++) {
-                    *p = *x * b1(i,k) + *y * b1(i,k+1);
-                    b1(i,k) = b1(i,k) - *p;
-                    b1(i,k+1) = b1(i,k+1) - *p * *q;
+                    *p = *x * b0(i,k) + *y * b0(i,k+1);
+                    b0(i,k) = b0(i,k) - *p;
+                    b0(i,k+1) = b0(i,k+1) - *p * *q;
                 }
             }
         }

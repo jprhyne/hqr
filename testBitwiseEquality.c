@@ -82,7 +82,7 @@ int main (int argc, char **argv)
         schurMatF[i + i * n] = 1;
     }
     // Now we call hqr. At the end schurMat will contain the schur vectors
-    double norm = hqr(n,n,1,n,A,eigValsRealC,eigValsImagC,1,schurMatC);
+    double norm = hqr(n,n,0,n-1,A,eigValsRealC,eigValsImagC,1,schurMatC);
     if (norm < 0) {
         // This means that hqr did not converge to at some index,
         // so we print it out and terminate execution as our Schur
@@ -154,7 +154,7 @@ int main (int argc, char **argv)
     double *eigMatF = (double *) calloc(n*n,sizeof(double));
     for (int i = 0; i < n; i++) 
         eigMatF0(i,i) = 1;
-    schurToEigen(1,n,norm,n,eigValsRealC,eigValsImagC,A,schurMatC);
+    schurToEigen(0,n - 1,norm,n,eigValsRealC,eigValsImagC,A,schurMatC);
 
     hqr2eigen_(&n,&n,&ione,&n,B,eigValsRealF,eigValsImagF,eigMatF,&ierr);
 

@@ -1,6 +1,6 @@
 #include<math.h>
-#define a1(i,j) A[(i - 1) + (j - 1) * n]
-#define schurMatrix1(i,j) schurMatrix[(i - 1) + (j - 1) * n]
+#define a0(i,j) A[(i) + (j) * n]
+#define schurMatrix0(i,j) schurMatrix[(i) + (j) * n]
 extern int qrIteration(int n, double* A, int en, int na, int l, double* s,
         double* x, double* y, double* p, double* q, double* r, double* zz,
         int m);
