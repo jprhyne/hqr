@@ -56,7 +56,7 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
     while (en >= low) {
         if (!didQRStep) 
             its = 0;
-        didQRStep = 0; //Resetting after we use it's value to prevent infinite loops
+        didQRStep = 0; //Resetting after we use its value to prevent infinite loops
         l = subDiagonalSearch(n,low,A,en,norm,&s);
         // Formshift does not need updating, just to change the inputs
         retVal = formShift(n,low, A, its, itn, en, l, &s, &t, &x, &y, &w);

@@ -74,7 +74,7 @@ int main (int argc, char **argv)
         // This means that hqr did not converge to at some index,
         // so we print it out and terminate execution as our Schur
         // vectors will not be correct
-        printf("Did not converge at index: %d\n",-norm);
+        printf("Did not converge at index: %e\n",-norm);
         return 1;
     }
 
