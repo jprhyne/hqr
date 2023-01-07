@@ -109,8 +109,6 @@ int main(int argc, char ** argv) {
             }
         }
 	hqr2eigen_( &n, &n, &ione, &n, T, eigValsReal, eigValsImag, Z, &ierr);
-    // Getting here means that we have successfully ran all of 
-    // hqr and got an answer. 
     // Zero out below quasi diagonal elements of T
     // First, zero out everything below the 1st subdiagonal
     for (int i = 0; i < n; i++) 
@@ -129,54 +127,84 @@ int main(int argc, char ** argv) {
             k++;
         }
     }
-
-    //  check || A * Z - Z * T  ||_F / || A ||_F
-    double normR, normA;
-    normR = 0.0e+00;
-    // Yes, this is lazy and inefficient, however it 
-    // accomplishes our goals in a reasonable time frame
-    double *lhs = matmul(A,n,n,Z,n,n);
-    double *rhs = matmul(Z,n,n,T,n,n);
-    double *ans = matsub(lhs,n,n,rhs,n,n);
-    for (int i = 0; i < n; i++)
-        for (int j = 0; j < n; j++)
-            normR += ans[i + j * n] * ans[i + j * n];
-    normR = sqrt( normR );
-    normA = 0.0e+00;
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            normA += a0(i,j) * a0(i,j) ;
+    double diffMatReal[n * n];
+    double diffMatImag[n * n];
+    for (k = 0; k < n; k++) {
+        // Redeclare on each loop to not have to reset each value to 0
+        // Vectors that will store Av = Ax + i * Ay
+        double Ax[n];
+        double Ay[n];
+        // Vectors that will store \lambda v = (a + ib)(x+iy) = (ax - by) + i(ay + bx)
+        double ax[n];
+        double ay[n];
+        for (int l = 0; l < n; l++) {
+            Ax[l] = 0.0;
+            Ay[l] = 0.0;
+            ax[l] = 0.0;
+            ay[l] = 0.0;
+        }
+        // Check if the current eigenvalue is real or imaginary.
+        // If it is real, we need only check Ax = ax
+        if (eigValsImag[k] == 0.0) {
+            // Real eigenvalue (eigenValsReal[k]) with eigenvector eigenMat(:,k)
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    Ax[i] += a0(i,j) * z0(j,k);
+                }
+                ax[i] = eigValsReal[k] * z0(i,k);
+            }
+        } else if (eigValsImag[k] > 0.0) {
+            //continue;
+            // Imaginary with positive imaginary part so has associated eigenvector
+            // eigenMat(:,k) + i * eigenMat(:,k+1)
+            // compute Ax,Ay
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    Ax[i] += a0(i,j) * z0(j,k);
+                    Ay[i] += a0(i,j) * z0(j, k + 1);
+                }
+                ax[i] = eigValsReal[k] * z0(i,k) - eigValsImag[k] * z0(i,k+1);
+                ay[i] = eigValsReal[k] * z0(i,k + 1) + eigValsImag[k] * z0(i,k);
+            }
+        } else {
+            //continue;
+            // Imaginary with negative imaginary part so has associated eigenvector
+            // eigenMat(:,k-1) - i * eigenMat(:,k)
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    Ax[i] += a0(i,j) * z0(j,k - 1);
+                    Ay[i] -= a0(i,j) * z0(j, k);
+                }
+                ax[i] = eigValsReal[k] * z0(i, k - 1) + eigValsImag[k] * z0(i, k);
+                ay[i] = eigValsImag[k] * z0(i, k - 1) - eigValsReal[k] * z0(i, k);
+            }
+        } 
+        // Now we construct the kth column of diffMatReal and diffMatImag. Note that if we had a real eigenvalue the
+        // kth column of diffMatImag will be exactly 0
+        for (int i = 0; i < n; i++) {
+            // We want the kth column of diffMatReal to be Ax - ax
+            // and the kth column of diffMatImag to be Ay - ay
+            diffMatReal[i + k * n] = Ax[i] - ax[i];
+            diffMatImag[i + k * n] = Ay[i] - ay[i];
         }
     }
-    normA = sqrt( normA );
-    
-    // Now we check if our eigen matrix is invertible
-    // Since finding the inverse is expensive, and inaccurate, we will get around
-    // The invertibility check by finding the eigenvalues and checking to make 
-    // sure none of them are 0, then we check representation.
-    //
-    // This assumes that hqr works correctly
-    double *eigEigValReal = malloc(n * sizeof(double));
-    double *eigEigValImag = malloc(n * sizeof(double));
-    hqr(n,n,1,n,Z,eigEigValReal,eigEigValImag,0,NULL);
-    // Check if any eigenvalue is 0
-    for (int k = 0; k < n; k++) 
-        if (eigEigValReal[k] == 0 && eigEigValImag[k] == 0)
-            printf("eigenValue of the Zrix is 0 at index %4d",k);
-    printf("%% [ REPRES ] n = %4d; check = [ %1.10e ];\n", n, normR / normA );
-    /*
+    // Now we have computed AV - VD and stored the real and imaginary parts separately
+    // Since we want to get a relative error we must compute \|AV - VD\| in order
+    // for this to be as close to accurate as possible we will compute the sum 
+    // of the absolute elements of AV - VD using the fact that |a + bi| = sqrt(a^2 + b^2)
+    double normR = 0.0;
+    double normA = 0.0;
     for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            printf("%1.10e",t0(i,j));
+        for (int j = 0; j < n; j++){
+            double tmpA = diffMatReal[i + j * n];
+            double tmpB = diffMatImag[i + j * n];
+            normR += sqrt(tmpA * tmpA + tmpB * tmpB); 
+            normA += fabs(a0(i,j));
         }
-        printf("\n");
     }
-    */
+    printf("n = %6d, Eigenvector Check: %1.10e\n", n, normR / normA);
     free(A);
     free(T);
     free(Z);
-    free(rhs);
-    free(lhs);
-    free(ans);
     return 0;
 }
