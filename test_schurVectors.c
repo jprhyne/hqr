@@ -67,7 +67,7 @@ int main (int argc, char **argv)
     for (int i = 0; i < n; i++)
         schurMat[i + i * n] = 1;
     // Now we call hqr. At the end schurMat will contain the schur vectors
-    double norm = hqr(n,n,1,n,T,eigValsReal,eigValsImag,1,schurMat);
+    double norm = hqr(n,n,0,n-1,T,eigValsReal,eigValsImag,1,schurMat);
     if (norm < 0) {
         // This means that hqr did not converge to at some index,
         // so we print it out and terminate execution as our Schur

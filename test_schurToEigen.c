@@ -110,6 +110,12 @@ int main (int argc, char **argv)
         // Vectors that will store \lambda v = (a + ib)(x+iy) = (ax - by) + i(ay + bx)
         double ax[n];
         double ay[n];
+        for (int l = 0; l < n; l++) {
+            Ax[l] = 0.0;
+            Ay[l] = 0.0;
+            ax[l] = 0.0;
+            ay[l] = 0.0;
+        }
         // Check if the current eigenvalue is real or imaginary.
         // If it is real, we need only check Ax = ax
         if (eigValsImag[k] == 0.0) {
@@ -121,6 +127,7 @@ int main (int argc, char **argv)
                 ax[i] = eigValsReal[k] * eigenMat0(i,k);
             }
         } else if (eigValsImag[k] > 0.0) {
+            //continue;
             // Imaginary with positive imaginary part so has associated eigenvector
             // eigenMat(:,k) + i * eigenMat(:,k+1)
             // compute Ax,Ay
@@ -133,6 +140,7 @@ int main (int argc, char **argv)
                 ay[i] = eigValsReal[k] * eigenMat0(i,k + 1) + eigValsImag[k] * eigenMat0(i,k);
             }
         } else {
+            //continue;
             // Imaginary with negative imaginary part so has associated eigenvector
             // eigenMat(:,k-1) - i * eigenMat(:,k)
             for (int i = 0; i < n; i++) {
@@ -157,14 +165,29 @@ int main (int argc, char **argv)
     // Since we want to get a relative error we must compute \|AV - VD\| in order
     // for this to be as close to accurate as possible we will compute the sum 
     // of the absolute elements of AV - VD using the fact that |a + bi| = sqrt(a^2 + b^2)
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (diffMatReal[ i + j * n] < 1e-20)
+                diffMatReal[i + j * n] = 0;
+            if (diffMatImag[ i + j * n] < 1e-20)
+                diffMatImag[i + j * n] = 0;
+        }
+    }
     double normR = 0.0;
     double normA = 0.0;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++){
+            
             normR += fabs(diffMatReal[ i + j * n]) + fabs(diffMatImag[i + j * n]);
             normA += fabs(a0(i,j));
-            printf("%1.10e ",diffMatImag[i + j * n]);
+            printf("%1.10e ",diffMatReal[i + j * n]);
         }
+        printf("\n");
+    }
+    printf("\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++)
+            printf("%1.10e ",diffMatImag[i + j * n]);
         printf("\n");
     }
     printf("%1.5e\n%1.5e\n",normR,normA);
