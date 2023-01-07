@@ -78,11 +78,7 @@ double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, do
                 itn = itn - 1;
                 m = doubleSubDiagonalSearch(n, A, en, l, &s, x, y, w, &p, &q, &r, &zz);
                 // double qr step
-		// TODO: if possible . . . try to push yhe 
-                if (schurVectorFlag) 
-                    qrIterationVec(n,A,en,l,&s,&x,&y,&p,&q,&r,&zz,m,low,igh,schurMatrix);
-                else 
-                    qrIteration(n,A,en,l,&s,&x,&y,&p,&q,&r,&zz,m);
+                qrIteration(n,A,en,l,&s,&x,&y,&p,&q,&r,&zz,m,schurVectorFlag,low,igh,schurMatrix);
                 didQRStep = 1;
                 break;
             case 1: 

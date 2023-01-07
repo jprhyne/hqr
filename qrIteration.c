@@ -1,4 +1,7 @@
 #define b0(i,j) B[(i) + (j) * n]
+#define b1(i,j) B[(i - 1) + (j - 1) * n]
+#define z0(i,j) Z[(i) + (j) * n]
+#define z1(i,j) Z[(i - 1) + (j - 1) * n]
 #include<stdbool.h>
 #include<math.h>
 /**
@@ -6,7 +9,8 @@
  * n: One dimension 
  */
 void qrIteration(int n, double* B, int en, int l, double* s, double* x, 
-        double * y, double* p, double* q, double* r, double* zz, int m)
+        double * y, double* p, double* q, double* r, double* zz, int m,
+        int schurVectorFlag, int low, int igh, double *Z)
 {
     int i,j,k;
     bool notLast;
@@ -46,8 +50,9 @@ void qrIteration(int n, double* B, int en, int l, double* s, double* x,
             *r = *r / *p;
             if (notLast) {
                 // Try doing nothing depending on behavior
+                int upperBound = (schurVectorFlag) ? n - 1 : en;
 //c     .......... row modification ..........
-                for (j = k; j <= en; j++) {
+                for (j = k; j <= upperBound; j++) {
                     *p = b0(k,j) + *q * b0(k+1,j) + *r * b0(k+2,j);
                     b0(k,j) = b0(k,j) - *p * *x;
                     b0(k+1,j) = b0(k+1,j) - *p * *y;
@@ -59,15 +64,26 @@ void qrIteration(int n, double* B, int en, int l, double* s, double* x,
                     j = k+3;
                 }
 //c     .......... column modification ..........
-                for (i = l; i <= j; i++) {
+                int lowerBound = (schurVectorFlag) ? 0 : l;
+                for (i = lowerBound; i <= j; i++) {
                     *p = *x * b0(i,k) + *y * b0(i,k+1) + *zz * b0(i,k+2);
                     b0(i,k) = b0(i,k) - *p;
                     b0(i,k+1) = b0(i,k+1) - *p * *q;
                     b0(i,k+2) = b0(i,k+2) - *p * *r;
                 }
+                if (schurVectorFlag) {
+//c     .......... accumulate transformations  ..........
+                    for (i = low; i <= igh; i++) {
+                        *p = *x * z0(i,k) + *y * z0(i,k+1) + *zz * z0(i,k+2);
+                        z0(i,k) = z0(i,k) - *p;
+                        z0(i, k + 1) = z0(i,k + 1) - *p * *q;
+                        z0(i, k + 2) = z0(i,k + 2) - *p * *r;
+                    }
+                }
             } else {
 //c     .......... row modification ..........
-                for (j = k; j <= en; j++) {
+                int upperBound = (schurVectorFlag) ? n - 1 : en;
+                for (j = k; j <= upperBound; j++) {
                     *p = b0(k,j) + *q * b0(k+1,j);
                     b0(k,j) = b0(k,j) - *p * *x;
                     b0(k+1,j) = b0(k+1,j) - *p * *y; 
@@ -78,10 +94,19 @@ void qrIteration(int n, double* B, int en, int l, double* s, double* x,
                     j = k+3;
                 }
 //c     .......... column modification ..........
-                for (i = l; i <= j; i++) {
+                int lowerBound = (schurVectorFlag) ? 0 : l;
+                for (i = lowerBound; i <= j; i++) {
                     *p = *x * b0(i,k) + *y * b0(i,k+1);
                     b0(i,k) = b0(i,k) - *p;
                     b0(i,k+1) = b0(i,k+1) - *p * *q;
+                }
+                if (schurVectorFlag) {
+//c     .......... accumulate transformations  ..........
+                    for (i = low; i <= igh; i++) {
+                        *p = *x * z0(i,k) + *y * z0(i,k+1);
+                        z0(i,k) = z0(i,k) - *p;
+                        z0(i, k + 1) = z0(i,k+1) - *p * *q;
+                    }
                 }
             }
         }

@@ -3,11 +3,7 @@
 #define schurMatrix0(i,j) schurMatrix[(i) + (j) * n]
 extern int qrIteration(int n, double* A, int en, int l, double* s,
         double* x, double* y, double* p, double* q, double* r, double* zz,
-        int m);
-
-extern int qrIterationVec(int n, double* A, int en, int l, double* s,
-        double* x, double* y, double* p, double* q, double* r, double* zz,
-        int m, int low, int igh, double* schurMatrix);
+        int m, int schurVectorFlag, int low, int igh, double* schurMatrix);
 
 extern int formShift(int n, int low, double* A, int its, int itn,
         int en, int l, double* s, double* t, double* x, double* y, double* w);
