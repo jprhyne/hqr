@@ -100,22 +100,16 @@ int main (int argc, char **argv)
             k++;
         }
     }
-    double diffMatReal[n * n];
-    double diffMatImag[n * n];
+    double *diffMatReal = (double *) calloc(n*n,sizeof(double));
+    double *diffMatImag = (double *) calloc(n*n,sizeof(double));
     for (k = 0; k < n; k++) {
         // Redeclare on each loop to not have to reset each value to 0
         // Vectors that will store Av = Ax + i * Ay
-        double Ax[n];
-        double Ay[n];
+        double *Ax = (double *) calloc(n,sizeof(double));
+        double *Ay = (double *) calloc(n,sizeof(double));
         // Vectors that will store \lambda v = (a + ib)(x+iy) = (ax - by) + i(ay + bx)
-        double ax[n];
-        double ay[n];
-        for (int l = 0; l < n; l++) {
-            Ax[l] = 0.0;
-            Ay[l] = 0.0;
-            ax[l] = 0.0;
-            ay[l] = 0.0;
-        }
+        double *ax = (double *) calloc(n,sizeof(double));
+        double *ay = (double *) calloc(n,sizeof(double));
         // Check if the current eigenvalue is real or imaginary.
         // If it is real, we need only check Ax = ax
         if (eigValsImag[k] == 0.0) {
@@ -160,6 +154,10 @@ int main (int argc, char **argv)
             diffMatReal[i + k * n] = Ax[i] - ax[i];
             diffMatImag[i + k * n] = Ay[i] - ay[i];
         }
+        free(Ax);
+        free(Ay);
+        free(ax);
+        free(ay);
     }
     // Now we have computed AV - VD and stored the real and imaginary parts separately
     // Since we want to get a relative error we must compute \|AV - VD\| in order
@@ -179,6 +177,8 @@ int main (int argc, char **argv)
 
     free(A);
     free(T);
+    free(diffMatReal);
+    free(diffMatImag);
     free(eigenMat);
     return 0;
 }
