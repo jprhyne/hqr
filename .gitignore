@@ -10,6 +10,7 @@
 
 # Jupyter notebook files
 *.ipynb
+.ipynb_checkpoints/*
 
 # Debugging file, can be exceptionally large
 outputFileC.txt
