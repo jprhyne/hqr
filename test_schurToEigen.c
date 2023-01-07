@@ -165,32 +165,16 @@ int main (int argc, char **argv)
     // Since we want to get a relative error we must compute \|AV - VD\| in order
     // for this to be as close to accurate as possible we will compute the sum 
     // of the absolute elements of AV - VD using the fact that |a + bi| = sqrt(a^2 + b^2)
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            if (diffMatReal[ i + j * n] < 1e-20)
-                diffMatReal[i + j * n] = 0;
-            if (diffMatImag[ i + j * n] < 1e-20)
-                diffMatImag[i + j * n] = 0;
-        }
-    }
     double normR = 0.0;
     double normA = 0.0;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++){
-            
-            normR += fabs(diffMatReal[ i + j * n]) + fabs(diffMatImag[i + j * n]);
+            double tmpA = diffMatReal[i + j * n];
+            double tmpB = diffMatImag[i + j * n];
+            normR += sqrt(tmpA * tmpA + tmpB * tmpB); 
             normA += fabs(a0(i,j));
-            printf("%1.10e ",diffMatReal[i + j * n]);
         }
-        printf("\n");
     }
-    printf("\n");
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++)
-            printf("%1.10e ",diffMatImag[i + j * n]);
-        printf("\n");
-    }
-    printf("%1.5e\n%1.5e\n",normR,normA);
     printf("n = %6d, Eigenvector Check: %1.10e\n", n, normR / normA);
 
     free(A);
