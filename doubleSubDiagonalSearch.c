@@ -1,5 +1,4 @@
 #define b0(i,j) B[(i) + (j) * n]
-#define b1(i,j) B[(i - 1) + (j - 1) * n]
 #include<math.h>
 /**
  *  Inputs that are passed as a pointer are modified after calling
@@ -29,8 +28,7 @@ int doubleSubDiagonalSearch(int n, double* B, int en, int l, double* s,
         )
 {
     int m;
-    for (int mm = l; mm <= en - 2; mm++) {
-        m = en - 2 + l - mm;
+    for (m = en - 2; m >= l; m--) {
         *zz = b0(m,m);
         *r = x - *zz;
         *s = y - *zz;

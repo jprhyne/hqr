@@ -28,12 +28,9 @@
  */
 double hqr(int nm, int n, int low, int igh, double *A, double *eigenValsReal, double *eigenValsImag, int schurVectorFlag, double *schurMatrix)
 {
-
-    int indexOfError = 0;
     double norm = 0.0;
-    // These deal with our boundary conditions
-    int i,j,en,m,mm,notLast,itn,its,l,ll,retVal,mp2;
-    double x,y,z,t,w,s,r,q,p,zz,tst1,tst2,ra,sa,vr,vi;
+    int i,j,en,m,itn,its,l,retVal;
+    double p,q,r,s,t,w,x,y,z,zz;
     // This section looks for any isolated eigenvalues. This is
     // really only useful if a function like 'balance' is ported or used 
     for (i = 0; i < n; i++) {

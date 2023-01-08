@@ -16,7 +16,7 @@
  */
 void schurToEigen(int low, int igh, double norm, int n, double *eigenValsReal, double *eigenValsImag, double *T, double *eigenMatrix)
 {
-    int en,m,i,j;
+    int en,m;
     double p,q,w,r,zz,s,t,tst0,tst2,x,y,ra,sa,vr,vi;
     if (norm <= 0.)
         return;
@@ -31,10 +31,10 @@ void schurToEigen(int low, int igh, double norm, int n, double *eigenValsReal, d
             t0(en,en) = 1.0;
             if (en == 0)
                 continue;
-            for (i = en - 1; i >= 0; i--) {
+            for (int i = en - 1; i >= 0; i--) {
                 w = t0(i,i) - p;
                 r = 0.0;
-                for (j = m; j <= en; j++)
+                for (int j = m; j <= en; j++)
                     r = r + t0(i,j) * t0(j,en);
                 if (eigenValsImag[i] < 0) {
                     zz = w;
@@ -73,7 +73,7 @@ void schurToEigen(int low, int igh, double norm, int n, double *eigenValsReal, d
                 tst2 = tst0 + 1.0 / tst0;
                 if (tst2 > tst0)
                     continue;
-                for (j = i; j <= en; j++)
+                for (int j = i; j <= en; j++)
                     t0(j,en) = t0(j,en) / t;
             }//label 700 restarts this loop
             // end real vector
@@ -95,11 +95,11 @@ void schurToEigen(int low, int igh, double norm, int n, double *eigenValsReal, d
             t0(en,en) = 1.0;
             if (en == 1)
                 continue;
-            for(i = en - 2; i >= 0; i--) { //fortran ends this loop at 795
+            for(int i = en - 2; i >= 0; i--) { //fortran ends this loop at 795
                 w = t0(i,i) - p;
                 ra = 0.0;
                 sa = 0.0;
-                for (j = m; j <= en; j++) {
+                for (int j = m; j <= en; j++) {
                     ra = ra + t0(i,j) * t0(j,en - 1);
                     sa = sa + t0(i,j) * t0(j,en);
                 }
@@ -156,7 +156,7 @@ void schurToEigen(int low, int igh, double norm, int n, double *eigenValsReal, d
                 tst2 = tst0 + 1.0 / tst0;
                 if (tst2 > tst0)
                     continue;
-                for (j = i; j <= en; j++) {
+                for (int j = i; j <= en; j++) {
                     t0(j,en - 1) = t0(j,en - 1) / t;
                     t0(j,en) = t0(j,en) / t;
                 }
@@ -167,17 +167,17 @@ void schurToEigen(int low, int igh, double norm, int n, double *eigenValsReal, d
     // This section produces the vectors of isolated roots. 
     // In our testing we do nothing with this, however this is kept in the event
     // that balance or a similar function is ported and/or used
-    for (i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++) {
         if (i >= low && i <= igh) 
            continue;
-        for (j = 0; j < n; j++)
+        for (int j = 0; j < n; j++)
             eigenMatrix0(i,j) = t0(i,j);
     }
-    for (j = n - 1; j >= low; j--) {
+    for (int j = n - 1; j >= low; j--) {
         m = j;
         if (m > igh)
             m = igh;
-        for (i = low; i <= igh; i++) {
+        for (int i = low; i <= igh; i++) {
             zz = 0.0;
             for (int k = low; k <= m; k++) 
                 zz = zz + eigenMatrix0(i,k) * t0(k,j);
