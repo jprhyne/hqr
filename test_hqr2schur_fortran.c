@@ -189,9 +189,9 @@ int main(int argc, char ** argv) {
     }
     normA = sqrt( normA );
     if(testFlag)
-        printf("%% [ ORTH ] n = %4d; checks = [ %1.10e %1.10e ];\n", n, orthZ, normR/normA);
+        printf("%% [ hqr2schur fortran ] n = %8d; seed = %8d; checks = [ %8.2e %8.2e ];\n", n, seed, orthZ, normR/normA);
     else
-        printf("%d %d %1.10e %1.10e\n", n, seed, orthZ, normR/normA);
+        printf( "%8d %8d %6.1e %6.1e\n", n, seed, orthZ, normR/normA);
     free(A);
     free(B);
     free(Zt);

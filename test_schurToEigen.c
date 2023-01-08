@@ -182,9 +182,9 @@ int main (int argc, char **argv)
         }
     }
     if (testFlag)
-        printf("n = %6d, Eigenvector Check: %1.10e\n", n, normR / normA);
+        printf("%% [ hqr2eigen C ] n = %8d; seed = %8d; check = %8.2e;\n", n, seed, normR / normA);
     else
-        printf("%d %d %1.10e\n", n, seed, normR/normA);
+        printf( "%8d %8d %6.1e\n", n, seed, normR/normA);
 
     free(A);
     free(T);
