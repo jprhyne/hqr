@@ -11,12 +11,14 @@ extern void schurToEigen(int low, int igh, double norm, int n, double *eigenVals
 
 void usage()
 {
-    printf("test_schurToEigen.exe [-h | -n sizeOfMatrix | -s seed]\n");
+    printf("test_schurToEigen.exe [-h | -n sizeOfMatrix | -s seed | -t]\n");
     printf("\t-h: Print this help dialogue\n");
     printf("\t-n: The following argument must be a positive integer\n");
     printf("\t\tThe default value is 20\n");
     printf("\t-s: Sets the seed. The following argument must be a positive integer.\n");
     printf("\t\tThe default value is 28.");
+    printf("\t-t: This flag tells us if we want the output in a human readable format\n");
+    printf("\t\twe default to machine readable to allow for easier plot creation");
 }
 
 int main (int argc, char **argv) 
@@ -25,6 +27,10 @@ int main (int argc, char **argv)
     int seed = 28;
     // Default size of the matrix A
     int n = 20;
+    //Flag that determines if we want the output in a 
+    //human readable format or in machine readable format
+    //We default to machine
+    int testFlag = 0;
     for(int i = 1; i < argc; i++){
         char *argument = argv[i];
         if (strcmp(argument, "-h") == 0) {
@@ -43,7 +49,9 @@ int main (int argc, char **argv)
             if (seed <= 0)
                 usage();
             i++;
-        } 
+        } else if ( strcmp (argv[i], "-t") == 0) {
+            testFlag = 1;
+        }
     }
     srand(seed);
     // First create a matrix A as upper hessenberg matrix.
@@ -173,7 +181,10 @@ int main (int argc, char **argv)
             normA += fabs(a0(i,j));
         }
     }
-    printf("n = %6d, Eigenvector Check: %1.10e\n", n, normR / normA);
+    if (testFlag)
+        printf("n = %6d, Eigenvector Check: %1.10e\n", n, normR / normA);
+    else
+        printf("%d %d %1.10e\n", n, seed, normR/normA);
 
     free(A);
     free(T);

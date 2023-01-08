@@ -20,15 +20,14 @@ double* eigenValsImag;
 
 void usage()
 {
-    printf("test_hqr2_fortran.exe [-n sizeOfMatrix | -v | -h]\n");
+    printf("test_hqr2_fortran.exe [-h | -n sizeOfMatrix | -s seed | -t]\n");
+    printf("\t-h: Print this help dialogue\n");
     printf("\t-n: The following argument must be a positive integer\n");
     printf("\t\tThe default value is 20\n");
-    printf("\t-v: verbose flag that prints out the results of eispack hqr\n");
-    printf("\t\tBy default, nothing is printed to the console\n");
-    printf("\t-t: testing flag that only prints the expected vs the");
-    printf("\t\tactual computed eigenvalues.");
-    printf("\t-h: Print this help dialogue\n");
-    printf("\t--jobv: Flag that tells us to compute the eigenvectors");
+    printf("\t-s: Sets the seed. The following argument must be a positive integer.\n");
+    printf("\t\tThe default value is 28.");
+    printf("\t-t: This flag tells us if we want the output in a human readable format\n");
+    printf("\t\twe default to machine readable to allow for easier plot creation");
 }
 
 void freeMemory()
@@ -83,17 +82,15 @@ int main(int argc, char ** argv) {
                 printFlag=1;
             } else if ( strcmp ( *(argv + i), "-t") == 0) {
 		testFlag=1;
-	    } else if ( strcmp ( *(argv + i), "--jobv") == 0) {
-                eigenVectorFlag=1;
-            } else if ( strcmp ( *(argv + i), "-s") == 0) {
+	    } else if ( strcmp ( *(argv + i), "-s") == 0) {
                 seed = atoi( *(argv + i + 1) ); 
                 if (seed <= 0)
                     usage();
                 i++;
             }
 	}
-		//Uncomment if we want to test the output of qrIteration.c
-		//testingFile = fopen("outputFileC.txt","w");
+        //Uncomment if we want to test the output of qrIteration.c
+        //testingFile = fopen("outputFileC.txt","w");
         srand(seed);
         // arrays that will hold the differences in the eigenvalues of hqr
         // and this implementation
@@ -138,7 +135,6 @@ int main(int argc, char ** argv) {
 	 */
 	// Check that V^T V = I 
     double orthZ, tmp;
-    printf("%% [ ORTH ] n = %4d; checks = [ ", n );
     orthZ = 0e+00;
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
@@ -150,7 +146,6 @@ int main(int argc, char ** argv) {
         }
     }
     orthZ = sqrt( orthZ );
-    printf(" %1.10e", orthZ );
 
 	// zero-out below quasi diagonal of H by looking wi
     // First, zero out everything below the 1st subdiagonal
@@ -193,8 +188,10 @@ int main(int argc, char ** argv) {
         }
     }
     normA = sqrt( normA );
-    printf(" %1.10e", normR / normA );
-    printf(" ];\n");
+    if(testFlag)
+        printf("%% [ ORTH ] n = %4d; checks = [ %1.10e %1.10e ];\n", n, orthZ, normR/normA);
+    else
+        printf("%d %d %1.10e %1.10e\n", n, seed, orthZ, normR/normA);
     free(A);
     free(B);
     free(Zt);

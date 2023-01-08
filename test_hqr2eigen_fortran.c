@@ -18,15 +18,14 @@ double* eigValsImag;
 
 void usage()
 {
-    printf("test_hqr2eigen_fortran.exe [-n sizeOfMatrix | -v | -h]\n");
+    printf("test_hqr2eigen_fortran.exe [-h | -n sizeOfMatrix | -s seed | -t]\n");
+    printf("\t-h: Print this help dialogue\n");
     printf("\t-n: The following argument must be a positive integer\n");
     printf("\t\tThe default value is 20\n");
-    printf("\t-v: verbose flag that prints out the results of eispack hqr\n");
-    printf("\t\tBy default, nothing is printed to the console\n");
-    printf("\t-t: testing flag that only prints the expected vs the");
-    printf("\t\tactual computed eigenvalues.");
-    printf("\t-h: Print this help dialogue\n");
-    printf("\t--jobv: Flag that tells us to compute the eigenvectors");
+    printf("\t-s: Sets the seed. The following argument must be a positive integer.\n");
+    printf("\t\tThe default value is 28.");
+    printf("\t-t: This flag tells us if we want the output in a human readable format\n");
+    printf("\t\twe default to machine readable to allow for easier plot creation");
 }
 
 int main(int argc, char ** argv) {
@@ -44,8 +43,9 @@ int main(int argc, char ** argv) {
          * By default, we do not do this
          */
         int printFlag = 0;
+        // This prints results in a human readable way
         int testFlag = 0;
-        int eigenVectorFlag = 0;
+
 
         // Seeds the random number generator for repeatability
         // Old seed was 734
@@ -72,8 +72,6 @@ int main(int argc, char ** argv) {
                 printFlag=1;
             } else if ( strcmp ( *(argv + i), "-t") == 0) {
                 testFlag=1;
-            } else if ( strcmp ( *(argv + i), "--jobv") == 0) {
-                eigenVectorFlag=1;
             } else if ( strcmp ( *(argv + i), "-s") == 0) {
                 seed = atoi( *(argv + i + 1) ); 
                 if (seed <= 0)
@@ -204,7 +202,10 @@ int main(int argc, char ** argv) {
                 normA += fabs(a0(i,j));
             }
         }
-        printf("n = %6d, Eigenvector Check: %1.10e\n", n, normR / normA);
+        if (testFlag)
+            printf("n = %6d, Eigenvector Check: %1.10e\n", n, normR / normA);
+        else
+            printf( "%d %d %1.10e\n", n, seed, normR/normA);
         free(A);
         free(T);
         free(Z);
