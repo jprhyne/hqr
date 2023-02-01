@@ -170,7 +170,7 @@ void schurToEigen(int low, int igh, double norm, int n, double *eigenValsReal, d
     for (int i = 0; i < n; i++) {
         if (i >= low && i <= igh) 
            continue;
-        for (int j = 0; j < n; j++)
+        for (int j = i; j < n; j++)
             eigenMatrix0(i,j) = t0(i,j);
     }
     for (int j = n - 1; j >= low; j--) {
