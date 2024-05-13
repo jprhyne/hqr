@@ -7,6 +7,9 @@
 #define b0(i,j) B[(i) + (j) * n]
 #define z0(i,j) z[(i) + (j) * n]
 
+// Libraries used to facilitate timing
+#include <sys/time.h>
+
 // This may be bad practice, but we put all malloc'd entities
 // as global variables in order to make freeing the
 // memory easier
